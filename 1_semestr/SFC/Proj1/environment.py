@@ -14,6 +14,7 @@ class FrozenLake:
                                0, 0, 0, 0])
         self.position = 0
 
+
     def reset(self):
         self.position = 0
         self.state = np.array([1, 0, 0, 0,
@@ -22,8 +23,10 @@ class FrozenLake:
                                0, 0, 0, 0])
         return self.state
 
+
     def place(self):
         return self.gameboard[self.position]
+
 
     def render(self):
         string = ""
@@ -36,6 +39,7 @@ class FrozenLake:
             if i in [3, 7, 11, 15]:
                 string = string + '\n'
         print(string)
+
 
     def step(self, action):
         #0: up, 1: left, 2:down, 3: right
@@ -74,6 +78,7 @@ class FrozenLake:
 
         return self.state, reward, done
 
+
     def get_rw_dn(self):
         reward = -1
         done = False
@@ -87,6 +92,7 @@ class FrozenLake:
             done = True
 
         return reward, done
+
 
     def render_wQ(self, q_values):
         string = format_matrix(['','0','', '','1','', '','2','','', '3',''],
@@ -108,15 +114,3 @@ class FrozenLake:
         string = string.replace('42.003', '   H  ')
         string = string.replace('42.004', '   G  ')
         print(string.replace('42.000', '      '))
-"""
-env = FrozenLake()
-env.render()
-print(env.step(0))
-env.render()
-print(env.step(1))
-env.render()
-print(env.step(2))
-env.render()
-print(env.step(3))
-env.render()
-"""

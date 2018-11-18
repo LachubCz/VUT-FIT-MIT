@@ -31,7 +31,7 @@ def train(model, memory, minibatch_size, gamma):
             q_value[i][action[i]] = reward[i] + gamma * np.max(ns_model_pred[i])
 
     model.fit(state, q_value)
-    #model.fit(state, q_value, epochs=1, verbose=0)
+
 
 def get_q_values(model):
     all_states = [[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -50,11 +50,49 @@ def get_q_values(model):
                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]]
-    #print (model.predict(np.array(all_states)))
+
     return model.predict(np.array(all_states))
 
+
 def fill_memory(env, memory):
+    for eps in range(10000):
+        state = env.reset()
+        last_position = env.position
+
+        already = np.empty((0,16))
+        already = np.append(already, np.array([state]), axis=0)
+
+        done = False
+        for _ in range(100):
+            action = np.random.randint(0, 4, size=1)[0]
+            next_state, reward, done = env.step(action)
+
+            for i, item in enumerate(already):
+                flag = True
+                for e, elem in enumerate(next_state):
+                    if item[e] != elem:
+                        flag = False
+                        break
+                if flag:
+                    reward -= 0.1
+                break
+
+            already = np.append(already, np.array([next_state]), axis=0)
+
+            if last_position == env.position:
+                reward = -0.1
+
+            memory.append((state, action, reward, next_state, done))
+
+            state = next_state
+            last_position = env.position
+
+            if done:
+                if len(memory) == 1000:
+                    return memory
+                break
     return memory
+
 
 def test(env, eps, epsilon, model):
     state = env.reset()
@@ -69,35 +107,7 @@ def test(env, eps, epsilon, model):
             else:
                 print(eps, epsilon, "LOSS", step+1)
             return
-    print(eps, epsilon, "CYCLE", step+1)
-"""
-def neural_network():
-    network_input = Input(shape=(16,))
 
-    net = Dense(units=16, activation="relu", kernel_initializer="he_uniform")(network_input)
-    net = Dense(units=16, activation="relu", kernel_initializer="he_uniform")(net)
-    net = Dense(units=4, activation="linear", kernel_initializer="he_uniform")(net)
-
-    model = Model(inputs=network_input, outputs=net)
-    model.summary()
-    model.compile(loss=losses.mean_squared_error, optimizer=optimizers.Adam(lr=0.001), metrics=['accuracy'])
-
-    return model
-"""
-
-"""
-def neural_network():
-    network_input = Input(shape=(16,))
-
-    net = Dense(units=16, activation="relu")(network_input)
-    net = Dense(units=4, activation="linear")(net)
-
-    model = Model(inputs=network_input, outputs=net)
-    model.summary()
-    model.compile(loss=losses.mean_squared_error, optimizer=optimizers.Adam(lr=0.001), metrics=['accuracy'])
-
-    return model
-"""
 
 def main():
     env = FrozenLake()
@@ -110,22 +120,36 @@ def main():
         state = env.reset()
         last_position = env.position
 
+        already = np.empty((0,16))
+        already = np.append(already, np.array([state]), axis=0)
+
         done = False
         for _ in range(100):
             #env.render_wQ(get_q_values(model))
-            #print(get_q_values(model))
             if np.random.rand() > epsilon:
                 action = np.argmax(model.predict(np.array([state])))
             else:
                 action = np.random.randint(0, 4, size=1)[0]
 
             next_state, reward, done = env.step(action)
+            
+            for i, item in enumerate(already):
+                flag = True
+                for e, elem in enumerate(next_state):
+                    if item[e] != elem:
+                        flag = False
+                        break
+                if flag:
+                    reward -= 0.1
+                break
+
+            already = np.append(already, np.array([next_state]), axis=0)
 
             if epsilon > 0.1:
-                epsilon -= 0.00001
+                epsilon -= 0.00005
 
             if last_position == env.position:
-                reward = -0.1
+                reward -= 0.1
 
             memory.append((state, action, reward, next_state, done))
             train(model, memory, 64, 0.9)
@@ -136,6 +160,7 @@ def main():
             if done:
                 test(env, eps, epsilon, model)
                 break
+
 
 if __name__ == "__main__":
     main()
