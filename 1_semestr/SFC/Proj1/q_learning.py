@@ -1,11 +1,39 @@
+import time
 import random
+import argparse
 import numpy as np
 from collections import deque
 
 from model import neural_network
 from environment import FrozenLake
+from helper import get_q_values, err_print
+
+def get_args():
+    """
+    method parses arguments
+    """
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("-mode", action="store", dest="mode",
+                        choices=["train", "test"], default="train",
+                        help="application mode")
+    parser.add_argument("-r_mode", action="store", dest="r_mode",
+                        choices=["weights", "map", "stats"], default="stats",
+                        help="render mode for training")
+    parser.add_argument("-model", action="store", dest="model", 
+                        help="name of file which contains already trained model")
+    args = parser.parse_args()
+
+    if args.mode == "test" and args.model == None:
+        err_print("Model was not selected.")
+
+    return args
+
 
 def train(model, memory, minibatch_size, gamma):
+    """
+    method performs q-learning
+    """
     if minibatch_size > len(memory):
         return
     minibatch = random.sample(list(memory), minibatch_size)
@@ -28,28 +56,32 @@ def train(model, memory, minibatch_size, gamma):
     model.fit(state, q_value)
 
 
-def get_q_values(model):
-    all_states = [[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                  [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                  [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                  [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                  [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                  [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                  [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                  [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-                  [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
-                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
-                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
-                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]]
+def test(env, eps, epsilon, model):
+    """
+    method tests succes of neural network
+    """
+    state = env.reset()
+    done = False
+    for step in range(100):
+        action = np.argmax(model.predict(np.array([state])))
+        next_state, reward, done = env.step(action)
+        state = next_state
+        if done:
+            if reward == 1:
+                print("Episode: {}; Epsilon: {:.2}; Test outcome: {} in {} moves" .format(eps, epsilon, "WIN", step+1))
+                return True
+            else:
+                print("Episode: {}; Epsilon: {:.2}; Test outcome: {} in {} moves" .format(eps, epsilon, "LOSS", step+1))
+                return False
 
-    return model.predict(np.array(all_states))
+    print("Episode: {}; Epsilon: {:.2}; Test outcome: {}" .format(eps, epsilon, "CYCLE"))
+    return False
 
 
 def fill_memory(env, memory):
+    """
+    method fills memory before learning
+    """
     for eps in range(10000):
         state = env.reset()
         last_position = env.position
@@ -89,22 +121,7 @@ def fill_memory(env, memory):
     return memory
 
 
-def test(env, eps, epsilon, model):
-    state = env.reset()
-    done = False
-    for step in range(100):
-        action = np.argmax(model.predict(np.array([state])))
-        next_state, reward, done = env.step(action)
-        state = next_state
-        if done:
-            if reward == 1:
-                print(eps, epsilon, "WIN", step+1)
-            else:
-                print(eps, epsilon, "LOSS", step+1)
-            return
-    print(eps, epsilon, "CYCLE", step+1)
-
-def main():
+def train_main(r_mode):
     env = FrozenLake()
     model = neural_network(16, 16, 4, 0.01)
     memory = deque(maxlen=1000)
@@ -153,9 +170,34 @@ def main():
             last_position = env.position
 
             if done:
-                test(env, eps, epsilon, model)
+                if test(env, eps, epsilon, model):
+                    model.save_model("model")
+                    print("[SUCCESSFUL RUN]")
+                    return
                 break
 
 
+def test_main(model_name):
+    env = FrozenLake()
+    model = neural_network(16, 16, 4, 0.01)
+    model.load_model(model_name)
+
+    env.render_wQ(get_q_values(model))
+    state = env.reset()
+    env.render()
+    done = False
+    for step in range(100):
+        time.sleep(0.7)
+        action = np.argmax(model.predict(np.array([state])))
+        next_state, reward, done = env.step(action)
+        state = next_state
+        env.render()
+        if done:
+            break
+
 if __name__ == "__main__":
-    main()
+    args = get_args()
+    if args.mode == "train":
+        train_main(args.r_mode)
+    else:
+        test_main(args.model)

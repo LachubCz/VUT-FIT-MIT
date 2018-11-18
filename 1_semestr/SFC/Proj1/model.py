@@ -1,3 +1,4 @@
+import pickle
 import numpy as np
 
 def linear(x, derivation=False):
@@ -70,3 +71,19 @@ class neural_network():
         l2o = linear(u2)
 
         return l2o
+
+    def save_model(self, name):
+        with open("{}.pkl" .format(name), "wb") as model:
+            pickle.dump(self, model, pickle.HIGHEST_PROTOCOL)
+
+    def load_model(self, name):
+        with open("{}.pkl".format(name), "rb") as model:
+            tmp_model = pickle.load(model)
+
+        self.l1_weights = tmp_model.l1_weights
+        self.l1_biases = tmp_model.l1_biases
+
+        self.l2_weights =  tmp_model.l2_weights
+        self.l2_biases = tmp_model.l2_biases
+
+        self.learning_rate = tmp_model.learning_rate
