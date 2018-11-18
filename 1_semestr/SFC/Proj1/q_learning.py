@@ -1,13 +1,8 @@
 import random
+import numpy as np
 from collections import deque
 
-import keras
-import numpy as np
-from mockup import neural_network
-from keras.models import Model
-from keras.layers import Input, Conv2D, Flatten, Dense, Concatenate, Lambda, Subtract, Add
-from keras import optimizers, losses
-
+from model import neural_network
 from environment import FrozenLake
 
 def train(model, memory, minibatch_size, gamma):
@@ -80,7 +75,7 @@ def fill_memory(env, memory):
             already = np.append(already, np.array([next_state]), axis=0)
 
             if last_position == env.position:
-                reward = -0.1
+                reward -= 0.1
 
             memory.append((state, action, reward, next_state, done))
 
@@ -107,7 +102,7 @@ def test(env, eps, epsilon, model):
             else:
                 print(eps, epsilon, "LOSS", step+1)
             return
-
+    print(eps, epsilon, "CYCLE", step+1)
 
 def main():
     env = FrozenLake()
@@ -146,7 +141,7 @@ def main():
             already = np.append(already, np.array([next_state]), axis=0)
 
             if epsilon > 0.1:
-                epsilon -= 0.00005
+                epsilon -= 0.001
 
             if last_position == env.position:
                 reward -= 0.1
