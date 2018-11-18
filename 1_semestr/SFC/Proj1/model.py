@@ -2,6 +2,9 @@ import pickle
 import numpy as np
 
 def linear(x, derivation=False):
+    """
+    activation function linear
+    """
     if derivation:
         return 1
     else:
@@ -9,6 +12,9 @@ def linear(x, derivation=False):
 
 
 def relu(x, derivation=False):
+    """
+    activation function relu
+    """
     if derivation:
         return 1.0 * (x > 0)
     else:
@@ -26,6 +32,9 @@ class neural_network():
         self.learning_rate = learning_rate
 
     def fit(self, x, y, epochs=1):
+        """
+        method implements backpropagation
+        """
         for epoch in range(epochs):  
         #Forward propagation
             #First layer
@@ -62,6 +71,9 @@ class neural_network():
 
 
     def predict(self, x):
+        """
+        method predicts q-values for state x
+        """
         #First layer
         u1 = np.dot(x, self.l1_weights) + self.l1_biases
         l1o = relu(u1)
@@ -73,10 +85,16 @@ class neural_network():
         return l2o
 
     def save_model(self, name):
+        """
+        method saves model
+        """
         with open("{}.pkl" .format(name), "wb") as model:
             pickle.dump(self, model, pickle.HIGHEST_PROTOCOL)
 
     def load_model(self, name):
+        """
+        method loads model
+        """
         with open("{}.pkl".format(name), "rb") as model:
             tmp_model = pickle.load(model)
 

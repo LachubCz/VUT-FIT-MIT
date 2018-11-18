@@ -6,7 +6,7 @@ class FrozenLake:
     def __init__(self):
         #1: starting point, 2: frozen surface, 3: hole, 4: goal
         self.gameboard = np.array([1, 2, 2, 2,
-                                   2, 3, 2, 2,
+                                   2, 3, 2, 3,
                                    2, 2, 2, 3,
                                    3, 2, 2, 4])
         self.state = np.array([1, 0, 0, 0,
@@ -15,8 +15,10 @@ class FrozenLake:
                                0, 0, 0, 0])
         self.position = 0
 
-
     def reset(self):
+        """
+        method resets environment
+        """
         self.position = 0
         self.state = np.array([1, 0, 0, 0,
                                0, 0, 0, 0,
@@ -24,12 +26,10 @@ class FrozenLake:
                                0, 0, 0, 0])
         return self.state
 
-
-    def place(self):
-        return self.gameboard[self.position]
-
-
     def render(self):
+        """
+        method renders environment
+        """
         string = ""
         fields = ["S", "F", "F", "F", "F", "H", "F", "H", "F", "F", "F", "H", "H", "F", "F", "G"]
         for i, item in enumerate(self.state):
@@ -41,8 +41,10 @@ class FrozenLake:
                 string = string + '\n'
         print(string)
 
-
     def step(self, action):
+        """
+        method makes step in environment
+        """
         #0: up, 1: left, 2:down, 3: right
         reward, done = self.get_rw_dn()
         if done:
@@ -79,8 +81,10 @@ class FrozenLake:
 
         return self.state, reward, done
 
-
     def get_rw_dn(self):
+        """
+        method returns reward and done status for actual state
+        """
         reward = -1
         done = False
         if self.gameboard[self.position] in [1,2]:
@@ -94,8 +98,10 @@ class FrozenLake:
 
         return reward, done
 
-
     def render_wQ(self, q_values):
+        """
+        method renders environment with actual q-values
+        """
         string = format_matrix(['','0','', '','1','', '','2','','', '3',''],
                             [[42, q_values[0][0], 42, 42, q_values[1][0], 42, 42, q_values[2][0], 42, 42, q_values[3][0], 42], 
                              [q_values[0][3], 42.001, q_values[0][1], q_values[1][3], 42.002, q_values[1][1], q_values[2][3], 42.002, q_values[2][1], q_values[3][3], 42.002, q_values[3][1]],

@@ -56,7 +56,7 @@ def train(model, memory, minibatch_size, gamma):
     model.fit(state, q_value)
 
 
-def test(env, eps, epsilon, model):
+def test(env, eps, epsilon, model, r_mode):
     """
     method tests succes of neural network
     """
@@ -68,13 +68,15 @@ def test(env, eps, epsilon, model):
         state = next_state
         if done:
             if reward == 1:
-                print("Episode: {}; Epsilon: {:.2}; Test outcome: {} in {} moves" .format(eps, epsilon, "WIN", step+1))
+                if r_mode == "stats":
+                    print("Episode: {}; Epsilon: {:.2}; Test outcome: {} in {} moves" .format(eps, epsilon, "WIN", step+1))
                 return True
             else:
-                print("Episode: {}; Epsilon: {:.2}; Test outcome: {} in {} moves" .format(eps, epsilon, "LOSS", step+1))
+                if r_mode == "stats":
+                    print("Episode: {}; Epsilon: {:.2}; Test outcome: {} in {} moves" .format(eps, epsilon, "LOSS", step+1))
                 return False
-
-    print("Episode: {}; Epsilon: {:.2}; Test outcome: {}" .format(eps, epsilon, "CYCLE"))
+    if r_mode == "stats":
+        print("Episode: {}; Epsilon: {:.2}; Test outcome: {}" .format(eps, epsilon, "CYCLE"))
     return False
 
 
@@ -122,6 +124,9 @@ def fill_memory(env, memory):
 
 
 def train_main(r_mode):
+    """
+    main for training mode
+    """
     env = FrozenLake()
     model = neural_network(16, 16, 4, 0.01)
     memory = deque(maxlen=1000)
@@ -136,8 +141,15 @@ def train_main(r_mode):
         already = np.append(already, np.array([state]), axis=0)
 
         done = False
+
+        if r_mode == "weights":
+            time.sleep(0.01)
+            env.render_wQ(get_q_values(model))
+        elif r_mode == "map":
+            time.sleep(0.2)
+            env.render()
+
         for _ in range(100):
-            #env.render_wQ(get_q_values(model))
             if np.random.rand() > epsilon:
                 action = np.argmax(model.predict(np.array([state])))
             else:
@@ -166,11 +178,18 @@ def train_main(r_mode):
             memory.append((state, action, reward, next_state, done))
             train(model, memory, 64, 0.9)
 
+            if r_mode == "weights":
+                time.sleep(0.01)
+                env.render_wQ(get_q_values(model))
+            elif r_mode == "map":
+                time.sleep(0.2)
+                env.render()
+
             state = next_state
             last_position = env.position
 
             if done:
-                if test(env, eps, epsilon, model):
+                if test(env, eps, epsilon, model, r_mode):
                     model.save_model("model")
                     print("[SUCCESSFUL RUN]")
                     return
@@ -178,6 +197,9 @@ def train_main(r_mode):
 
 
 def test_main(model_name):
+    """
+    main for testing mode
+    """
     env = FrozenLake()
     model = neural_network(16, 16, 4, 0.01)
     model.load_model(model_name)
@@ -187,13 +209,14 @@ def test_main(model_name):
     env.render()
     done = False
     for step in range(100):
-        time.sleep(0.7)
+        time.sleep(0.5)
         action = np.argmax(model.predict(np.array([state])))
         next_state, reward, done = env.step(action)
         state = next_state
         env.render()
         if done:
             break
+
 
 if __name__ == "__main__":
     args = get_args()
