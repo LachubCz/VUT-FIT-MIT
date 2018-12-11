@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!--
+ * Put this file into ${user.home}/.m2/settings.xml
+ (in GNU/Linux it is ~/.m2/settings.xml,
+ in Windows it is C:\Users\YOUR_WINDOWS_LOGIN\.m2\settings.xml)
+ and replace YOUR_ORACLE_ACCOUNT_EMAIL with your Oracle acount login (email)
+ and YOUR_ORACLE_ACCOUNT_PASSWORD with you Oracle account password.
+ * You can create the Oracle account at
+ https://login.oracle.com/mysso/signon.jsp
+ * Finally, you will need to register into Oracle Maven repository at
+ http://www.oracle.com/webfolder/application/maven/index.html
+ (follow the "visit the registration site" link to
+ http://www.oracle.com/webapps/maven/register/license.html)
+ Ignore error "Unable to register user" after accepting the License Agreement, it is OK.
+-->
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0                                           http://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <localRepository/>
+  <interactiveMode/>
+  <usePluginRegistry/>
+  <offline/>
+  <pluginGroups/>
+  <servers>
+    <server>
+      <id>maven.oracle.com</id>
+      <username>YOUR_ORACLE_ACCOUNT_EMAIL</username>
+      <password>YOUR_ORACLE_ACCOUNT_PASSWORD</password>
+      <configuration>
+        <basicAuthScope>
+          <host>ANY</host>
+          <port>ANY</port>
+          <realm>OAM 11g</realm>
+        </basicAuthScope>
+        <httpConfiguration>
+          <all>
+            <params>
+              <property>
+                <name>http.protocol.allow-circular-redirects</name>
+                <value>%b,true</value>
+              </property>
+            </params>
+          </all>
+        </httpConfiguration>
+      </configuration>
+    </server>
+  </servers>
+  <mirrors/>
+  <proxies/>
+  <profiles/>
+  <activeProfiles/>
+</settings>

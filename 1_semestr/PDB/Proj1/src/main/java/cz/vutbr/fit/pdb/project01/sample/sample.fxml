@@ -1,0 +1,2235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+   <children>
+      <TabPane fx:id="tabs" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+        <tabs>
+          <Tab fx:id="clientTab" text="Klient">
+               <content>
+                  <HBox fx:id="account" alignment="CENTER" prefHeight="400.0" prefWidth="200.0" spacing="5.0">
+                     <children>
+                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0" HBox.hgrow="NEVER">
+                           <children>
+                              <ImageView fx:id="accountImage" fitHeight="400.0" fitWidth="700.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@resources/warning.png" />
+                                 </image>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </ImageView>
+                              <HBox alignment="CENTER" prefHeight="0.0" prefWidth="240.0" spacing="10.0" VBox.vgrow="NEVER">
+                                 <children>
+                                    <Button fx:id="imagePathButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" HBox.hgrow="NEVER">
+                                       <tooltip>
+                                          <Tooltip text="Výběr souboru fotografie" />
+                                       </tooltip></Button>
+                                    <Button fx:id="imageRotateLeftButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0">
+                                       <tooltip>
+                                          <Tooltip text="Rotace fotografie vlevo" />
+                                       </tooltip></Button>
+                                    <Button fx:id="imageRotateRightButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0">
+                                       <tooltip>
+                                          <Tooltip fx:id="imageRotateRightTooltip" text="Rotace fotografie vpravo" />
+                                       </tooltip></Button>
+                                    <Button fx:id="imageContrastDownButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0">
+                                       <tooltip>
+                                          <Tooltip text="Obrácení fotografie" />
+                                       </tooltip></Button>
+                                    <Button fx:id="imageContrastUpButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0">
+                                       <tooltip>
+                                          <Tooltip text="Zvýšení kontrastu fotografie" />
+                                       </tooltip></Button>
+                                    <Button fx:id="imageBrightnessDownButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0">
+                                       <tooltip>
+                                          <Tooltip text="Snížení jasu fotografie" />
+                                       </tooltip></Button>
+                                    <Button fx:id="imageBrightnessUpButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0">
+                                       <tooltip>
+                                          <Tooltip text="Zvýšení jasu fotografie" />
+                                       </tooltip></Button>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER" prefHeight="300.0" prefWidth="350.0" spacing="10.0" HBox.hgrow="NEVER">
+                           <children>
+                              <TextField fx:id="loginEdit" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="300.0" promptText="Uživatelské jméno">
+                                 <tooltip>
+                                    <Tooltip text="Uživatelské jméno" />
+                                 </tooltip>
+                              </TextField>
+                              <PasswordField fx:id="passwordEdit" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="300.0" promptText="Heslo">
+                                 <tooltip>
+                                    <Tooltip text="Heslo" />
+                                 </tooltip></PasswordField>
+                              <HBox fx:id="nameBox" alignment="CENTER" prefHeight="4.0" prefWidth="350.0" spacing="10.0">
+                                 <children>
+                                    <TextField fx:id="firstNameEdit" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="145.0" promptText="Křestní jméno">
+                                       <tooltip>
+                                          <Tooltip text="Křestní jméno" />
+                                       </tooltip>
+                                    </TextField>
+                                    <TextField fx:id="lastNameEdit" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="145.0" promptText="Příjmení">
+                                       <tooltip>
+                                          <Tooltip text="Příjmení" />
+                                       </tooltip>
+                                    </TextField>
+                                 </children>
+                              </HBox>
+                              <HBox fx:id="genderBox" alignment="CENTER" prefHeight="4.0" prefWidth="350.0" spacing="10.0" VBox.vgrow="NEVER">
+                                 <children>
+                                    <TextField fx:id="identificationNumberEdit" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="210.0" promptText="Rodné číslo">
+                                       <tooltip>
+                                          <Tooltip text="Rodné číslo" />
+                                       </tooltip>
+                                    </TextField>
+                                    <Button fx:id="genderButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="26.0" prefWidth="80.0" text="Muž">
+                                       <tooltip>
+                                          <Tooltip text="Pohlaví" />
+                                       </tooltip>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                              <HBox fx:id="numberBox" alignment="CENTER" prefHeight="4.0" prefWidth="350.0" spacing="10.0">
+                                 <children>
+                                    <TextField fx:id="phoneEdit" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="145.0" promptText="Telefonní číslo">
+                                       <tooltip>
+                                          <Tooltip text="Telefonní číslo" />
+                                       </tooltip>
+                                    </TextField>
+                                    <DatePicker fx:id="birthEdit" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="145.0">
+                                       <tooltip>
+                                          <Tooltip text="Datum narození" />
+                                       </tooltip>
+                                    </DatePicker>
+                                 </children>
+                              </HBox>
+                              <TextField fx:id="emailEdit" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="300.0" promptText="Emailová adresa">
+                                 <tooltip>
+                                    <Tooltip text="Emailová adresa" />
+                                 </tooltip>
+                              </TextField>
+                              <TextField fx:id="addressEdit" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="300.0" promptText="Kontaktní adresa">
+                                 <tooltip>
+                                    <Tooltip text="Kontaktní adresa" />
+                                 </tooltip>
+                              </TextField>
+                              <HBox alignment="CENTER" prefHeight="4.0" prefWidth="350.0" spacing="10.0">
+                                 <children>
+                                    <Button fx:id="logoutButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="26.0" prefWidth="100.0" text="Odhlásit">
+                                       <tooltip>
+                                          <Tooltip fx:id="logoutTooltip" text="Odhlášení uživatele" />
+                                       </tooltip>
+                                    </Button>
+                                    <Button fx:id="acceptButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="26.0" prefWidth="100.0" text="Potvrdit">
+                                       <tooltip>
+                                          <Tooltip fx:id="acceptTooltip" text="Potvrzení provedených změn" />
+                                       </tooltip>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefHeight="4.0" prefWidth="350.0" spacing="10.0">
+                                 <children>
+                                    <Button fx:id="adminButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="26.0" prefWidth="100.0" text="Správce" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets left="10.0" right="10.0" />
+                     </padding>
+                  </HBox>
+               </content>
+            </Tab>
+          <Tab fx:id="ordersTab" text="Objednávky">
+               <content>
+                  <ScrollPane fx:id="ordersScrollPane" fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
+                     <content>
+                        <VBox prefHeight="200.0" prefWidth="100.0" spacing="80.0">
+                           <children>
+                              <HBox fx:id="orderOne" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="350.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="orderImageOne" fitHeight="350.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/box.png" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="orderDateOne" text="1. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Datum objednávky" />
+                                             </tooltip>
+                                          </Label>
+                                          <ComboBox fx:id="orderTourSelectOne" prefWidth="120.0">
+                                             <tooltip>
+                                                <Tooltip text="Seznam zájezdů" />
+                                             </tooltip>
+                                          </ComboBox>
+                                          <Label fx:id="orderTourStateOne" text="Rakousko">
+                                             <tooltip>
+                                                <Tooltip text="Země" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderTourLocationOne" text="Innsbruck">
+                                             <tooltip>
+                                                <Tooltip text="Lokace" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderTourCenterOne" text="Kleinberg">
+                                             <tooltip>
+                                                <Tooltip text="Středisko" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderFromLabelOne" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počátek zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderToLabelOne" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konec zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderHotelOne" text="Hotel Grand">
+                                             <tooltip>
+                                                <Tooltip text="Název hotelu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderServicesOne" text="Stravování a doprava">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnuté služby" />
+                                             </tooltip>
+                                          </Label>
+                                          <ComboBox fx:id="orderActionsOne" prefWidth="200.0">
+                                             <tooltip>
+                                                <Tooltip text="Seznam zahrnutých akcí" />
+                                             </tooltip>
+                                          </ComboBox>
+                                          <Label fx:id="orderMembersCountOne" text="Počet osob: 5">
+                                             <tooltip>
+                                                <Tooltip text="Počet osob" />
+                                             </tooltip>
+                                          </Label>
+                                          <Button fx:id="orderAcceptOne" mnemonicParsing="false" text="Potvrdit">
+                                             <tooltip>
+                                                <Tooltip text="Provedení odpovídající akce" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="orderSeparatorOne" prefWidth="200.0" />
+                              <HBox fx:id="orderTwo" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="350.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="orderImageTwo" fitHeight="350.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/box.png" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="orderDateTwo" text="1. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Datum objednávky" />
+                                             </tooltip>
+                                          </Label>
+                                          <ComboBox fx:id="orderTourSelectTwo" prefWidth="120.0">
+                                             <tooltip>
+                                                <Tooltip text="Seznam zájezdů" />
+                                             </tooltip>
+                                          </ComboBox>
+                                          <Label fx:id="orderTourStateTwo" text="Rakousko">
+                                             <tooltip>
+                                                <Tooltip text="Země" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderTourLocationTwo" text="Innsbruck">
+                                             <tooltip>
+                                                <Tooltip text="Lokace" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderTourCenterTwo" text="Kleinberg">
+                                             <tooltip>
+                                                <Tooltip text="Středisko" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderFromLabelTwo" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počátek zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderToLabelTwo" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konec zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderHotelTwo" text="Hotel Grand">
+                                             <tooltip>
+                                                <Tooltip text="Název hotelu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderServicesTwo" text="Stravování a doprava">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnuté služby" />
+                                             </tooltip>
+                                          </Label>
+                                          <ComboBox fx:id="orderActionsTwo" prefWidth="200.0">
+                                             <tooltip>
+                                                <Tooltip text="Seznam zahrnutých akcí" />
+                                             </tooltip>
+                                          </ComboBox>
+                                          <Label fx:id="orderMembersCountTwo" text="Počet osob: 5">
+                                             <tooltip>
+                                                <Tooltip text="Počet osob" />
+                                             </tooltip>
+                                          </Label>
+                                          <Button fx:id="orderAcceptTwo" mnemonicParsing="false" text="Potvrdit">
+                                             <tooltip>
+                                                <Tooltip text="Provedení odpovídající akce" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="orderSeparatorTwo" prefWidth="200.0" />
+                              <HBox fx:id="orderThree" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="350.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="orderImageThree" fitHeight="350.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/box.png" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="orderDateThree" text="1. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Datum objednávky" />
+                                             </tooltip>
+                                          </Label>
+                                          <ComboBox fx:id="orderTourSelectThree" prefWidth="120.0">
+                                             <tooltip>
+                                                <Tooltip text="Seznam zájezdů" />
+                                             </tooltip>
+                                          </ComboBox>
+                                          <Label fx:id="orderTourStateThree" text="Rakousko">
+                                             <tooltip>
+                                                <Tooltip text="Země" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderTourLocationThree" text="Innsbruck">
+                                             <tooltip>
+                                                <Tooltip text="Lokace" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderTourCenterThree" text="Kleinberg">
+                                             <tooltip>
+                                                <Tooltip text="Středisko" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderFromLabelThree" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počátek zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderToLabelThree" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konec zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderHotelThree" text="Hotel Grand">
+                                             <tooltip>
+                                                <Tooltip text="Název hotelu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderServicesThree" text="Stravování a doprava">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnuté služby" />
+                                             </tooltip>
+                                          </Label>
+                                          <ComboBox fx:id="orderActionsThree" prefWidth="200.0">
+                                             <tooltip>
+                                                <Tooltip text="Seznam zahrnutých akcí" />
+                                             </tooltip>
+                                          </ComboBox>
+                                          <Label fx:id="orderMembersCountThree" text="Počet osob: 5">
+                                             <tooltip>
+                                                <Tooltip text="Počet osob" />
+                                             </tooltip>
+                                          </Label>
+                                          <Button fx:id="orderAcceptThree" mnemonicParsing="false" text="Potvrdit">
+                                             <tooltip>
+                                                <Tooltip text="Provedení odpovídající akce" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="orderSeparatorThree" prefWidth="200.0" />
+                              <HBox fx:id="orderFour" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="350.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="orderImageFour" fitHeight="350.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/box.png" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="orderDateFour" text="1. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Datum objednávky" />
+                                             </tooltip>
+                                          </Label>
+                                          <ComboBox fx:id="orderTourSelectFour" prefWidth="120.0">
+                                             <tooltip>
+                                                <Tooltip text="Seznam zájezdů" />
+                                             </tooltip>
+                                          </ComboBox>
+                                          <Label fx:id="orderTourStateFour" text="Rakousko">
+                                             <tooltip>
+                                                <Tooltip text="Země" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderTourLocationFour" text="Innsbruck">
+                                             <tooltip>
+                                                <Tooltip text="Lokace" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderTourCenterFour" text="Kleinberg">
+                                             <tooltip>
+                                                <Tooltip text="Středisko" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderFromLabelFour" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počátek zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderToLabelFour" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konec zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderHotelFour" text="Hotel Grand">
+                                             <tooltip>
+                                                <Tooltip text="Název hotelu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderServicesFour" text="Stravování a doprava">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnuté služby" />
+                                             </tooltip>
+                                          </Label>
+                                          <ComboBox fx:id="orderActionsFour" prefWidth="200.0">
+                                             <tooltip>
+                                                <Tooltip text="Seznam zahrnutých akcí" />
+                                             </tooltip>
+                                          </ComboBox>
+                                          <Label fx:id="orderMembersCountFour" text="Počet osob: 5">
+                                             <tooltip>
+                                                <Tooltip text="Počet osob" />
+                                             </tooltip>
+                                          </Label>
+                                          <Button fx:id="orderAcceptFour" mnemonicParsing="false" text="Potvrdit">
+                                             <tooltip>
+                                                <Tooltip text="Provedení odpovídající akce" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="orderSeparatorFour" prefWidth="200.0" />
+                              <HBox fx:id="orderFive" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="350.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="orderImageFive" fitHeight="350.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/box.png" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="orderDateFive" text="1. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Datum objednávky" />
+                                             </tooltip>
+                                          </Label>
+                                          <ComboBox fx:id="orderTourSelectFive" prefWidth="120.0">
+                                             <tooltip>
+                                                <Tooltip text="Seznam zájezdů" />
+                                             </tooltip>
+                                          </ComboBox>
+                                          <Label fx:id="orderTourStateFive" text="Rakousko">
+                                             <tooltip>
+                                                <Tooltip text="Země" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderTourLocationFive" text="Innsbruck">
+                                             <tooltip>
+                                                <Tooltip text="Lokace" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderTourCenterFive" text="Kleinberg">
+                                             <tooltip>
+                                                <Tooltip text="Středisko" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderFromLabelFive" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počátek zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderToLabelFive" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konec zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderHotelFive" text="Hotel Grand">
+                                             <tooltip>
+                                                <Tooltip text="Název hotelu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderServicesFive" text="Stravování a doprava">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnuté služby" />
+                                             </tooltip>
+                                          </Label>
+                                          <ComboBox fx:id="orderActionsFive" prefWidth="200.0">
+                                             <tooltip>
+                                                <Tooltip text="Seznam zahrnutých akcí" />
+                                             </tooltip>
+                                          </ComboBox>
+                                          <Label fx:id="orderMembersCountFive" text="Počet osob: 5">
+                                             <tooltip>
+                                                <Tooltip text="Počet osob" />
+                                             </tooltip>
+                                          </Label>
+                                          <Button fx:id="orderAcceptFive" mnemonicParsing="false" text="Potvrdit">
+                                             <tooltip>
+                                                <Tooltip text="Provedení odpovídající akce" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="orderSeparatorFive" prefWidth="200.0" />
+                              <HBox fx:id="orderSix" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="350.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="orderImageSix" fitHeight="350.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/box.png" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="orderDateSix" text="1. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Datum objednávky" />
+                                             </tooltip>
+                                          </Label>
+                                          <ComboBox fx:id="orderTourSelectSix" prefWidth="120.0">
+                                             <tooltip>
+                                                <Tooltip text="Seznam zájezdů" />
+                                             </tooltip>
+                                          </ComboBox>
+                                          <Label fx:id="orderTourStateSix" text="Rakousko">
+                                             <tooltip>
+                                                <Tooltip text="Země" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderTourLocationSix" text="Innsbruck">
+                                             <tooltip>
+                                                <Tooltip text="Lokace" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderTourCenterSix" text="Kleinberg">
+                                             <tooltip>
+                                                <Tooltip text="Středisko" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderFromLabelSix" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počátek zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderToLabelSix" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konec zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderHotelSix" text="Hotel Grand">
+                                             <tooltip>
+                                                <Tooltip text="Název hotelu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderServicesSix" text="Stravování a doprava">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnuté služby" />
+                                             </tooltip>
+                                          </Label>
+                                          <ComboBox fx:id="orderActionsSix" prefWidth="200.0">
+                                             <tooltip>
+                                                <Tooltip text="Seznam zahrnutých akcí" />
+                                             </tooltip>
+                                          </ComboBox>
+                                          <Label fx:id="orderMembersCountSix" text="Počet osob: 5">
+                                             <tooltip>
+                                                <Tooltip text="Počet osob" />
+                                             </tooltip>
+                                          </Label>
+                                          <Button fx:id="orderAcceptSix" mnemonicParsing="false" text="Potvrdit">
+                                             <tooltip>
+                                                <Tooltip text="Provedení odpovídající akce" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="orderSeparatorSix" prefWidth="200.0" />
+                              <HBox fx:id="orderSeven" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="350.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="orderImageSeven" fitHeight="350.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/box.png" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="orderDateSeven" text="1. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Datum objednávky" />
+                                             </tooltip>
+                                          </Label>
+                                          <ComboBox fx:id="orderTourSelectSeven" prefWidth="120.0">
+                                             <tooltip>
+                                                <Tooltip text="Seznam zájezdů" />
+                                             </tooltip>
+                                          </ComboBox>
+                                          <Label fx:id="orderTourStateSeven" text="Rakousko">
+                                             <tooltip>
+                                                <Tooltip text="Země" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderTourLocationSeven" text="Innsbruck">
+                                             <tooltip>
+                                                <Tooltip text="Lokace" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderTourCenterSeven" text="Kleinberg">
+                                             <tooltip>
+                                                <Tooltip text="Středisko" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderFromLabelSeven" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počátek zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderToLabelSeven" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konec zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderHotelSeven" text="Hotel Grand">
+                                             <tooltip>
+                                                <Tooltip text="Název hotelu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderServicesSeven" text="Stravování a doprava">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnuté služby" />
+                                             </tooltip>
+                                          </Label>
+                                          <ComboBox fx:id="orderActionsSeven" prefWidth="200.0">
+                                             <tooltip>
+                                                <Tooltip text="Seznam zahrnutých akcí" />
+                                             </tooltip>
+                                          </ComboBox>
+                                          <Label fx:id="orderMembersCountSeven" text="Počet osob: 5">
+                                             <tooltip>
+                                                <Tooltip text="Počet osob" />
+                                             </tooltip>
+                                          </Label>
+                                          <Button fx:id="orderAcceptSeven" mnemonicParsing="false" text="Potvrdit">
+                                             <tooltip>
+                                                <Tooltip text="Provedení odpovídající akce" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="orderSeparatorSeven" prefWidth="200.0" />
+                              <HBox fx:id="orderEight" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="350.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="orderImageEight" fitHeight="350.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/box.png" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="orderDateEight" text="1. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Datum objednávky" />
+                                             </tooltip>
+                                          </Label>
+                                          <ComboBox fx:id="orderTourSelectEight" prefWidth="120.0">
+                                             <tooltip>
+                                                <Tooltip text="Seznam zájezdů" />
+                                             </tooltip>
+                                          </ComboBox>
+                                          <Label fx:id="orderTourStateEight" text="Rakousko">
+                                             <tooltip>
+                                                <Tooltip text="Země" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderTourLocationEight" text="Innsbruck">
+                                             <tooltip>
+                                                <Tooltip text="Lokace" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderTourCenterEight" text="Kleinberg">
+                                             <tooltip>
+                                                <Tooltip text="Středisko" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderFromLabelEight" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počátek zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderToLabelEight" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konec zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderHotelEight" text="Hotel Grand">
+                                             <tooltip>
+                                                <Tooltip text="Název hotelu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderServicesEight" text="Stravování a doprava">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnuté služby" />
+                                             </tooltip>
+                                          </Label>
+                                          <ComboBox fx:id="orderActionsEight" prefWidth="200.0">
+                                             <tooltip>
+                                                <Tooltip text="Seznam zahrnutých akcí" />
+                                             </tooltip>
+                                          </ComboBox>
+                                          <Label fx:id="orderMembersCountEight" text="Počet osob: 5">
+                                             <tooltip>
+                                                <Tooltip text="Počet osob" />
+                                             </tooltip>
+                                          </Label>
+                                          <Button fx:id="orderAcceptEight" mnemonicParsing="false" text="Potvrdit">
+                                             <tooltip>
+                                                <Tooltip text="Provedení odpovídající akce" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="orderSeparatorEight" prefWidth="200.0" />
+                              <HBox fx:id="orderNine" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="350.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="orderImageNine" fitHeight="350.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/box.png" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="orderDateNine" text="1. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Datum objednávky" />
+                                             </tooltip>
+                                          </Label>
+                                          <ComboBox fx:id="orderTourSelectNine" prefWidth="120.0">
+                                             <tooltip>
+                                                <Tooltip text="Seznam zájezdů" />
+                                             </tooltip>
+                                          </ComboBox>
+                                          <Label fx:id="orderTourStateNine" text="Rakousko">
+                                             <tooltip>
+                                                <Tooltip text="Země" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderTourLocationNine" text="Innsbruck">
+                                             <tooltip>
+                                                <Tooltip text="Lokace" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderTourCenterNine" text="Kleinberg">
+                                             <tooltip>
+                                                <Tooltip text="Středisko" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderFromLabelNine" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počátek zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderToLabelNine" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konec zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderHotelNine" text="Hotel Grand">
+                                             <tooltip>
+                                                <Tooltip text="Název hotelu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderServicesNine" text="Stravování a doprava">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnuté služby" />
+                                             </tooltip>
+                                          </Label>
+                                          <ComboBox fx:id="orderActionsNine" prefWidth="200.0">
+                                             <tooltip>
+                                                <Tooltip text="Seznam zahrnutých akcí" />
+                                             </tooltip>
+                                          </ComboBox>
+                                          <Label fx:id="orderMembersCountNine" text="Počet osob: 5">
+                                             <tooltip>
+                                                <Tooltip text="Počet osob" />
+                                             </tooltip>
+                                          </Label>
+                                          <Button fx:id="orderAcceptNine" mnemonicParsing="false" text="Potvrdit">
+                                             <tooltip>
+                                                <Tooltip text="Provedení odpovídající akce" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="orderSeparatorNine" prefWidth="200.0" />
+                              <HBox fx:id="orderTen" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="350.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="orderImageTen" fitHeight="350.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/box.png" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="orderDateTen" text="1. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Datum objednávky" />
+                                             </tooltip>
+                                          </Label>
+                                          <ComboBox fx:id="orderTourSelectTen" prefWidth="120.0">
+                                             <tooltip>
+                                                <Tooltip text="Seznam zájezdů" />
+                                             </tooltip>
+                                          </ComboBox>
+                                          <Label fx:id="orderTourStateTen" text="Rakousko">
+                                             <tooltip>
+                                                <Tooltip text="Země" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderTourLocationTen" text="Innsbruck">
+                                             <tooltip>
+                                                <Tooltip text="Lokace" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderTourCenterTen" text="Kleinberg">
+                                             <tooltip>
+                                                <Tooltip text="Středisko" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderFromLabelTen" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počátek zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderToLabelTen" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konec zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderHotelTen" text="Hotel Grand">
+                                             <tooltip>
+                                                <Tooltip text="Název hotelu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="orderServicesTen" text="Stravování a doprava">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnuté služby" />
+                                             </tooltip>
+                                          </Label>
+                                          <ComboBox fx:id="orderActionsTen" prefWidth="200.0">
+                                             <tooltip>
+                                                <Tooltip text="Seznam zahrnutých akcí" />
+                                             </tooltip>
+                                          </ComboBox>
+                                          <Label fx:id="orderMembersCountTen" text="Počet osob: 5">
+                                             <tooltip>
+                                                <Tooltip text="Počet osob" />
+                                             </tooltip>
+                                          </Label>
+                                          <Button fx:id="orderAcceptTen" mnemonicParsing="false" text="Potvrdit">
+                                             <tooltip>
+                                                <Tooltip text="Provedení odpovídající akce" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="40.0" top="40.0" />
+                           </padding>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+               </content></Tab>
+            <Tab fx:id="toursTab" text="Zájezdy">
+               <content>
+                  <ScrollPane fx:id="toursScrollPane" fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
+                     <content>
+                        <VBox prefHeight="200.0" prefWidth="100.0" spacing="80.0">
+                           <children>
+                              <HBox fx:id="tourOne" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="tourImageOne" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/tour1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="stateLabelOne" text="Rakousko">
+                                             <tooltip>
+                                                <Tooltip text="Země" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="locationLabelOne" text="Innsbruck">
+                                             <tooltip>
+                                                <Tooltip text="Lokace" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="centerLabelOne" text="Kleinberg">
+                                             <tooltip>
+                                                <Tooltip text="Středisko" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="fromLabelOne" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počátek zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="toLabelOne" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konec zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <CheckBox fx:id="foodCheckOne" mnemonicParsing="false" selected="true" text="Stravování">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnutí stravy" />
+                                             </tooltip>
+                                          </CheckBox>
+                                          <CheckBox fx:id="busCheckOne" mnemonicParsing="false" text="Doprava">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnutí dopravy na zájezd" />
+                                             </tooltip>
+                                          </CheckBox>
+                                          <Button fx:id="pickTourButtonOne" mnemonicParsing="false" text="Objednat">
+                                             <tooltip>
+                                                <Tooltip text="Potvrzení objednávky" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="tourSeparatorOne" prefWidth="200.0" />
+                              <HBox fx:id="tourTwo" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="tourImageTwo" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/tour1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="stateLabelTwo" text="Rakousko">
+                                             <tooltip>
+                                                <Tooltip text="Země" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="locationLabelTwo" text="Innsbruck">
+                                             <tooltip>
+                                                <Tooltip text="Lokace" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="centerLabelTwo" text="Kleinberg">
+                                             <tooltip>
+                                                <Tooltip text="Středisko" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="fromLabelTwo" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počátek zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="toLabelTwo" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konec zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <CheckBox fx:id="foodCheckTwo" mnemonicParsing="false" selected="true" text="Stravování">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnutí stravy" />
+                                             </tooltip>
+                                          </CheckBox>
+                                          <CheckBox fx:id="busCheckTwo" mnemonicParsing="false" text="Doprava">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnutí dopravy na zájezd" />
+                                             </tooltip>
+                                          </CheckBox>
+                                          <Button fx:id="pickTourButtonTwo" mnemonicParsing="false" text="Objednat">
+                                             <tooltip>
+                                                <Tooltip text="Potvrzení objednávky" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="tourSeparatorTwo" prefWidth="200.0" />
+                              <HBox fx:id="tourThree" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="tourImageThree" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/tour1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="stateLabelThree" text="Rakousko">
+                                             <tooltip>
+                                                <Tooltip text="Země" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="locationLabelThree" text="Innsbruck">
+                                             <tooltip>
+                                                <Tooltip text="Lokace" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="centerLabelThree" text="Kleinberg">
+                                             <tooltip>
+                                                <Tooltip text="Středisko" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="fromLabelThree" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počátek zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="toLabelThree" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konec zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <CheckBox fx:id="foodCheckThree" mnemonicParsing="false" selected="true" text="Stravování">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnutí stravy" />
+                                             </tooltip>
+                                          </CheckBox>
+                                          <CheckBox fx:id="busCheckThree" mnemonicParsing="false" text="Doprava">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnutí dopravy na zájezd" />
+                                             </tooltip>
+                                          </CheckBox>
+                                          <Button fx:id="pickTourButtonThree" mnemonicParsing="false" text="Objednat">
+                                             <tooltip>
+                                                <Tooltip text="Potvrzení objednávky" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="tourSeparatorThree" prefWidth="200.0" />
+                              <HBox fx:id="tourFour" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="tourImageFour" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/tour1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="stateLabelFour" text="Rakousko">
+                                             <tooltip>
+                                                <Tooltip text="Země" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="locationLabelFour" text="Innsbruck">
+                                             <tooltip>
+                                                <Tooltip text="Lokace" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="centerLabelFour" text="Kleinberg">
+                                             <tooltip>
+                                                <Tooltip text="Středisko" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="fromLabelFour" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počátek zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="toLabelFour" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konec zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <CheckBox fx:id="foodCheckFour" mnemonicParsing="false" selected="true" text="Stravování">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnutí stravy" />
+                                             </tooltip>
+                                          </CheckBox>
+                                          <CheckBox fx:id="busCheckFour" mnemonicParsing="false" text="Doprava">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnutí dopravy na zájezd" />
+                                             </tooltip>
+                                          </CheckBox>
+                                          <Button fx:id="pickTourButtonFour" mnemonicParsing="false" text="Objednat">
+                                             <tooltip>
+                                                <Tooltip text="Potvrzení objednávky" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="tourSeparatorFour" prefWidth="200.0" />
+                              <HBox fx:id="tourFive" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="tourImageFive" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/tour1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="stateLabelFive" text="Rakousko">
+                                             <tooltip>
+                                                <Tooltip text="Země" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="locationLabelFive" text="Innsbruck">
+                                             <tooltip>
+                                                <Tooltip text="Lokace" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="centerLabelFive" text="Kleinberg">
+                                             <tooltip>
+                                                <Tooltip text="Středisko" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="fromLabelFive" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počátek zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="toLabelFive" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konec zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <CheckBox fx:id="foodCheckFive" mnemonicParsing="false" selected="true" text="Stravování">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnutí stravy" />
+                                             </tooltip>
+                                          </CheckBox>
+                                          <CheckBox fx:id="busCheckFive" mnemonicParsing="false" text="Doprava">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnutí dopravy na zájezd" />
+                                             </tooltip>
+                                          </CheckBox>
+                                          <Button fx:id="pickTourButtonFive" mnemonicParsing="false" text="Objednat">
+                                             <tooltip>
+                                                <Tooltip text="Potvrzení objednávky" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="tourSeparatorFive" prefWidth="200.0" />
+                              <HBox fx:id="tourSix" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="tourImageSix" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/tour1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="stateLabelSix" text="Rakousko">
+                                             <tooltip>
+                                                <Tooltip text="Země" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="locationLabelSix" text="Innsbruck">
+                                             <tooltip>
+                                                <Tooltip text="Lokace" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="centerLabelSix" text="Kleinberg">
+                                             <tooltip>
+                                                <Tooltip text="Středisko" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="fromLabelSix" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počátek zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="toLabelSix" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konec zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <CheckBox fx:id="foodCheckSix" mnemonicParsing="false" selected="true" text="Stravování">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnutí stravy" />
+                                             </tooltip>
+                                          </CheckBox>
+                                          <CheckBox fx:id="busCheckSix" mnemonicParsing="false" text="Doprava">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnutí dopravy na zájezd" />
+                                             </tooltip>
+                                          </CheckBox>
+                                          <Button fx:id="pickTourButtonSix" mnemonicParsing="false" text="Objednat">
+                                             <tooltip>
+                                                <Tooltip text="Potvrzení objednávky" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="tourSeparatorSix" prefWidth="200.0" />
+                              <HBox fx:id="tourSeven" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="tourImageSeven" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/tour1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="stateLabelSeven" text="Rakousko">
+                                             <tooltip>
+                                                <Tooltip text="Země" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="locationLabelSeven" text="Innsbruck">
+                                             <tooltip>
+                                                <Tooltip text="Lokace" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="centerLabelSeven" text="Kleinberg">
+                                             <tooltip>
+                                                <Tooltip text="Středisko" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="fromLabelSeven" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počátek zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="toLabelSeven" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konec zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <CheckBox fx:id="foodCheckSeven" mnemonicParsing="false" selected="true" text="Stravování">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnutí stravy" />
+                                             </tooltip>
+                                          </CheckBox>
+                                          <CheckBox fx:id="busCheckSeven" mnemonicParsing="false" text="Doprava">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnutí dopravy na zájezd" />
+                                             </tooltip>
+                                          </CheckBox>
+                                          <Button fx:id="pickTourButtonSeven" mnemonicParsing="false" text="Objednat">
+                                             <tooltip>
+                                                <Tooltip text="Potvrzení objednávky" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="tourSeparatorSeven" prefWidth="200.0" />
+                              <HBox fx:id="tourEight" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="tourImageEight" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/tour1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="stateLabelEight" text="Rakousko">
+                                             <tooltip>
+                                                <Tooltip text="Země" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="locationLabelEight" text="Innsbruck">
+                                             <tooltip>
+                                                <Tooltip text="Lokace" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="centerLabelEight" text="Kleinberg">
+                                             <tooltip>
+                                                <Tooltip text="Středisko" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="fromLabelEight" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počátek zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="toLabelEight" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konec zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <CheckBox fx:id="foodCheckEight" mnemonicParsing="false" selected="true" text="Stravování">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnutí stravy" />
+                                             </tooltip>
+                                          </CheckBox>
+                                          <CheckBox fx:id="busCheckEight" mnemonicParsing="false" text="Doprava">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnutí dopravy na zájezd" />
+                                             </tooltip>
+                                          </CheckBox>
+                                          <Button fx:id="pickTourButtonEight" mnemonicParsing="false" text="Objednat">
+                                             <tooltip>
+                                                <Tooltip text="Potvrzení objednávky" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="tourSeparatorEight" prefWidth="200.0" />
+                              <HBox fx:id="tourNine" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="tourImageNine" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/tour1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="stateLabelNine" text="Rakousko">
+                                             <tooltip>
+                                                <Tooltip text="Země" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="locationLabelNine" text="Innsbruck">
+                                             <tooltip>
+                                                <Tooltip text="Lokace" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="centerLabelNine" text="Kleinberg">
+                                             <tooltip>
+                                                <Tooltip text="Středisko" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="fromLabelNine" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počátek zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="toLabelNine" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konec zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <CheckBox fx:id="foodCheckNine" mnemonicParsing="false" selected="true" text="Stravování">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnutí stravy" />
+                                             </tooltip>
+                                          </CheckBox>
+                                          <CheckBox fx:id="busCheckNine" mnemonicParsing="false" text="Doprava">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnutí dopravy na zájezd" />
+                                             </tooltip>
+                                          </CheckBox>
+                                          <Button fx:id="pickTourButtonNine" mnemonicParsing="false" text="Objednat">
+                                             <tooltip>
+                                                <Tooltip text="Potvrzení objednávky" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="tourSeparatorNine" prefWidth="200.0" />
+                              <HBox fx:id="tourTen" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="tourImageTen" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/tour1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="stateLabelTen" text="Rakousko">
+                                             <tooltip>
+                                                <Tooltip text="Země" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="locationLabelTen" text="Innsbruck">
+                                             <tooltip>
+                                                <Tooltip text="Lokace" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="centerLabelTen" text="Kleinberg">
+                                             <tooltip>
+                                                <Tooltip text="Středisko" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="fromLabelTen" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počátek zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="toLabelTen" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konec zájezdu" />
+                                             </tooltip>
+                                          </Label>
+                                          <CheckBox fx:id="foodCheckTen" mnemonicParsing="false" selected="true" text="Stravování">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnutí stravy" />
+                                             </tooltip>
+                                          </CheckBox>
+                                          <CheckBox fx:id="busCheckTen" mnemonicParsing="false" text="Doprava">
+                                             <tooltip>
+                                                <Tooltip text="Zahrnutí dopravy na zájezd" />
+                                             </tooltip>
+                                          </CheckBox>
+                                          <Button fx:id="pickTourButtonTen" mnemonicParsing="false" text="Objednat">
+                                             <tooltip>
+                                                <Tooltip text="Potvrzení objednávky" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="40.0" top="40.0" />
+                           </padding>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+               </content></Tab>
+            <Tab fx:id="hotelsTab" text="Hotely">
+               <content>
+                  <ScrollPane fx:id="hotelsScrollPane" fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
+                     <content>
+                        <VBox prefHeight="200.0" prefWidth="100.0" spacing="80.0">
+                           <children>
+                              <HBox fx:id="hotelOne" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="hotelImageOne" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/hotel1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="hotelLabelOne" text="Hotel Grand">
+                                             <tooltip>
+                                                <Tooltip text="Název hotelu" />
+                                             </tooltip>
+                                          </Label>
+                                          <ImageView fx:id="starsImageOne" fitHeight="30.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@resources/fiveStar.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Button fx:id="pickHotelButtonOne" mnemonicParsing="false" text="Zvolit">
+                                             <tooltip>
+                                                <Tooltip text="Potvrzení objednávky" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="hotelSeparatorOne" prefWidth="200.0" />
+                              <HBox fx:id="hotelTwo" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="hotelImageTwo" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/hotel1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="hotelLabelTwo" text="Hotel Grand">
+                                             <tooltip>
+                                                <Tooltip text="Název hotelu" />
+                                             </tooltip>
+                                          </Label>
+                                          <ImageView fx:id="starsImageTwo" fitHeight="30.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@resources/fiveStar.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Button fx:id="pickHotelButtonTwo" mnemonicParsing="false" text="Zvolit">
+                                             <tooltip>
+                                                <Tooltip text="Potvrzení objednávky" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="hotelSeparatorTwo" prefWidth="200.0" />
+                              <HBox fx:id="hotelThree" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="hotelImageThree" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/hotel1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="hotelLabelThree" text="Hotel Grand">
+                                             <tooltip>
+                                                <Tooltip text="Název hotelu" />
+                                             </tooltip>
+                                          </Label>
+                                          <ImageView fx:id="starsImageThree" fitHeight="30.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@resources/fiveStar.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Button fx:id="pickHotelButtonThree" mnemonicParsing="false" text="Zvolit">
+                                             <tooltip>
+                                                <Tooltip text="Potvrzení objednávky" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="hotelSeparatorThree" prefWidth="200.0" />
+                              <HBox fx:id="hotelFour" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="hotelImageFour" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/hotel1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="hotelLabelFour" text="Hotel Grand">
+                                             <tooltip>
+                                                <Tooltip text="Název hotelu" />
+                                             </tooltip>
+                                          </Label>
+                                          <ImageView fx:id="starsImageFour" fitHeight="30.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@resources/fiveStar.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Button fx:id="pickHotelButtonFour" mnemonicParsing="false" text="Zvolit">
+                                             <tooltip>
+                                                <Tooltip text="Potvrzení objednávky" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="hotelSeparatorFour" prefWidth="200.0" />
+                              <HBox fx:id="hotelFive" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="hotelImageFive" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/hotel1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="hotelLabelFive" text="Hotel Grand">
+                                             <tooltip>
+                                                <Tooltip text="Název hotelu" />
+                                             </tooltip>
+                                          </Label>
+                                          <ImageView fx:id="starsImageFive" fitHeight="30.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@resources/fiveStar.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Button fx:id="pickHotelButtonFive" mnemonicParsing="false" text="Zvolit">
+                                             <tooltip>
+                                                <Tooltip text="Potvrzení objednávky" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="hotelSeparatorFive" prefWidth="200.0" />
+                              <HBox fx:id="hotelSix" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="hotelImageSix" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/hotel1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="hotelLabelSix" text="Hotel Grand">
+                                             <tooltip>
+                                                <Tooltip text="Název hotelu" />
+                                             </tooltip>
+                                          </Label>
+                                          <ImageView fx:id="starsImageSix" fitHeight="30.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@resources/fiveStar.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Button fx:id="pickHotelButtonSix" mnemonicParsing="false" text="Zvolit">
+                                             <tooltip>
+                                                <Tooltip text="Potvrzení objednávky" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="hotelSeparatorSix" prefWidth="200.0" />
+                              <HBox fx:id="hotelSeven" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="hotelImageSeven" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/hotel1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="hotelLabelSeven" text="Hotel Grand">
+                                             <tooltip>
+                                                <Tooltip text="Název hotelu" />
+                                             </tooltip>
+                                          </Label>
+                                          <ImageView fx:id="starsImageSeven" fitHeight="30.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@resources/fiveStar.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Button fx:id="pickHotelButtonSeven" mnemonicParsing="false" text="Zvolit">
+                                             <tooltip>
+                                                <Tooltip text="Potvrzení objednávky" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="hotelSeparatorSeven" prefWidth="200.0" />
+                              <HBox fx:id="hotelEight" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="hotelImageEight" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/hotel1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="hotelLabelEight" text="Hotel Grand">
+                                             <tooltip>
+                                                <Tooltip text="Název hotelu" />
+                                             </tooltip>
+                                          </Label>
+                                          <ImageView fx:id="starsImageEight" fitHeight="30.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@resources/fiveStar.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Button fx:id="pickHotelButtonEight" mnemonicParsing="false" text="Zvolit">
+                                             <tooltip>
+                                                <Tooltip text="Potvrzení objednávky" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="hotelSeparatorEight" prefWidth="200.0" />
+                              <HBox fx:id="hotelNine" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="hotelImageNine" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/hotel1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="hotelLabelNine" text="Hotel Grand">
+                                             <tooltip>
+                                                <Tooltip text="Název hotelu" />
+                                             </tooltip>
+                                          </Label>
+                                          <ImageView fx:id="starsImageNine" fitHeight="30.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@resources/fiveStar.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Button fx:id="pickHotelButtonNine" mnemonicParsing="false" text="Zvolit">
+                                             <tooltip>
+                                                <Tooltip text="Potvrzení objednávky" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="hotelSeparatorNine" prefWidth="200.0" />
+                              <HBox fx:id="hotelTen" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="hotelImageTen" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/hotel1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="hotelLabelTen" text="Hotel Grand">
+                                             <tooltip>
+                                                <Tooltip text="Název hotelu" />
+                                             </tooltip>
+                                          </Label>
+                                          <ImageView fx:id="starsImageTen" fitHeight="30.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@resources/fiveStar.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Button fx:id="pickHotelButtonTen" mnemonicParsing="false" text="Zvolit">
+                                             <tooltip>
+                                                <Tooltip text="Potvrzení objednávky" />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="40.0" top="40.0" />
+                           </padding>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+               </content></Tab>
+            <Tab fx:id="actionsTab" text="Akce">
+               <content>
+                  <ScrollPane fx:id="actionsScrollPane" fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
+                     <content>
+                        <VBox prefHeight="200.0" prefWidth="100.0" spacing="80.0">
+                           <children>
+                              <HBox fx:id="actionOne" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="actionImageOne" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/action1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="actionLabelOne" text="Grilování">
+                                             <tooltip>
+                                                <Tooltip text="Druh akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="personsLabelOne" text="Až 10 osob">
+                                             <tooltip>
+                                                <Tooltip text="Maximální počet osob" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="actionFromLabelOne" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počáteční platnost akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="actionToLabelOne" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konečná platnost akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <CheckBox fx:id="actionCheckOne" mnemonicParsing="false" text="Zvolit">
+                                             <tooltip>
+                                                <Tooltip text="Mám o akci zájem" />
+                                             </tooltip>
+                                          </CheckBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="actionSeparatorOne" prefWidth="200.0" />
+                              <HBox fx:id="actionTwo" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="actionImageTwo" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/action1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="actionLabelTwo" text="Grilování">
+                                             <tooltip>
+                                                <Tooltip text="Druh akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="personsLabelTwo" text="Až 10 osob">
+                                             <tooltip>
+                                                <Tooltip text="Maximální počet osob" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="actionFromLabelTwo" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počáteční platnost akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="actionToLabelTwo" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konečná platnost akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <CheckBox fx:id="actionCheckTwo" mnemonicParsing="false" text="Zvolit">
+                                             <tooltip>
+                                                <Tooltip text="Mám o akci zájem" />
+                                             </tooltip>
+                                          </CheckBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="actionSeparatorTwo" prefWidth="200.0" />
+                              <HBox fx:id="actionThree" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="actionImageThree" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/action1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="actionLabelThree" text="Grilování">
+                                             <tooltip>
+                                                <Tooltip text="Druh akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="personsLabelThree" text="Až 10 osob">
+                                             <tooltip>
+                                                <Tooltip text="Maximální počet osob" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="actionFromLabelThree" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počáteční platnost akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="actionToLabelThree" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konečná platnost akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <CheckBox fx:id="actionCheckThree" mnemonicParsing="false" text="Zvolit">
+                                             <tooltip>
+                                                <Tooltip text="Mám o akci zájem" />
+                                             </tooltip>
+                                          </CheckBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="actionSeparatorThree" prefWidth="200.0" />
+                              <HBox fx:id="actionFour" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="actionImageFour" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/action1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="actionLabelFour" text="Grilování">
+                                             <tooltip>
+                                                <Tooltip text="Druh akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="personsLabelFour" text="Až 10 osob">
+                                             <tooltip>
+                                                <Tooltip text="Maximální počet osob" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="actionFromLabelFour" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počáteční platnost akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="actionToLabelFour" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konečná platnost akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <CheckBox fx:id="actionCheckFour" mnemonicParsing="false" text="Zvolit">
+                                             <tooltip>
+                                                <Tooltip text="Mám o akci zájem" />
+                                             </tooltip>
+                                          </CheckBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="actionSeparatorFour" prefWidth="200.0" />
+                              <HBox fx:id="actionFive" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="actionImageFive" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/action1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="actionLabelFive" text="Grilování">
+                                             <tooltip>
+                                                <Tooltip text="Druh akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="personsLabelFive" text="Až 10 osob">
+                                             <tooltip>
+                                                <Tooltip text="Maximální počet osob" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="actionFromLabelFive" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počáteční platnost akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="actionToLabelFive" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konečná platnost akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <CheckBox fx:id="actionCheckFive" mnemonicParsing="false" text="Zvolit">
+                                             <tooltip>
+                                                <Tooltip text="Mám o akci zájem" />
+                                             </tooltip>
+                                          </CheckBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="actionSeparatorFive" prefWidth="200.0" />
+                              <HBox fx:id="actionSix" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="actionImageSix" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/action1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="actionLabelSix" text="Grilování">
+                                             <tooltip>
+                                                <Tooltip text="Druh akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="personsLabelSix" text="Až 10 osob">
+                                             <tooltip>
+                                                <Tooltip text="Maximální počet osob" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="actionFromLabelSix" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počáteční platnost akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="actionToLabelSix" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konečná platnost akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <CheckBox fx:id="actionCheckSix" mnemonicParsing="false" text="Zvolit">
+                                             <tooltip>
+                                                <Tooltip text="Mám o akci zájem" />
+                                             </tooltip>
+                                          </CheckBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="actionSeparatorSix" prefWidth="200.0" />
+                              <HBox fx:id="actionSeven" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="actionImageSeven" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/action1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="actionLabelSeven" text="Grilování">
+                                             <tooltip>
+                                                <Tooltip text="Druh akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="personsLabelSeven" text="Až 10 osob">
+                                             <tooltip>
+                                                <Tooltip text="Maximální počet osob" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="actionFromLabelSeven" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počáteční platnost akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="actionToLabelSeven" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konečná platnost akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <CheckBox fx:id="actionCheckSeven" mnemonicParsing="false" text="Zvolit">
+                                             <tooltip>
+                                                <Tooltip text="Mám o akci zájem" />
+                                             </tooltip>
+                                          </CheckBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="actionSeparatorSeven" prefWidth="200.0" />
+                              <HBox fx:id="actionEight" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="actionImageEight" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/action1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="actionLabelEight" text="Grilování">
+                                             <tooltip>
+                                                <Tooltip text="Druh akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="personsLabelEight" text="Až 10 osob">
+                                             <tooltip>
+                                                <Tooltip text="Maximální počet osob" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="actionFromLabelEight" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počáteční platnost akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="actionToLabelEight" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konečná platnost akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <CheckBox fx:id="actionCheckEight" mnemonicParsing="false" text="Zvolit">
+                                             <tooltip>
+                                                <Tooltip text="Mám o akci zájem" />
+                                             </tooltip>
+                                          </CheckBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="actionSeparatorEight" prefWidth="200.0" />
+                              <HBox fx:id="actionNine" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="actionImageNine" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/action1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="actionLabelNine" text="Grilování">
+                                             <tooltip>
+                                                <Tooltip text="Druh akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="personsLabelNine" text="Až 10 osob">
+                                             <tooltip>
+                                                <Tooltip text="Maximální počet osob" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="actionFromLabelNine" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počáteční platnost akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="actionToLabelNine" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konečná platnost akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <CheckBox fx:id="actionCheckNine" mnemonicParsing="false" text="Zvolit">
+                                             <tooltip>
+                                                <Tooltip text="Mám o akci zájem" />
+                                             </tooltip>
+                                          </CheckBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator fx:id="actionSeparatorNine" prefWidth="200.0" />
+                              <HBox fx:id="actionTen" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="240.0" prefWidth="200.0" spacing="20.0" visible="true">
+                                 <children>
+                                    <ImageView fx:id="actionImageTen" fitHeight="240.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@resources/in/action1.gif" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox alignment="CENTER" prefHeight="300.0" prefWidth="400.0" spacing="10.0" HBox.hgrow="NEVER">
+                                       <children>
+                                          <Label fx:id="actionLabelTen" text="Grilování">
+                                             <tooltip>
+                                                <Tooltip text="Druh akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="personsLabelTen" text="Až 10 osob">
+                                             <tooltip>
+                                                <Tooltip text="Maximální počet osob" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="actionFromLabelTen" text="14. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Počáteční platnost akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <Label fx:id="actionToLabelTen" text="21. prosince 2018">
+                                             <tooltip>
+                                                <Tooltip text="Konečná platnost akce" />
+                                             </tooltip>
+                                          </Label>
+                                          <CheckBox fx:id="actionCheckTen" mnemonicParsing="false" text="Zvolit">
+                                             <tooltip>
+                                                <Tooltip text="Mám o akci zájem" />
+                                             </tooltip>
+                                          </CheckBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="40.0" top="40.0" />
+                           </padding>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+               </content></Tab>
+            <Tab fx:id="mapTab" disable="true" text="Mapa" />
+        </tabs>
+      </TabPane>
+      <HBox alignment="CENTER_LEFT" prefHeight="36.0" prefWidth="600.0" spacing="5.0" VBox.vgrow="NEVER">
+         <children>
+            <TextField fx:id="filterState" prefHeight="26.0" prefWidth="130.0" promptText="Stát">
+               <tooltip>
+                  <Tooltip text="Filtr státu" />
+               </tooltip>
+            </TextField>
+            <TextField fx:id="filterLocation" prefHeight="26.0" prefWidth="130.0" promptText="Lokace">
+               <tooltip>
+                  <Tooltip text="Filtr lokace" />
+               </tooltip>
+            </TextField>
+            <TextField fx:id="filterCenter" prefHeight="26.0" prefWidth="130.0" promptText="Středisko">
+               <tooltip>
+                  <Tooltip text="Filtr centra" />
+               </tooltip>
+            </TextField>
+            <DatePicker fx:id="filterFrom" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="145.0" promptText="Od">
+               <tooltip>
+                  <Tooltip text="Filtr začátku zájezdu" />
+               </tooltip>
+            </DatePicker>
+            <DatePicker fx:id="filterTo" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="145.0" promptText="Do">
+               <tooltip>
+                  <Tooltip text="Filtr konce zájezdu" />
+               </tooltip>
+            </DatePicker>
+            <Button fx:id="similarityButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0">
+               <tooltip>
+                  <Tooltip text="Vyhledat podobné zájezdy podle obrázku" />
+               </tooltip>
+            </Button>
+            <Separator prefWidth="2.0" visible="false" HBox.hgrow="ALWAYS" />
+            <Spinner fx:id="personSpinner" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="100.0">
+               <tooltip>
+                  <Tooltip text="Počet účastníků zájezdu" />
+               </tooltip></Spinner>
+            <Button fx:id="insertButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="26.0" prefWidth="80.0" text="Potvrdit">
+               <tooltip>
+                  <Tooltip text="Objednat zvolený zájezd" />
+               </tooltip>
+            </Button>
+            <Spinner fx:id="pageSpinner" editable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="100.0">
+               <tooltip>
+                  <Tooltip text="Číslo strany" />
+               </tooltip></Spinner>
+         </children>
+         <padding>
+            <Insets left="5.0" right="5.0" />
+         </padding>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </HBox>
+   </children>
+</VBox>
