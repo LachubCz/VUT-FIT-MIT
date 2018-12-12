@@ -12,4 +12,4 @@
   * [2. Projekt](./1_semestr/TIN/Proj2) - ?/5
   * [3. Projekt](./1_semestr/TIN/Proj3) - ?/5
 * SFC - Soft Computing
-  * [1. Projekt](./1_semestr/SFC/Proj1) - ?/30
+  * [1. Projekt](./1_semestr/SFC/Proj1) - 21/30
