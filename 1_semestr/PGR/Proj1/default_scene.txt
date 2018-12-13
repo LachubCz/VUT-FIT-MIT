@@ -1,0 +1,27 @@
+// Lines starting with "//" are comments. The rest are directives to build the scene.
+// At least one camera directive is required. Otherwise you might encounter crashes.
+// Color format: (r, g, b) where each component is between 0 (darkest) and 1 (brightest).
+
+// !REQUIRED! camera (eye_origin) (viewplane_origin) (viewplane_width) (viewplane_height) (bounding_box_range)
+camera (0, -25, 0) (0, 0, 0) 18 12 4.0
+
+// ambient (ambient_color)
+ambient (1, 1, 1)
+
+// light (origin) (color) intensity radius
+light (0, -6.25, 0) (1, 1, 1) 10 0.2
+
+// material material_name (diffuse_color) (reflection_color) (specular_color) kAmbient kDiffuse kOcclusion kReflection kSpecular shininess type
+material qmat1 (1, 1, 1) (1, 1, 1) (1, 1, 1) 1.0 0.0 0.0 0.0 0.0 0 2
+material qmat2 (1, 1, 1) (1, 1, 1) (1, 1, 1) 1.0 0.0 0.0 0.0 0.0 0 4
+material qmat3 (1, 1, 1) (1, 1, 1) (1, 1, 1) 0.8 0.6 0.0 0.0 1.5 75 1
+material qmat4 (1, 1, 1) (1, 1, 1) (1, 1, 1) 0.8 0.6 0.0 0.0 1.5 75 2
+
+// quadric (origin) (parameters) type_id material_name
+quadric (0, 0, 0) (2, 2, 2) 3 qmat3
+
+// qualityparams max_reflections softlight_quality occlusion_quality
+qualityparams 0 20 20
+
+// render width height outfile
+render 880 660 sample_scene.png
