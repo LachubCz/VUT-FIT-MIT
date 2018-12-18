@@ -1,0 +1,65 @@
+# top_level.fdo: Top Level Function simulation file
+# Author: Tomas Martinek <martinto at fit.vutbr.cz>
+
+# -------------------------------------------------------------------------
+#                        Modules Compilation
+# -------------------------------------------------------------------------
+#Project setup
+#Test bench files (separated by space)
+set TBFILES "tb.vhd"
+set TIMESIM "no"
+
+#Compile project
+source "../../build/fpga/med_filtr_sim.fdo"
+
+# Starting simulation
+vsim -t 1ps -novopt -L xilinxcorelib -lib work testbench
+
+# Suppress warnings from arithm library
+puts "Std Arith Warnings - Disabled"
+set  StdArithNoWarnings 1
+
+# -------------------------------------------------------------------------
+#                       Waveform Definition 
+# -------------------------------------------------------------------------
+
+add wave -label reset /testbench/uut/reset
+add wave -label clk /testbench/uut/clk
+
+# Pixel gen signals --------------------------------------------
+add wave -divider "Pixel Generator"
+add wave -label pause /testbench/uut/genpix_u/pause_rsc_z
+add wave -label req /testbench/uut/genpix_u/req_rsc_z
+add wave -radix unsigned -label pixel /testbench/uut/genpix_u/pixel_rsc_z
+add wave -label pixel_vld /testbench/uut/genpix_u/pixel_vld_rsc_z
+
+# Filter signals -----------------------------------------
+add wave -divider "Filter"
+add wave -label in_data_lz /testbench/uut/filter_u/in_data_rsc_lz
+add wave -radix unsigned -label in_data /testbench/uut/filter_u/in_data_rsc_z
+add wave -label in_data_vld /testbench/uut/filter_u/in_data_vld_rsc_z
+add wave -radix unsigned -label out_data /testbench/uut/filter_u/out_data_rsc_z
+add wave -label out_data_lz /testbench/uut/filter_u/out_data_rsc_lz
+
+# Video buf signals -----------------------------------------
+add wave -divider "Video Buffer"
+add wave -radix unsigned -label in_data /testbench/uut/video_buf_u/in_data_rsc_z
+add wave -label in_data_vld /testbench/uut/video_buf_u/in_data_vld_rsc_z
+add wave -label vga_enable /testbench/uut/video_buf_u/vga_enable_rsc_z
+add wave -radix unsigned -label vga_row /testbench/uut/video_buf_u/vga_row_rsc_z
+add wave -radix unsigned -label vga_col /testbench/uut/video_buf_u/vga_col_rsc_z
+add wave -radix unsigned -label out_data /testbench/uut/video_buf_u/out_data_rsc_z
+add wave -label gen_pause /testbench/uut/video_buf_u/gen_pause_rsc_z
+
+# VGA Controler signals -----------------------------------------
+add wave -divider "VGA Controler"
+add wave -radix unsigned -label vga_red /testbench/uut/vga/vga_red
+add wave -radix unsigned -label vga_blue /testbench/uut/vga/vga_blue
+add wave -radix unsigned -label vga_green /testbench/uut/vga/vga_green
+add wave -label vga_hsync /testbench/uut/vga/vga_hsync
+add wave -label vga_vsync /testbench/uut/vga/vga_vsync
+
+
+run 300 us
+wave zoomful
+
