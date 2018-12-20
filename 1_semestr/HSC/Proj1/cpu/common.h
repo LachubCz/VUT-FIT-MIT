@@ -10,7 +10,7 @@
 #define PIXEL_WIDTH     3
 
 /* Vypocet parametru generatoru na zaklade loginu */
-#define LOGIN           "xnovak00"
+#define LOGIN           "xbucha02"
 #define NUM1            (LOGIN[0]+LOGIN[1]+LOGIN[2]+LOGIN[3]) % 4 
 #define NUM2            (LOGIN[4]+LOGIN[5]+LOGIN[6]+LOGIN[7]) % 16
 #define IMG_SIZE        img_size[NUM1]
