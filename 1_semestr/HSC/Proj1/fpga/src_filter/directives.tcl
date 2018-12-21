@@ -62,7 +62,7 @@ solution library add Xilinx_RAMS
 go libraries
 directive set -CLOCKS {clk {-CLOCK_PERIOD 40.0 -CLOCK_EDGE rising -CLOCK_UNCERTAINTY 0.0 -CLOCK_HIGH_TIME 20.0 -RESET_SYNC_NAME rst -RESET_ASYNC_NAME arst_n -RESET_KIND sync -RESET_SYNC_ACTIVE high -RESET_ASYNC_ACTIVE low -ENABLE_ACTIVE high}}
 go assembly
-directive set /filter/core/main -PIPELINE_INIT_INTERVAL 2
+directive set /filter/core/main -PIPELINE_INIT_INTERVAL 4
 directive set /filter/out_data:rsc -MAP_TO_MODULE mgc_ioport.mgc_out_stdreg_en
 directive set /filter/in_data:rsc -MAP_TO_MODULE mgc_ioport.mgc_in_wire_en
 directive set /filter/mcu_data:rsc -MAP_TO_MODULE Xilinx_RAMS.BLOCK_SPRAM_RBW

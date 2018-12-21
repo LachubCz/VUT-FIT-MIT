@@ -1,8 +1,8 @@
 #include <fitkitlib.h>
 #include "../cpu/common.h"
-/*
+
 #define PROFILE
-*/
+
 const int img_size[4] = {8,16,32,64};
 const int prime_num[16] = {919, 929, 937, 941, 947, 953, 967, 971, \
                            977, 983, 991, 997, 1009, 1013, 1019, 1021};
