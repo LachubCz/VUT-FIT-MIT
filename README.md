@@ -12,6 +12,6 @@
 * TIN - Teoretická informatika
   * [1. Projekt](./1_semestr/TIN/Proj1) - 4.1/5
   * [2. Projekt](./1_semestr/TIN/Proj2) - 3/5
-  * [3. Projekt](./1_semestr/TIN/Proj3) - ?/5
+  * [3. Projekt](./1_semestr/TIN/Proj3) - 2.5/5
 * SFC - Soft Computing
   * [1. Projekt](./1_semestr/SFC/Proj1) - 21/30
