@@ -78,6 +78,7 @@ class Grid():
         tm = create_timestamp()
         print(tm)
         #cv2.imwrite(tm+'.png',self.original)
+        return len(objs)
 
 
     def get_coords(self, index):

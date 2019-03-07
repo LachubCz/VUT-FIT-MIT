@@ -1,4 +1,10 @@
+import os
+import sys
+import smtplib
 import datetime
+from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
+from email.mime.multipart import MIMEMultipart
 
 import cv2
 import numpy as np
@@ -136,3 +142,52 @@ def get_neighbors(index):
         neighbors.add(62)
 
     return neighbors
+
+
+def sound_notification():
+    """
+    method notificates user via sound
+    """
+    sys.stdout.write('\a')
+    sys.stdout.flush()
+
+
+def email_notification(data, timestamp):
+    """
+    method prepares emails to send
+    """
+    for _, item in enumerate(data.recievers):
+        sendemail(from_addr  = data.sender,
+                to_addr_list = [item],
+                cc_addr_list = [''],
+                subject      = "New motion - " + timestamp,
+                message      = '',
+                login        = data.sender_email,
+                password     = data.sender_password,
+                timestamp    = timestamp)
+    print("Sending notifications...")
+
+
+def sendemail(from_addr, to_addr, cc_addr_list, subject, message, login, 
+              password, timestamp, smtpserver='smtp.gmail.com:587'):
+    """
+    method sends email notification
+    """
+    image = open('{}.jpg' .format(timestamp), 'rb').read()
+    msg = MIMEMultipart()
+    msg['Subject'] = subject
+    msg['From'] = from_addr
+    msg['To'] = to_addr
+
+    image = MIMEImage(image, name=os.path.basename('{}.jpg' .format(timestamp)))
+    msg.attach(image)
+
+    try:
+        server = smtplib.SMTP(smtpserver)
+        server.starttls()
+        server.login(login,password)
+        problems = server.sendmail(from_addr, to_addr, msg.as_string())
+        server.quit()
+        return problems
+    except:
+        return None
