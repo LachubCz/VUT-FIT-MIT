@@ -156,25 +156,26 @@ def email_notification(data, timestamp):
     """
     method prepares emails to send
     """
-    for _, item in enumerate(data.recievers):
-        sendemail(from_addr  = data.sender,
-                to_addr_list = [item],
-                cc_addr_list = [''],
-                subject      = "New motion - " + timestamp,
-                message      = '',
-                login        = data.sender_email,
-                password     = data.sender_password,
-                timestamp    = timestamp)
-    print("Sending notifications...")
+    for _, item in enumerate(data['recievers']):
+        send_email(from_addr    = data['sender_email'],
+                   to_addr      = item,
+                   cc_addr_list = [''],
+                   subject      = "New motion - " + timestamp,
+                   message      = '',
+                   login        = data['sender_email'],
+                   password     = data['sender_password'],
+                   timestamp    = timestamp)
+    print("Email notifications were sent.")
 
 
-def sendemail(from_addr, to_addr, cc_addr_list, subject, message, login, 
-              password, timestamp, smtpserver='smtp.gmail.com:587'):
+def send_email(from_addr, to_addr, cc_addr_list, subject, message, login, 
+               password, timestamp, smtpserver='smtp.gmail.com:587'):
     """
     method sends email notification
     """
     image = open('{}.jpg' .format(timestamp), 'rb').read()
     msg = MIMEMultipart()
+    print(from_addr, to_addr)
     msg['Subject'] = subject
     msg['From'] = from_addr
     msg['To'] = to_addr
@@ -182,12 +183,10 @@ def sendemail(from_addr, to_addr, cc_addr_list, subject, message, login,
     image = MIMEImage(image, name=os.path.basename('{}.jpg' .format(timestamp)))
     msg.attach(image)
 
-    try:
-        server = smtplib.SMTP(smtpserver)
-        server.starttls()
-        server.login(login,password)
-        problems = server.sendmail(from_addr, to_addr, msg.as_string())
-        server.quit()
-        return problems
-    except:
-        return None
+    server = smtplib.SMTP(smtpserver)
+    server.ehlo()
+    server.starttls()
+    server.ehlo()
+    server.login(login, password)
+    server.sendmail(from_addr, to_addr, msg.as_string())
+    server.quit()

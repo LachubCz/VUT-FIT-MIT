@@ -29,6 +29,7 @@ class Entity():
         y1 = 0
         x2 = 0
         y2 = 0
+        """
         border_x1 = True
         for i in range(0,8):
             divisible = divisible_numbers(sorted_parts, [8], i)
@@ -98,4 +99,4 @@ class Entity():
             self.y2 = y2
         else:
             self.y2 = int((y1 + y2) / 2)
-        """
+        
