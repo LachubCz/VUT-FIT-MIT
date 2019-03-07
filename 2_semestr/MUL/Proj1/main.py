@@ -35,6 +35,9 @@ def get_args():
 
 
 def real_time(args):
+    """
+    main for real-time mode
+    """
     cap = cv2.VideoCapture(0)
 
     ret, frame = cap.read()
@@ -46,10 +49,10 @@ def real_time(args):
 
         frame = Grid(frame)
 
-        start_time = timer()
-        frame.put_text(last)
-        end_time = timer() - start_time
-        print("Computations: " + str(end_time))
+        #start_time = timer()
+        frame.draw(last)
+        #end_time = timer() - start_time
+        #print("Computation time: " + str(end_time))
 
         cv2.imshow('frame',frame.original)
         if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -62,6 +65,9 @@ def real_time(args):
 
 
 def time_capsule(args):
+    """
+    main for time-capsule mode
+    """
     if args.email_notification:
         with open('email_settings.json') as f:
             email_data = json.load(f)
@@ -83,7 +89,7 @@ def time_capsule(args):
         
         frame = Grid(frame)
 
-        number_of_elm = frame.put_text(last)
+        number_of_elm = frame.draw(last)
 
         if number_of_elm > 0:
             if args.sound_notification:
