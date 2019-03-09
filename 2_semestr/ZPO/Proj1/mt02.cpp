@@ -25,8 +25,29 @@ void convolution( cv::Mat& gray, const cv::Mat& kernel, cv::Mat& dst )
 		return;
 
 	/*  Working area - begin */
+    float filter = 0;
+    for (int i=0; i < kernel.rows; ++i){
+        for (int j=0; j < kernel.cols; ++j){
+            filter += abs(kernel.at<float>(i,j));
+        }
+    }
 
-
+    for (int i=0; i < gray.rows; ++i){
+        for (int j=0; j < gray.cols; ++j){
+            if (i != 0 && i != (gray.rows - 1) && j != 0 && j != (gray.cols - 1)){
+                dst.at<float>(i,j) += int(gray.at<unsigned char>(i-1,j-1)) * kernel.at<float>(2,2);
+                dst.at<float>(i,j) += int(gray.at<unsigned char>(i,j-1)) * kernel.at<float>(1,2);
+                dst.at<float>(i,j) += int(gray.at<unsigned char>(i+1,j-1)) * kernel.at<float>(0,2);
+                dst.at<float>(i,j) += int(gray.at<unsigned char>(i-1,j)) * kernel.at<float>(2,1);
+                dst.at<float>(i,j) += int(gray.at<unsigned char>(i,j)) * kernel.at<float>(1,1);
+                dst.at<float>(i,j) += int(gray.at<unsigned char>(i+1,j)) * kernel.at<float>(0,1);
+                dst.at<float>(i,j) += int(gray.at<unsigned char>(i-1,j+1)) * kernel.at<float>(2,0);
+                dst.at<float>(i,j) += int(gray.at<unsigned char>(i,j+1)) * kernel.at<float>(1,0);
+                dst.at<float>(i,j) += int(gray.at<unsigned char>(i+1,j+1)) * kernel.at<float>(0,0);
+                dst.at<float>(i,j) = dst.at<float>(i,j) / filter;
+            }
+        }
+    }
 	/*  Working area - end */
 	
 }
