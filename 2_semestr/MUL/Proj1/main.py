@@ -17,7 +17,7 @@ def get_args():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('-m', '--mode', action="store", choices=["real_time", "time_capsule"],
-                        default="real-time", help="training dataset file")
+                        default="real_time", help="training dataset file")
     parser.add_argument('--threshold', action="store", type=int,
                         default=20, help="training dataset file")
     parser.add_argument('--time_jump', action="store", type=int,
