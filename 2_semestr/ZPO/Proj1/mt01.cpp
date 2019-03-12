@@ -56,7 +56,9 @@ int main(int argc, char *argv[])
 	/*  Working area - begin */
 
 	// load image to origI, use first argument, load as grayscale image
-	// origI = ...
+    std::string img_path = ""; 
+    img_path = std::string(argv[1]);
+	origI = imread(img_path, IMREAD_GRAYSCALE);
 
 	/*  Working area - end */
 
@@ -99,19 +101,26 @@ int main(int argc, char *argv[])
 	
 	// save the noise image (noiseI) to "noise.png" file (use this exact name and path)
 	// ...
-	
+
+	cv::imwrite("noise.png", noiseI);
 
 	// suppress noise using Gaussian blur and compute PSNR to psnrG variable
 	// use denoiseIG image as the result of denoising
 	// save the image to "denoiseG.png" file (use this exact name and path)
 	// ...
-	
-	
+
+    cv::GaussianBlur(noiseI, denoiseIG, Size( kernel_size, kernel_size ), 0, 0);
+    psnrG = getPSNR(origI, denoiseIG);
+	cv::imwrite("denoiseG.png", denoiseIG);
+
 	// suppress noise using median filter and compute PSNR to psnrM variable
 	// use denoiseIM image as the result of denoising
 	// save the image to "denoiseM.png" file (use this exact name and path)
 	// ...
 
+    cv::medianBlur(noiseI, denoiseIM, kernel_size);
+    psnrM = getPSNR(origI, denoiseIM);
+    cv::imwrite("denoiseM.png", denoiseIM);
 
 	/*
 		Otazka: Je originalni a zasumeny obraz. Je-li hodnota 
@@ -144,9 +153,23 @@ double getPSNR(const Mat& I1, const Mat& I2)
 	
 	// reference:	http://docs.opencv.org/2.4/doc/tutorials/highgui/video-input-psnr-ssim/video-input-psnr-ssim.html#image-similarity-psnr-and-ssim
 	// copying opencv tutorial code is allowed 
+    Mat s1;
+    absdiff(I1, I2, s1);       // |I1 - I2|
+    s1.convertTo(s1, CV_32F);  // cannot make a square on 8 bits
+    s1 = s1.mul(s1);           // |I1 - I2|^2
 
+    Scalar s = sum(s1);         // sum elements per channel
 
+    double sse = s.val[0] + s.val[1] + s.val[2]; // sum channels
 
+    if( sse <= 1e-10) // for small values return zero
+        return 0;
+    else
+    {
+        double  mse =sse /(double)(I1.channels() * I1.total());
+        double psnr = 10.0*log10((255*255)/mse);
+        return psnr;
+    }
 	/*  Working area - end */
 
 	return psnr;
