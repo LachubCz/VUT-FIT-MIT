@@ -82,8 +82,21 @@ void geometricalTransform( const cv::Mat& src, cv::Mat& dst, const cv::Mat& tran
 	*/
 
 	/*  Working area - begin */
+    for (int i=0; i < dst.rows; ++i){
+        for (int j=0; j < dst.cols; ++j){
+            cv::Mat coords = cv::Mat::ones(3,1, CV_32FC1);
 
+            coords.at<float>(0) = j;
+            coords.at<float>(1) = i;
 
+            coords = T*coords;
+
+            if (cvRound(coords.at<float>(0)) < dst.cols && cvRound(coords.at<float>(1)) < dst.rows && 
+                cvRound(coords.at<float>(0)) >= 0 && cvRound(coords.at<float>(1)) >= 0){
+                dst.at<unsigned char>(i, j, 0) = int(src.at<unsigned char>(cvRound(coords.at<float>(1)), cvRound(coords.at<float>(0))));
+            }
+        }
+    }
 	/*  Working area - end */
 	
 	return;
@@ -173,8 +186,38 @@ int main(int argc, char* argv[])
 	*/
 
 	/*  Working area - begin */
+    //translation
+    T.at<float>(0,0) = 1;
+    T.at<float>(0,1) = 0;
+    T.at<float>(0,2) = -c.x;
+    T.at<float>(1,0) = 0;
+    T.at<float>(1,1) = 1;
+    T.at<float>(1,2) = -c.y;
+    T.at<float>(2,0) = 0;
+    T.at<float>(2,1) = 0;
+    T.at<float>(2,2) = 1;
+    //rotation
+    R.at<float>(0,0) = cos(r*CV_PI/180);
+    R.at<float>(0,1) = sin(r*CV_PI/180);
+    R.at<float>(0,2) = 0;
+    R.at<float>(1,0) = -sin(r*CV_PI/180);
+    R.at<float>(1,1) = cos(r*CV_PI/180);
+    R.at<float>(1,2) = 0;
+    R.at<float>(2,0) = 0;
+    R.at<float>(2,1) = 0;
+    R.at<float>(2,2) = 1;
+    //scale
+    S.at<float>(0,0) = s;
+    S.at<float>(0,1) = 0;
+    S.at<float>(0,2) = 0;
+    S.at<float>(1,0) = 0;
+    S.at<float>(1,1) = s;
+    S.at<float>(1,2) = 0;
+    S.at<float>(2,0) = 0;
+    S.at<float>(2,1) = 0;
+    S.at<float>(2,2) = 1;
 
-
+    M = (T.inv())*(S*(R*T));
 	/*  Working area - end */
 
 	//std::cout << M << std::endl;
