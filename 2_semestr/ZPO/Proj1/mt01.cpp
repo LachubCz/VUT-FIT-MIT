@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
 		typem sumu je pravdepodobne obraz zkreslen?
 	*/
 	// doplnte "gauss" nebo "sp"
-	odpoved = "";		
+	odpoved = "sp";		
 	
 	/*  Working area - end */
 
