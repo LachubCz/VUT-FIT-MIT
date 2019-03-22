@@ -1,13 +1,12 @@
 import cv2
 import cvui
-from tools import exp_type, get_graph
 from timeit import default_timer as timer
 
-WINDOW_NAME = 'Speed of Light Measurement'
+from tools import exp_type, get_graph
 
-def galileo(frame):
-    curr_expr = 0
-    experiments = [[False] for i in range(6)]
+def galileo(frame, expr):
+    curr_expr = expr
+    experiments = [[False] for i in range(4)]
 
     restart = True
     distance_tr = [1.1]
@@ -64,7 +63,7 @@ def galileo(frame):
 
             if animation >= 21 and animation < 42:
                 cvui.image(frame, 960, 200, first_graph)
-                cvui.text(frame, 1079, 278, str(int(first_delay))+"ms", 0.4);
+                cvui.text(frame, 1079, 278, str(int(first_delay))+"ms", 0.4)
         
                 cvui.image(frame, 1036, 390, galileo_fire)
                 for _ in range(animation+1-21):
@@ -75,13 +74,11 @@ def galileo(frame):
                     if (timer() - first_after_end) > (second_delay/1000):
                         first_after_end = 0
                         cvui.image(frame, 131, 205, second_graph)
-                        cvui.text(frame, 248, 285, str(int(second_delay))+"ms", 0.4);
+                        cvui.text(frame, 248, 285, str(int(second_delay))+"ms", 0.4)
                         delay = static_distance/speed_of_light + (first_delay/1000) + (second_delay/1000)
-                        
-
                 else:
                     cvui.image(frame, 131, 205, second_graph)
-                    cvui.text(frame, 248, 285, str(int(second_delay))+"ms", 0.4);
+                    cvui.text(frame, 248, 285, str(int(second_delay))+"ms", 0.4)
 
                 cvui.image(frame, 1036, 390, galileo_fire)
                 for _ in range(21):
@@ -116,18 +113,18 @@ def galileo(frame):
                             animation = int(traveled_parts)
             else:
                 cvui.image(frame, 960, 200, first_graph)
-                cvui.text(frame, 1079, 278, str(int(first_delay))+"ms", 0.4);
+                cvui.text(frame, 1079, 278, str(int(first_delay))+"ms", 0.4)
                 if delay != 0:
-                    cvui.text(frame, 660, 343, str(round(delay, 2))+"s", 0.5);
+                    cvui.text(frame, 660, 343, str(round(delay, 2))+"s", 0.5)
                     cvui.text(frame, 345, 90, "c=(2*s)/(t-2*o)=(2*{:,})/({}-2*0.25)={:,} km/s"
                         .format(static_distance/2, str(round(delay, 2)), round(static_distance/(round(delay, 2)-2*0.25), 2)), 0.5)
 
         #Experiment settings window
         cvui.window(frame, 1033.5, 2, 243.5, 133, 'Experiment settings')
         
-        cvui.trackbar(frame,  1030, 39, 249, distance_tr, 1.1, 10.0);
-        cvui.rect(frame, 1035, 39, 240, 12, 0x313431, 0x313431);
-        cvui.rect(frame, 1035, 74, 240, 25, 0x313431, 0x313431);
+        cvui.trackbar(frame,  1030, 39, 249, distance_tr, 1.1, 10.0)
+        cvui.rect(frame, 1035, 39, 240, 12, 0x313131, 0x313131)
+        cvui.rect(frame, 1035, 74, 240, 25, 0x313131, 0x313131)
         cvui.text(frame, 1041, 32, "Distance")
         cvui.text(frame, 1042, 82, "{:,} km".format(round((distance_tr[0])**8, 0)))
         if cvui.button(frame, 1040, 102, "Execute"):
@@ -139,25 +136,23 @@ def galileo(frame):
             restart = True
         
         #Experiments window
-        cvui.window(frame, 2, 2, 155, 165, 'Experiments')
+        cvui.window(frame, 2, 2, 155, 121, 'Experiments')
 
-        cvui.checkbox(frame, 10,  30, "1638 - Galileo",   experiments[0])
-        cvui.checkbox(frame, 10,  53, "1676 - Roemer",    experiments[1])
-        cvui.checkbox(frame, 10,  76, "1729 - Bradley",   experiments[2])
-        cvui.checkbox(frame, 10,  99, "1849 - Fizeau",    experiments[3])
-        cvui.checkbox(frame, 10, 122, "1862 - Foucalt",   experiments[4])
-        cvui.checkbox(frame, 10, 145, "1879 - Michelson", experiments[5])
+        cvui.checkbox(frame, 10, 30, "1638 - Galileo",   experiments[0])
+        cvui.checkbox(frame, 10, 53, "1676 - Roemer",    experiments[1])
+        cvui.checkbox(frame, 10, 76, "1849 - Fizeau",    experiments[2])
+        cvui.checkbox(frame, 10, 99, "1879 - Michelson", experiments[3])
 
         curr_expr = exp_type(curr_expr, experiments)
-        experiments = [[False] for i in range(6)]
+        experiments = [[False] for i in range(4)]
         experiments[curr_expr] = [True]
 
         cvui.update()
 
-        cv2.imshow(WINDOW_NAME, frame)
+        cv2.imshow('Speed of Light Measurement', frame)
 
         if cv2.waitKey(20) == 27:
             return -1
 
-        if curr_expr != 0:
+        if curr_expr != expr:
             return curr_expr

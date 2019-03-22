@@ -1,82 +1,112 @@
+from collections import deque
+
 import cv2
 import cvui
-import tools
+from timeit import default_timer as timer
 
-def fizeau(frame):
-    curr_expr = 0
-    experiments = [[False] for i in range(6)]
+from tools import exp_type, overlay_image_alpha
 
+
+def get_60(fizeau_default, fizeau_sprocket):
+    array = deque([])
+    (h, w) = fizeau_sprocket.shape[:2]
+    center = (w / 2, h / 2)
+
+    for e in range(4):
+        for i in range(15):
+            M = cv2.getRotationMatrix2D(center, 2*i, 1.0)
+            temp = cv2.warpAffine(fizeau_sprocket, M, (h, w))
+            blank = fizeau_default.copy()
+            overlay_image_alpha(blank, temp[:, :, 0:3], (795, 495), temp[:, :, 3] / 255.0)
+            array.append(blank)
+
+    return array
+
+
+def put_line(sprites, fizeau_dot):
+    x = 153
+    x_lenght = 1007 + 639 + 249 #63.1
+    y = 495
+    x_right = 1160
+    shift = 521
+
+    y_high = 249
+    for i, item in enumerate(sprites):
+        if i < 30:
+            overlay_image_alpha(item, fizeau_dot[:, :, 0:3], (int(x+i*32.67), y), fizeau_dot[:, :, 3] / 255.0)
+            sprites[i] = item
+        elif i == 30:
+            overlay_image_alpha(item, fizeau_dot[:, :, 0:3], (x_right, y), fizeau_dot[:, :, 3] / 255.0)
+            sprites[i] = item
+        elif i > 32 and i < 50:
+            overlay_image_alpha(item, fizeau_dot[:, :, 0:3], (int(x_right-(i-30)*32.67), y), fizeau_dot[:, :, 3] / 255.0)
+            sprites[i] = item
+        elif i > 48 and i < 58:
+            overlay_image_alpha(item, fizeau_dot[:, :, 0:3], (shift, int(y-(i-50)*32.67)), fizeau_dot[:, :, 3] / 255.0)
+            sprites[i] = item
+        elif i == 58:
+            overlay_image_alpha(item, fizeau_dot[:, :, 0:3], (shift, y_high), fizeau_dot[:, :, 3] / 255.0)
+            sprites[i] = item
+    return sprites
+
+
+def fizeau(frame, expr):
+    curr_expr = expr
+    experiments = [[False] for i in range(4)]
+
+    fizeau_default = cv2.imread("images/fizeau_default.png", 1)
+    fizeau_line = cv2.imread("images/fizeau_line.png", 1)
+    fizeau_dot = cv2.imread("images/fizeau_dot.png", cv2.IMREAD_UNCHANGED)
+    fizeau_sprocket = cv2.imread("images/fizeau_sprocket.png", cv2.IMREAD_UNCHANGED)
+    wheel_sprites = get_60(fizeau_default, fizeau_sprocket)
+    wheel_sprites = put_line(wheel_sprites, fizeau_dot)
+    wheel_sprites.rotate(15)
+    wheel_sprites = put_line(wheel_sprites, fizeau_dot)
+    wheel_sprites.rotate(15)
+    wheel_sprites = put_line(wheel_sprites, fizeau_dot)
+    wheel_sprites.rotate(15)
+    wheel_sprites = put_line(wheel_sprites, fizeau_dot)
+    
     animation = 0
-    animate = False
-    galileo_coord_bottom = 385
-    galileo_coord_top = 985
-    distance = [0.2]
+    frequency_tr = [1.1]
 
     while (True):
-        galileo_default = cv2.imread("images/galileo_default.png", 1)
-        galileo_yellow_dot = cv2.imread("images/galileo_yellow_dot.png", 1)
-        galileo_fire = cv2.imread("images/galileo_fire.png", 1)
+        frame[:] = (49,52,49)
+        #Animation window
+        cvui.image(frame, 0, 0, wheel_sprites[animation])
+        cvui.image(frame, 872, 499, fizeau_line)
+        animation += 1
+        if animation == 60:
+            animation = 0
 
-        cvui.image(frame, 0, 0, galileo_default)
+        #cvui.image(frame, 400, 400, fizeau_sprocket)
+        cvui.window(frame, 2, 2, 155, 121, 'Experiments')
 
-        if animate:
-            galileo_coord_bottom = 368
-            galileo_coord_top = 968
-            cvui.image(frame, 314, 393, galileo_fire)
-            if animation < 21:
-                for _ in range(animation+1):
-                    cvui.image(frame, galileo_coord_bottom, 400, galileo_yellow_dot)
-                    galileo_coord_bottom = galileo_coord_bottom + 30
-            else:
-                for _ in range(21):
-                    cvui.image(frame, galileo_coord_bottom, 400, galileo_yellow_dot)
-                    galileo_coord_bottom = galileo_coord_bottom + 30
+        cvui.checkbox(frame, 10, 30, "1638 - Galileo",   experiments[0])
+        cvui.checkbox(frame, 10, 53, "1676 - Roemer",    experiments[1])
+        cvui.checkbox(frame, 10, 76, "1849 - Fizeau",    experiments[2])
+        cvui.checkbox(frame, 10, 99, "1879 - Michelson", experiments[3])
 
-            if animation >= 21 and animation < 42 :
-                cvui.image(frame, 1036, 390, galileo_fire)
-                for _ in range(animation+1-21):
-                    cvui.image(frame, galileo_coord_top, 375, galileo_yellow_dot)
-                    galileo_coord_top = galileo_coord_top - 30
-            elif animation == 42:
-                cvui.image(frame, 1036, 390, galileo_fire)
-                for _ in range(21):
-                    cvui.image(frame, galileo_coord_top, 375, galileo_yellow_dot)
-                    galileo_coord_top = galileo_coord_top - 30
+        #Experiment settings window
+        cvui.window(frame, 1033.5, 2, 243.5, 133, 'Experiment settings')
+        
+        cvui.trackbar(frame,  1030, 39, 249, frequency_tr, 1.1, 10.0)
+        cvui.rect(frame, 1035, 39, 240, 12, 0x313131, 0x313131)
+        cvui.rect(frame, 1035, 74, 240, 25, 0x313131, 0x313131)
+        cvui.text(frame, 1041, 32, "Frequency")
+        cvui.text(frame, 1042, 82, "{:,} Hz".format(round((frequency_tr[0])**8, 0)))
 
-            if animation < 42:
-                animation += 1
 
-            cvui.text(frame, 1079, 278, "250 ms", 0.4);
-            cvui.text(frame, 248, 285, "250 ms", 0.4);
-            cvui.text(frame, 660, 343, "250 ms", 0.5);
+        curr_expr = exp_type(curr_expr, experiments)
+        experiments = [[False] for i in range(4)]
+        experiments[curr_expr] = [True]
 
-        cvui.window(frame, 1000, 2, 277.5, 212, 'Experiment settings')
+        cvui.update()
 
-        cvui.trackbar(frame,  1010, 50, 260, distance, 0.1, 10.0);
-        cvui.rect(frame, 1010, 85, 260, 25, 0x313431, 0x313431);
-        if cvui.button(frame, 1010, 90, "Execute"):
-            animate = True
-        cvui.text(frame, 1010, 30, "Distance")
+        cv2.imshow('Speed of Light Measurement', frame)
 
-    cvui.window(frame, 2, 2, 155, 165, 'Experiments')
+        if cv2.waitKey(20) == 27:
+            return -1
 
-    cvui.checkbox(frame, 10,  30, "1638 - Galileo",   experiments[0])
-    cvui.checkbox(frame, 10,  53, "1676 - Roemer",    experiments[1])
-    cvui.checkbox(frame, 10,  76, "1729 - Bradley",   experiments[2])
-    cvui.checkbox(frame, 10,  99, "1849 - Fizeau",    experiments[3])
-    cvui.checkbox(frame, 10, 122, "1862 - Foucalt",   experiments[4])
-    cvui.checkbox(frame, 10, 145, "1879 - Michelson", experiments[5])
-
-    curr_expr = exp_type(curr_expr, experiments)
-    experiments = [[False] for i in range(6)]
-    experiments[curr_expr] = [True]
-
-    cvui.update()
-
-    cv2.imshow(WINDOW_NAME, frame)
-
-    if cv2.waitKey(20) == 27:
-        return -1
-
-    if curr_expr != 0:
-        return curr_expr
+        if curr_expr != expr:
+            return curr_expr
