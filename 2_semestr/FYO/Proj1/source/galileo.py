@@ -63,6 +63,7 @@ def galileo(frame, expr):
 
             if animation >= 21 and animation < 42:
                 cvui.image(frame, 960, 200, first_graph)
+                cvui.text(frame, 1045, 186, "Reaction delay", 0.4)
                 cvui.text(frame, 1079, 278, str(int(first_delay))+"ms", 0.4)
         
                 cvui.image(frame, 1036, 390, galileo_fire)
@@ -74,10 +75,12 @@ def galileo(frame, expr):
                     if (timer() - first_after_end) > (second_delay/1000):
                         first_after_end = 0
                         cvui.image(frame, 131, 205, second_graph)
+                        cvui.text(frame, 216, 191, "Reaction delay", 0.4)
                         cvui.text(frame, 248, 285, str(int(second_delay))+"ms", 0.4)
                         delay = static_distance/speed_of_light + (first_delay/1000) + (second_delay/1000)
                 else:
                     cvui.image(frame, 131, 205, second_graph)
+                    cvui.text(frame, 216, 191, "Reaction delay", 0.4)
                     cvui.text(frame, 248, 285, str(int(second_delay))+"ms", 0.4)
 
                 cvui.image(frame, 1036, 390, galileo_fire)
@@ -113,10 +116,14 @@ def galileo(frame, expr):
                             animation = int(traveled_parts)
             else:
                 cvui.image(frame, 960, 200, first_graph)
+                cvui.text(frame, 1045, 186, "Reaction delay", 0.4)
                 cvui.text(frame, 1079, 278, str(int(first_delay))+"ms", 0.4)
                 if delay != 0:
+                    cvui.text(frame, 640, 320, "Total time", 0.5)
                     cvui.text(frame, 660, 343, str(round(delay, 2))+"s", 0.5)
-                    cvui.text(frame, 345, 90, "c=(2*s)/(t-2*o)=(2*{:,})/({}-2*0.25)={:,} km/s"
+                    cvui.text(frame, 345, 70, "Calculation of the speed of light", 0.5)
+                    
+                    cvui.text(frame, 345, 90, "c=(2*s)/(t-2*d)=(2*{:,})/({}-2*0.25)={:,} km/s"
                         .format(static_distance/2, str(round(delay, 2)), round(static_distance/(round(delay, 2)-2*0.25), 2)), 0.5)
 
         #Experiment settings window
