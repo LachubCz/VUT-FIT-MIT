@@ -58,24 +58,14 @@ def get_graph():
 
 
 def overlay_image_alpha(img, img_overlay, pos, alpha_mask):
-    """Overlay img_overlay on top of img at the position specified by
-    pos and blend using alpha_mask.
-
-    Alpha mask must contain values within the range [0, 1] and be the
-    same size as img_overlay.
-    """
-
     x, y = pos
 
-    # Image ranges
     y1, y2 = max(0, y), min(img.shape[0], y + img_overlay.shape[0])
     x1, x2 = max(0, x), min(img.shape[1], x + img_overlay.shape[1])
 
-    # Overlay ranges
     y1o, y2o = max(0, -y), min(img_overlay.shape[0], img.shape[0] - y)
     x1o, x2o = max(0, -x), min(img_overlay.shape[1], img.shape[1] - x)
 
-    # Exit if nothing to do
     if y1 >= y2 or x1 >= x2 or y1o >= y2o or x1o >= x2o:
         return
 

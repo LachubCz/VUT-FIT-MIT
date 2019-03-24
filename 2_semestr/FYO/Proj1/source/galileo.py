@@ -6,7 +6,7 @@ from tools import exp_type, get_graph
 
 def galileo(frame, expr):
     curr_expr = expr
-    experiments = [[False] for i in range(4)]
+    experiments = [[False] for i in range(2)]
 
     restart = True
     distance_tr = [1.1]
@@ -35,6 +35,7 @@ def galileo(frame, expr):
             first_after_half = 0
             first_after_end = 0
             restart = False
+            static_distance = False
 
         if not first_graph_f:
             first_graph, lag = get_graph()
@@ -121,10 +122,20 @@ def galileo(frame, expr):
                 if delay != 0:
                     cvui.text(frame, 640, 320, "Total time", 0.5)
                     cvui.text(frame, 660, 343, str(round(delay, 2))+"s", 0.5)
-                    cvui.text(frame, 345, 70, "Calculation of the speed of light", 0.5)
-                    
-                    cvui.text(frame, 345, 90, "c=(2*s)/(t-2*d)=(2*{:,})/({}-2*0.25)={:,} km/s"
+                    cvui.text(frame, 345, 60, "Calculation of the speed of light", 0.5)
+                    cvui.text(frame, 345, 80, "distance between mountains ... s = {:,} km" .format(static_distance/2), 0.5)
+                    cvui.text(frame, 345, 100, "average human reaction time ... d = 250 ms", 0.5)
+                    cvui.text(frame, 345, 120, "c=(2*s)/(t-2*d)=(2*{:,})/({}-2*0.25)={:,} km/s"
                         .format(static_distance/2, str(round(delay, 2)), round(static_distance/(round(delay, 2)-2*0.25), 2)), 0.5)
+
+        if delay == 0:
+            cvui.text(frame, 345, 60, "Calculation of the speed of light", 0.5)
+            if static_distance:
+                cvui.text(frame, 345, 80, "distance between mountains ... s = {:,} km" .format(static_distance/2), 0.5)
+            else:
+                cvui.text(frame, 345, 80, "distance between mountains ... s = {:,} km" .format(round((distance_tr[0])**8, 0)), 0.5)
+            cvui.text(frame, 345, 100, "average human reaction time ... d = 250 ms", 0.5)
+            cvui.text(frame, 345, 120, "c=(2*s)/(t-2*d) ... total time wasn't measured", 0.5)
 
         #Experiment settings window
         cvui.window(frame, 1033.5, 2, 243.5, 133, 'Experiment settings')
@@ -134,24 +145,22 @@ def galileo(frame, expr):
         cvui.rect(frame, 1035, 74, 240, 25, 0x313131, 0x313131)
         cvui.text(frame, 1041, 32, "Distance")
         cvui.text(frame, 1042, 82, "{:,} km".format(round((distance_tr[0])**8, 0)))
-        if cvui.button(frame, 1040, 102, "Execute"):
+        if cvui.button(frame, 1040, 102, "Measure time"):
             if not animate:
                 static_distance = round((distance_tr[0])**8, 0) * 2
             animate = True
             start_time = timer()
-        if cvui.button(frame, 1125, 102, "Clear"):
+        if cvui.button(frame, 1161, 102, "Clear"):
             restart = True
         
         #Experiments window
-        cvui.window(frame, 2, 2, 155, 121, 'Experiments')
+        cvui.window(frame, 2, 2, 155, 75, 'Experiments')
 
         cvui.checkbox(frame, 10, 30, "1638 - Galileo",   experiments[0])
-        cvui.checkbox(frame, 10, 53, "1676 - Roemer",    experiments[1])
-        cvui.checkbox(frame, 10, 76, "1849 - Fizeau",    experiments[2])
-        cvui.checkbox(frame, 10, 99, "1879 - Michelson", experiments[3])
+        cvui.checkbox(frame, 10, 53, "1849 - Fizeau",    experiments[1])
 
         curr_expr = exp_type(curr_expr, experiments)
-        experiments = [[False] for i in range(4)]
+        experiments = [[False] for i in range(2)]
         experiments[curr_expr] = [True]
 
         cvui.update()
