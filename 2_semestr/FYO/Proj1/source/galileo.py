@@ -2,7 +2,7 @@ import cv2
 import cvui
 from timeit import default_timer as timer
 
-from tools import exp_type, get_graph
+from tools import exp_type, get_graph, resource_path
 
 def galileo(frame, expr):
     curr_expr = expr
@@ -11,9 +11,9 @@ def galileo(frame, expr):
     restart = True
     distance_tr = [1.1]
 
-    galileo_default = cv2.imread("images/galileo_default.png", 1)
-    galileo_yellow_dot = cv2.imread("images/galileo_yellow_dot.png", 1)
-    galileo_fire = cv2.imread("images/galileo_fire.png", 1)
+    galileo_default = cv2.imread(resource_path("images/galileo_default.png"), 3)
+    galileo_yellow_dot = cv2.imread(resource_path("images/galileo_yellow_dot.png"), 3)
+    galileo_fire = cv2.imread(resource_path("images/galileo_fire.png"), 3)
     
     while (True):
         frame[:] = (49, 52, 49)

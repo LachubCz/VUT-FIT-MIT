@@ -3,7 +3,7 @@ from collections import deque
 import cv2
 import cvui
 
-from tools import exp_type, overlay_image_alpha
+from tools import exp_type, overlay_image_alpha, resource_path
 
 
 def get_120(fizeau_default, fizeau_sprocket):
@@ -100,17 +100,17 @@ def fizeau(frame, expr):
     curr_expr = expr
     experiments = [[False] for i in range(2)]
 
-    fizeau_default = cv2.imread("images/fizeau_default.png", 1)
-    fizeau_not_default = cv2.imread("images/fizeau_not_default.png", 1)
-    fizeau_line = cv2.imread("images/fizeau_line.png", 1)
-    fizeau_distance = cv2.imread("images/fizeau_distance.png", 1)
-    fizeau_dot = cv2.imread("images/fizeau_dot.png", cv2.IMREAD_UNCHANGED)
-    fizeau_dot_grey = cv2.imread("images/fizeau_dot_grey.png", cv2.IMREAD_UNCHANGED)
-    fizeau_sprocket = cv2.imread("images/fizeau_sprocket.png", cv2.IMREAD_UNCHANGED)
-    fizeau_metre = cv2.imread("images/fizeau_metre.png", cv2.IMREAD_UNCHANGED)
-    fizeau_blank = cv2.imread("images/fizeau_blank.png", cv2.IMREAD_UNCHANGED)
-    fizeau_darkstripes = cv2.imread("images/fizeau_darkstripes.png", cv2.IMREAD_UNCHANGED)
-    fizeau_lightstripes = cv2.imread("images/fizeau_lightstripes.png", cv2.IMREAD_UNCHANGED)
+    fizeau_default = cv2.imread(resource_path("images/fizeau_default.png"), 3)
+    fizeau_not_default = cv2.imread(resource_path("images/fizeau_not_default.png"), 3)
+    fizeau_line = cv2.imread(resource_path("images/fizeau_line.png"), 3)
+    fizeau_distance = cv2.imread(resource_path("images/fizeau_distance.png"), 3)
+    fizeau_dot = cv2.imread(resource_path("images/fizeau_dot.png"), cv2.IMREAD_UNCHANGED)
+    fizeau_dot_grey = cv2.imread(resource_path("images/fizeau_dot_grey.png"), cv2.IMREAD_UNCHANGED)
+    fizeau_sprocket = cv2.imread(resource_path("images/fizeau_sprocket.png"), cv2.IMREAD_UNCHANGED)
+    fizeau_metre = cv2.imread(resource_path("images/fizeau_metre.png"), cv2.IMREAD_UNCHANGED)
+    fizeau_blank = cv2.imread(resource_path("images/fizeau_blank.png"), cv2.IMREAD_UNCHANGED)
+    fizeau_darkstripes = cv2.imread(resource_path("images/fizeau_darkstripes.png"), cv2.IMREAD_UNCHANGED)
+    fizeau_lightstripes = cv2.imread(resource_path("images/fizeau_lightstripes.png"), cv2.IMREAD_UNCHANGED)
 
     wheel_sprites_pos = get_120(fizeau_default, fizeau_sprocket)
     wheel_sprites_pos = put_dots_pos(wheel_sprites_pos, fizeau_dot, fizeau_dot_grey)
