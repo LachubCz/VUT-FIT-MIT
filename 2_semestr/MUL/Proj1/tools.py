@@ -7,7 +7,9 @@ from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 
 import cv2
+import imutils
 import numpy as np
+
 
 def four_quadrants(image):
     """
@@ -190,3 +192,50 @@ def send_email(from_addr, to_addr, cc_addr_list, subject, message, login,
     server.login(login, password)
     server.sendmail(from_addr, to_addr, msg.as_string())
     server.quit()
+
+def find_bbox(frame, thresh):
+    thresh = np.asarray(thresh, dtype=np.uint8)
+
+    kernel = np.ones((3, 3), np.uint8) 
+    closing = cv2.morphologyEx(thresh, cv2.MORPH_GRADIENT, 
+                                kernel, iterations = 2) 
+      
+    # Background area using Dialation 
+    bg = cv2.dilate(closing, kernel, iterations = 4) 
+      
+    # Finding foreground area 
+    dist_transform = cv2.distanceTransform(closing, cv2.DIST_L2, 0) 
+    ret, fg = cv2.threshold(dist_transform, 0.02
+                            * dist_transform.max(), 255, 0) 
+
+    fg = cv2.convertScaleAbs(fg)
+    cnts = cv2.findContours(fg.copy(), cv2.RETR_EXTERNAL,
+        cv2.CHAIN_APPROX_SIMPLE)
+    cnts = imutils.grab_contours(cnts)
+ 
+    whites = round(np.count_nonzero(fg == 255)/ (fg.shape[0]*fg.shape[1]), 2)
+    
+    if whites <= 0.15:
+        bulgarian_constant = 5000
+    elif whites <= 0.25:
+        bulgarian_constant = 10000
+    elif whites <= 0.35:
+        bulgarian_constant = 15000
+    elif whites <= 0.45:
+        bulgarian_constant = 35000
+    else:
+        bulgarian_constant = 75000
+    print(whites, bulgarian_constant)
+    # loop over the contours
+    for c in cnts:
+        # if the contour is too small, ignore it
+        if cv2.contourArea(c) < bulgarian_constant:
+            continue
+ 
+        # compute the bounding box for the contour, draw it on the frame,
+        # and update the text
+        (x, y, w, h) = cv2.boundingRect(c)
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        text = "Occupied"
+
+    return frame, fg
