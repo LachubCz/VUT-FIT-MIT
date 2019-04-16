@@ -196,26 +196,48 @@ def send_email(from_addr, to_addr, cc_addr_list, subject, message, login,
 def find_bbox(frame, thresh):
     thresh = np.asarray(thresh, dtype=np.uint8)
 
+    #kernel = np.array([[3,3,3],
+    #                   [3,-1,3],
+    #                   [3,3,3]])
+    #thresh = cv2.filter2D(thresh, -1, kernel)
+    thresh = cv2.medianBlur(thresh, 3)
+    ret, thresh = cv2.threshold(thresh, 127, 255, 0)     
+    thresh = cv2.medianBlur(thresh, 3)
     kernel = np.ones((3, 3), np.uint8) 
+
     closing = cv2.morphologyEx(thresh, cv2.MORPH_GRADIENT, 
-                                kernel, iterations = 2) 
+                                kernel, iterations = 4) 
       
     # Background area using Dialation 
-    bg = cv2.dilate(closing, kernel, iterations = 4) 
+    # bg = cv2.dilate(closing, kernel, iterations = 4) 
       
     # Finding foreground area 
-    dist_transform = cv2.distanceTransform(closing, cv2.DIST_L2, 0) 
+    dist_transform = cv2.distanceTransform(thresh, cv2.DIST_L2, 0) 
     ret, fg = cv2.threshold(dist_transform, 0.02
                             * dist_transform.max(), 255, 0) 
 
+    fg = cv2.medianBlur(fg, 3)
+
+    fg = cv2.morphologyEx(fg, cv2.MORPH_GRADIENT, 
+                                kernel, iterations = 4) 
+
     fg = cv2.convertScaleAbs(fg)
+
     cnts = cv2.findContours(fg.copy(), cv2.RETR_EXTERNAL,
         cv2.CHAIN_APPROX_SIMPLE)
     cnts = imutils.grab_contours(cnts)
  
     whites = round(np.count_nonzero(fg == 255)/ (fg.shape[0]*fg.shape[1]), 2)
-    
-    if whites <= 0.15:
+
+    if whites <= 0.02:
+        bulgarian_constant = 1000
+    elif whites <= 0.03:
+        bulgarian_constant = 1500
+    elif whites <= 0.05:
+        bulgarian_constant = 2500
+    elif whites <= 0.07:
+        bulgarian_constant = 3500
+    elif whites <= 0.15:
         bulgarian_constant = 5000
     elif whites <= 0.25:
         bulgarian_constant = 10000
@@ -238,4 +260,11 @@ def find_bbox(frame, thresh):
         cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
         text = "Occupied"
 
-    return frame, fg
+    return frame, fg, thresh, closing
+
+def exp_type(curr_expr, experiments):
+    for i, item in enumerate(experiments):
+        if item[0] and curr_expr!=i:
+            return i
+
+    return curr_expr

@@ -10,6 +10,7 @@ from timeit import default_timer as timer
 
 from grid import Grid
 from tools import sound_notification, create_timestamp, email_notification, find_bbox
+from real_time import real_time
 
 def get_args():
     """
@@ -33,29 +34,6 @@ def get_args():
     args = parser.parse_args()
 
     return args
-
-
-def real_time(args):
-    """
-    main for real-time mode
-    """
-    cap = cv2.VideoCapture(0)
-    fgbg = cv2.createBackgroundSubtractorMOG2()
-
-    while(True):
-        ret, frame = cap.read()
-
-        #start_time = timer()
-        map_ = fgbg.apply(frame)
-        #end_time = timer() - start_time
-        #print("Computation time: " + str(end_time))
-        frame, fg = find_bbox(frame, map_)
-        cv2.imshow('fgmask', frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-
-    cap.release()
-    cv2.destroyAllWindows()
 
 
 def time_capsule(args):
@@ -105,6 +83,6 @@ def time_capsule(args):
 if __name__ == "__main__":
     args = get_args()
     if args.mode == "real_time":
-        real_time(args)
+        real_time()
     elif args.mode == "time_capsule":
         time_capsule(args)
