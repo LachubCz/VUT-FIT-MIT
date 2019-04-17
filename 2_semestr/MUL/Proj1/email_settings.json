@@ -1,5 +1,0 @@
-{
-    "sender_email"    : "mynameisjeff@google.com", 
-    "sender_password" : "passwd",
-    "recievers"       : ["richard@google.com", "feynman@google.com"]
-}
