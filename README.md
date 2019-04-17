@@ -15,3 +15,21 @@
   * [3. Projekt](./1_semestr/TIN/Proj3) - 2.5/5
 * SFC - Soft Computing
   * [1. Projekt](./1_semestr/SFC/Proj1) - 21/30
+
+## 2. semester
+
+* FYO - Fyzikální optika
+  * [1. Projekt](./2_semestr/FYO/Proj1) - 27/30
+* MUL - Multimédia
+  * [1. Projekt](./2_semestr/MUL/Proj1) - ?/29
+* PDS - Přenos dat, počítačové sítě a protokoly	
+  * [1. Projekt](./2_semestr/PDS/Proj1) - ?/25
+* ZPO - Zpracování obrazu
+  * [1. Projekt](./2_semestr/ZPO/Proj1) - 2/2
+  * [2. Projekt](./2_semestr/ZPO/Proj2) - 2/2
+  * [3. Projekt](./2_semestr/ZPO/Proj3) - 2/2
+  * [5. Projekt](./2_semestr/ZPO/Proj5) - 2/2
+  * [6. Projekt](./2_semestr/ZPO/Proj6) - ?/29
+* ZRE - Zpracování řečových signálů
+  * [1. Projekt](./2_semestr/ZRE/Proj1) - ?/29
+  
