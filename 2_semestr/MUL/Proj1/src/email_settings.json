@@ -1,5 +1,5 @@
 {
-    "sender_email"    : "megustagroup@gmail.com", 
-    "sender_password" : "748159263",
-    "recievers"       : ["lachubcz@gmail.com", "petr.genius.buchal@gmail.com"]
+    "sender_email"    : "sender@gmail.com", 
+    "sender_password" : "password",
+    "recievers"       : ["reciever1@gmail.com", "reciever2@gmail.com"]
 }
