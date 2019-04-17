@@ -9,8 +9,8 @@ from collections import deque
 import cv2
 from timeit import default_timer as timer
 
-from tools import sound_notification, create_timestamp, email_notification, find_bbox
-from real_time import real_time
+from tools import sound_notification, create_timestamp, email_notification, find_bbox, err_print
+from demo import demo
 
 def get_args():
     """
@@ -18,8 +18,8 @@ def get_args():
     """
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('-m', '--mode', action="store", choices=["real_time", "time_capsule"],
-                        default="real_time", help="training dataset file")
+    parser.add_argument('-m', '--mode', action="store", choices=["demo", "time_capsule"],
+                        default="demo", help="training dataset file")
     parser.add_argument('--source', action="store",
                         default=None, help="video file to test algorithm")
     parser.add_argument('--time_jump', action="store", type=int,
@@ -31,6 +31,8 @@ def get_args():
     parser.add_argument('-s', '--sound_notification', action="store_true",
                         default=False, help="flag for sound notification")
     parser.add_argument('-r', '--save_records', action="store_true",
+                        default=False, help="flag for saving images with detected motion")
+    parser.add_argument('-n', '--no_display', action="store_true",
                         default=False, help="flag for saving images with detected motion")
 
     args = parser.parse_args()
@@ -67,6 +69,7 @@ def time_capsule(args):
         frame, _, _, _, _, _, _, _, number_of_elm = find_bbox(frame, map_)
 
         if number_of_elm > 0:
+            print(tm + " - Motion detected.")
             if args.sound_notification:
                 sound_notification()
             if args.email_notification:
@@ -75,14 +78,15 @@ def time_capsule(args):
                 os.remove(tm + '.jpg')
             if args.save_records:
                 cv2.imwrite('./history/' + tm + '.jpg', frame)
+                print("Frame with motion was saved.")
             if args.copy_to_server:
-                subprocess.check_call(['scp', './history/' + tm + '.jpg', 
+                cv2.imwrite(tm + '.jpg', frame)
+                p = subprocess.check_call(['scp', './' + tm + '.jpg', 
                                       scp_data['user']+'@'+scp_data['server']+':'+scp_data['path']])
-                #p = subprocess.Popen(['scp', './history/' + tm + '.jpg', 
-                #                      scp_data['user']+'@'+scp_data['server']+':'+scp_data['path']])
-                #sts = os.waitpid(p.pid, 0)
+                os.remove(tm + '.jpg')
 
-        cv2.imshow('frame',frame)
+        if not args.no_display:
+            cv2.imshow('Motion detection', frame)
         for _ in range(int(args.time_jump/0.1)):
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 cap.release()
@@ -93,7 +97,7 @@ def time_capsule(args):
 
 if __name__ == "__main__":
     args = get_args()
-    if args.mode == "real_time":
-        real_time(args.source)
+    if args.mode == "demo":
+        demo(args.source)
     elif args.mode == "time_capsule":
         time_capsule(args)

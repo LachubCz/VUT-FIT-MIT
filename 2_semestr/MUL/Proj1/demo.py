@@ -7,7 +7,7 @@ import numpy as np
 
 from tools import find_bbox
 
-def real_time(source=None, height=240):
+def demo(source=None, height=240):
     """
     method creates window, that shows, what is happening with image,
     when is analyzed by algorithm

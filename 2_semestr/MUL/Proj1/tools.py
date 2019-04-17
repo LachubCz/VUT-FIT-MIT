@@ -10,6 +10,13 @@ import cv2
 import imutils
 import numpy as np
 
+def err_print(*args, **kwargs):
+    """
+    method for printing to stderr
+    """
+    print(*args, file=sys.stderr, **kwargs)
+
+
 def create_timestamp():
     """
     method creates timestamps
@@ -54,7 +61,6 @@ def send_email(from_addr, to_addr, cc_addr_list, subject, message, login,
     """
     image = open('{}.jpg' .format(timestamp), 'rb').read()
     msg = MIMEMultipart()
-    print(from_addr, to_addr)
     msg['Subject'] = subject
     msg['From'] = from_addr
     msg['To'] = to_addr
