@@ -6,6 +6,7 @@ import numpy as np
 from PIL import Image, ImageChops
 
 from image import Image as Dato
+from bbox_evaluation import evaluate_ellipse_fit
 
 def ela_(image, scale=10, quality=80):
     original = Image.open(image)
@@ -95,11 +96,19 @@ def find_augmentation(image):
 
 if __name__ == '__main__':
     data = parse_data("./Sp_im.txt", "./Sp/", "./Au/")
+    whole_score = 0
     for i, item in enumerate(data):
         image = ela(item.path)
+        image = cv2.medianBlur(image, 3)
+        #cv2.imshow("frame1", image)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-
+        #cv2.imshow("frame2", image)
+        #image = cv2.adaptiveThreshold(image,255,cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY,11,2)
+        ret, image = cv2.threshold(image,50,255,cv2.THRESH_BINARY)
+        #cv2.imshow("frame3", image)
+        kernel = np.ones((3, 3), np.uint8) 
+        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 4)
+        #cv2.imshow("frame4", image)
         cnts = cv2.findContours(image.copy(), cv2.RETR_EXTERNAL,
             cv2.CHAIN_APPROX_SIMPLE)
         cnts = imutils.grab_contours(cnts)
@@ -112,10 +121,23 @@ if __name__ == '__main__':
             else:
                 max_idx = e
                 max_pnts = cv2.contourArea(elem)
+        #print(len(cnts), max_idx)
         #print("MAX:", max_pnts)
-
-        (x, y, w, h) = cv2.boundingRect(cnts[max_idx])
-        cv2.rectangle(item.image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-
-        cv2.imshow("frame", item.image)
-        cv2.waitKey(0)
+        if len(cnts) > 0:
+            (x, y, w, h) = cv2.boundingRect(cnts[max_idx])
+            pred =  {
+              "x": x,
+              "y": y,
+              "w": w,
+              "h": h
+            }
+            cv2.rectangle(item.image, (pred['x'], pred['y']), (pred['x'] + pred['w'], pred['y'] + pred['h']), (0, 255, 0), 2)
+            cv2.rectangle(item.image, (item.bbox['x'], item.bbox['y']), (item.bbox['x'] + item.bbox['w'], item.bbox['y'] + item.bbox['h']), (255, 0, 0),2)
+        else:
+            pred = None
+        score = evaluate_ellipse_fit(pred, item)
+        print(score)
+        whole_score += score
+        #cv2.imshow("frame", item.image)
+        #cv2.waitKey(0)
+    print((whole_score/(len(data)))*100)
