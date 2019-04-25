@@ -82,4 +82,4 @@ def decode(s):
     return ret
 
 if __name__ == "__main__":
-    encode("")
+    print(encode({str.encode("type"):"hello", str.encode("txid"):123, str.encode("username"):"xlogin00", str.encode("ipv4"): "192.0.2.1", str.encode("port"): 34567}))
