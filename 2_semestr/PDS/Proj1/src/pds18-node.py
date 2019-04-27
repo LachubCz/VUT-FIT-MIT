@@ -10,6 +10,8 @@ from messages import Peer_Record, Peer_Records, Db_Record, Db_Records
 from bencode import encode, decode
 from tools import err_print, get_pipe_name
 
+buffer_size = 16384
+
 def get_args():
     """
     method for parsing of arguments
@@ -22,6 +24,8 @@ def get_args():
         help="IP address to which the peer will regularly send HELLO messages and GETLIST queries")
     parser.add_argument('--reg-port', action="store", type=int, required=True,
         help="registration node port to which the peer will regularly send HELLO messages and GETLIST queries")
+    parser.add_argument('--debug', action="store_true", default=False,
+        help="debug logging")
 
     args = parser.parse_args()
 
@@ -54,7 +58,7 @@ class Node(object):
 
     def listen_reg(self):
         while True:
-            data, addr = self.reg_sock.recvfrom(1024)
+            data, addr = self.reg_sock.recvfrom(buffer_size)
 
             data = decode(data)
             type_ = data[str.encode("type")]

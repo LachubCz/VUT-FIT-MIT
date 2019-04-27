@@ -10,6 +10,8 @@ from messages import Peer_Record, Peer_Records, Db_Record, Db_Records
 from bencode import encode, decode
 from tools import err_print, get_pipe_name
 
+buffer_size = 16384
+
 def get_args():
     """
     method for parsing of arguments
@@ -28,6 +30,8 @@ def get_args():
         help="IP address to which the peer will regularly send HELLO messages and GETLIST queries")
     parser.add_argument('--reg-port', action="store", type=int, required=True,
         help="registration node port to which the peer will regularly send HELLO messages and GETLIST queries")
+    parser.add_argument('--debug', action="store_true", default=False,
+        help="debug logging")
 
     args = parser.parse_args()
 
@@ -36,22 +40,23 @@ def get_args():
 
 class Peer(object):
     def __init__(self, args):
+        #arguments from terminal
         self.id = args.id_
         self.username = args.username
         self.chat_ipv4 = args.chat_ipv4
         self.chat_port = args.chat_port
         self.reg_ipv4 = args.reg_ipv4
         self.reg_port = args.reg_port
-
-        self.pipe = get_pipe_name("peer", self.id)
-
-        self.txid = 0
-
-        self.print_nextlist = False
-        self.actual_peers = False
-        self.print_ack = False
+        self.debug = args.debug
 
         self.peers = Peer_Records()
+        self.pipe = get_pipe_name("peer", self.id)
+        
+        self.txid = 0
+
+        self.print_ack = False
+        self.actual_peers = False
+        self.print_nextlist = False
 
         try:
             self.chat_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -62,8 +67,7 @@ class Peer(object):
 
         msg = Message_Hello('hello', self.txid, self.username, self.chat_ipv4, self.chat_port)
         msg_b = msg.encoded_msg()
-        self.chat_sock.sendto(msg_b, (self.reg_ipv4, self.reg_port))
-        self.next_txid()
+        self.send_message(msg_b)
 
 
     def run(self):
@@ -75,14 +79,20 @@ class Peer(object):
 
     def listen_chat(self):
         while True:
-            data, addr = self.chat_sock.recvfrom(1024)
+            data, addr = self.chat_sock.recvfrom(buffer_size)
             data = decode(data)
+            if self.debug:
+                print(data)
             type_ = data[str.encode("type")]
             type_ = type_.decode('UTF-8')
+
+
             if type_ == "error":
-                print(data)
+                pass
+
+
             elif type_ == "list":
-                print(data)
+                
                 self.peers = Peer_Records()
                 for i in range(len(data[str.encode("peers")].keys())):
                     rec = Peer_Record(data[str.encode("peers")][str.encode(str(i))][str.encode("username")], data[str.encode("peers")][str.encode(str(i))][str.encode("ipv4")], data[str.encode("peers")][str.encode(str(i))][str.encode("port")], bytes_=True)
@@ -102,17 +112,20 @@ class Peer(object):
                     err_print(string)
                     self.print_nextlist = False
 
+
             elif type_ == "message":
-                print(data)
                 print(data[str.encode("message")].decode('UTF-8'))
+
+
             elif type_ == "ack":
-                print(data)
                 if self.print_ack:
                     print("Message GETLIST acknowlidged.")
                     self.print_ack = False
+
+
             else:
-                print("other")
-                print(data)
+                #ignore other messages
+                pass
 
 
     def listen_pipe(self):
@@ -121,19 +134,20 @@ class Peer(object):
                 with open(self.pipe) as p:
                     data = p.read()
                 data = data.split()
-                if data[0] == "message":
+                if self.debug:
                     print(data)
+
+
+                if data[0] == "message":
                     self.actual_peers = False
 
                     msg = Message_GetList('getlist', self.txid)
                     msg_b = msg.encoded_msg()
-                    self.chat_sock.sendto(msg_b, (self.reg_ipv4, self.reg_port))
+                    self.send_message(msg_b)
 
                     while True:
                         if self.actual_peers:
                             break
-
-                    self.next_txid()
 
                     if data[1] == self.username:
                         for i, item in enumerate(self.peers.records):
@@ -144,60 +158,57 @@ class Peer(object):
 
                                 self.next_txid()
 
+
                 elif data[0] == "getlist":
-                    print(data)
                     msg = Message_GetList('getlist', self.txid)
                     msg_b = msg.encoded_msg()
                     self.print_ack = True
-                    self.chat_sock.sendto(msg_b, (self.reg_ipv4, self.reg_port))
+                    self.send_message(msg_b)
 
-                    self.next_txid()
-
-                    
 
                 elif data[0] == "peers":
-                    print(data)
                     msg = Message_GetList('getlist', self.txid)
                     msg_b = msg.encoded_msg()
                     self.print_nextlist = True
-                    self.chat_sock.sendto(msg_b, (self.reg_ipv4, self.reg_port))
+                    self.send_message(msg_b)
 
-                    self.next_txid()
-
-                    
 
                 elif data[0] == "reconnect":
-                    print(data)
                     #disconnect from node
                     msg = Message_Hello('hello', self.txid, self.username, '0.0.0.0', 0)
                     msg_b = msg.encoded_msg()
-                    self.chat_sock.sendto(msg_b, (self.reg_ipv4, self.reg_port))
+                    self.send_message(msg_b)
 
-                    self.next_txid()
-
-                    #changes in peer class                   
+                    #changes in peer class
                     self.reg_ipv4 = data[1]
                     self.reg_port = int(data[2])
 
                     #connect from node
                     msg = Message_Hello('hello', self.txid, self.username, self.chat_ipv4, self.chat_port)
                     msg_b = msg.encoded_msg()
-                    self.chat_sock.sendto(msg_b, (self.reg_ipv4, self.reg_port))
+                    self.send_message(msg_b)
 
-                    self.next_txid()
+
                 else:
-                    #ignoring of wrong pipe messages
+                    #ignore other pipe messages
                     pass
-            except:# Exception as e: 
-                #pipe is not created
+            except:# Exception as e:
                 #print(e)
+                #pipe is not created
                 pass
+
 
     def next_txid(self):
         if self.txid == 65535:
             self.txid = 0
         else:
             self.txid += 1
+
+
+    def send_message(self, msg_b):
+        self.chat_sock.sendto(msg_b, (self.reg_ipv4, self.reg_port))
+        self.next_txid()
+
 
 if __name__ == "__main__":
     args = get_args()
