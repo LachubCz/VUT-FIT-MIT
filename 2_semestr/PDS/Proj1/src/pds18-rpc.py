@@ -44,7 +44,7 @@ def get_args():
             err_print("--from --to and --message are required for this command")
             sys.exit(-1)
     elif args.command == "reconnect" or args.command == "connect":
-        if args.reg_ipv4 == None or reg_port == None:
+        if args.reg_ipv4 == None or args.reg_port == None:
             err_print("--reg-ipv4 and --reg-port are required for this command")
             sys.exit(-1)
 

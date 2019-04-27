@@ -45,6 +45,8 @@ class Peer(object):
 
         self.pipe = get_pipe_name("peer", self.id)
 
+        self.txid = 0
+
         try:
             self.chat_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             self.chat_sock.bind((self.chat_ipv4, self.chat_port))
@@ -52,16 +54,8 @@ class Peer(object):
             err_print("Cannot assign requested chat address or port.")
             sys.exit(-1)
 
-        try:
-            self.reg_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            self.reg_sock.bind((self.reg_ipv4, self.reg_port))
-        except:
-            err_print("Cannot assign requested reg address or port.")
-            sys.exit(-1)
-
     def run(self):
         _thread.start_new_thread(self.listen_chat, ( ))
-        _thread.start_new_thread(self.listen_reg,  ( ))
         _thread.start_new_thread(self.listen_pipe, ( ))
 
         while True:
@@ -73,48 +67,23 @@ class Peer(object):
             data = decode(data)
             type_ = decoded[str.encode("type")]
             if type_ == "hello":
-                pass
+                print(data)
             elif type_ == "getlist":
-                pass
+                print(data)
             elif type_ == "error":
-                pass
+                print(data)
             elif type_ == "list":
-                pass
+                print(data)
             elif type_ == "message":
-                pass
+                print(data)
             elif type_ == "update":
-                pass
+                print(data)
             elif type_ == "disconnect":
-                pass
+                print(data)
             elif type_ == "ack":
-                pass
+                print(data)
             else:
-                pass
-
-
-    def listen_reg(self):
-        while True:
-            data, addr = self.reg_sock.recvfrom(1024)
-            data = decode(data)
-            type_ = decoded[str.encode("type")]
-            if type_ == "hello":
-                pass
-            elif type_ == "getlist":
-                pass
-            elif type_ == "error":
-                pass
-            elif type_ == "list":
-                pass
-            elif type_ == "message":
-                pass
-            elif type_ == "update":
-                pass
-            elif type_ == "disconnect":
-                pass
-            elif type_ == "ack":
-                pass
-            else:
-                pass
+                print(data)
 
 
     def listen_pipe(self):
@@ -131,6 +100,19 @@ class Peer(object):
                     print(data)
                 elif data[0] == "reconnect":
                     print(data)
+                    #disconnect from node
+                    msg = Message_Hello('hello', self.txid, self.username, '0.0.0.0', 0)
+                    msg_b = msg.encoded_msg()
+
+                    self.chat_sock.sendto(msg_b, (self.reg_ipv4, self.reg_port))
+                    self.next_txid()
+                    #connect from node
+                    self.reg_ipv4 = data[1]
+                    self.reg_port = data[2]
+
+                    msg = Message_Hello('hello', self.txid, self.username, self.chat_ipv4, self.chat_port)
+                    msg_b = msg.encoded_msg()
+                    self.chat_sock.sendto(msg_b, (self.reg_ipv4, self.reg_port))
                 else:
                     #ignoring of wrong pipe messages
                     pass
@@ -138,6 +120,11 @@ class Peer(object):
                 #pipe is not created
                 pass
 
+    def next_txid(self):
+        if txid == 65535:
+            self.txid = 0
+        else:
+            self.txid += 1
 
 if __name__ == "__main__":
     args = get_args()

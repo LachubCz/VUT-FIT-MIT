@@ -16,11 +16,11 @@ def get_args():
     """
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--id', action="store", type=int,
+    parser.add_argument('--id', action="store", type=int, required=True, dest="id_",
         help="unique peer instance identifier, where you need to distinguish between them within a single guest")
-    parser.add_argument('--reg-ipv4', action="store", type=str,
+    parser.add_argument('--reg-ipv4', action="store", type=str, required=True,
         help="IP address to which the peer will regularly send HELLO messages and GETLIST queries")
-    parser.add_argument('--reg-port', action="store", type=int,
+    parser.add_argument('--reg-port', action="store", type=int, required=True,
         help="registration node port to which the peer will regularly send HELLO messages and GETLIST queries")
 
     args = parser.parse_args()
@@ -34,6 +34,8 @@ class Node(object):
         self.reg_port = args.reg_port
 
         self.pipe = get_pipe_name("node", self.id)
+
+        self.peers = []
 
         try:
             self.reg_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -52,26 +54,30 @@ class Node(object):
     def listen_reg(self):
         while True:
             data, addr = self.reg_sock.recvfrom(1024)
+
             data = decode(data)
-            type_ = decoded[str.encode("type")]
+            type_ = data[str.encode("type")]
+            type_ = type_.decode('UTF-8')
+
             if type_ == "hello":
-                pass
+                print(data)
+                Peer_Record(data[str.encode("username")], data[str.encode("ipv4")], data[str.encode("port")], bytes_=True)
             elif type_ == "getlist":
-                pass
+                print(data)
             elif type_ == "error":
-                pass
+                print(data)
             elif type_ == "list":
-                pass
+                print(data)
             elif type_ == "message":
-                pass
+                print(data)
             elif type_ == "update":
-                pass
+                print(data)
             elif type_ == "disconnect":
-                pass
+                print(data)
             elif type_ == "ack":
-                pass
+                print(data)
             else:
-                pass
+                print(data)
 
 
     def listen_pipe(self):
