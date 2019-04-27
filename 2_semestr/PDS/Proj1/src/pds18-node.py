@@ -71,6 +71,7 @@ class Node(object):
                 print(self.peers)
             elif type_ == "getlist":
                 print(data)
+                self.acknowlidge(addr[0], addr[1], data[str.encode("txid")])
                 is_authorized = False
                 for i, item in enumerate(self.peers):
                     if item.ipv4_ == addr[0] and item.port_ == addr[1]:
@@ -153,6 +154,10 @@ class Node(object):
                 #print(e)
                 pass
 
+    def acknowlidge(self, ipv4, port, txid):
+        msg = Message_Ack('ack', txid)
+        msg_b = msg.encoded_msg()
+        self.reg_sock.sendto(msg_b, (ipv4, port))
 
 if __name__ == "__main__":
     args = get_args()

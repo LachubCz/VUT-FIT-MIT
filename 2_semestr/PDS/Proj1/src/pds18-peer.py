@@ -49,6 +49,7 @@ class Peer(object):
 
         self.print_nextlist = False
         self.actual_peers = False
+        self.print_ack = False
 
         self.peers = Peer_Records()
 
@@ -78,11 +79,7 @@ class Peer(object):
             data = decode(data)
             type_ = data[str.encode("type")]
             type_ = type_.decode('UTF-8')
-            if type_ == "hello":
-                print(data)
-            elif type_ == "getlist":
-                print(data)
-            elif type_ == "error":
+            if type_ == "error":
                 print(data)
             elif type_ == "list":
                 print(data)
@@ -108,12 +105,11 @@ class Peer(object):
             elif type_ == "message":
                 print(data)
                 print(data[str.encode("message")].decode('UTF-8'))
-            elif type_ == "update":
-                print(data)
-            elif type_ == "disconnect":
-                print(data)
             elif type_ == "ack":
                 print(data)
+                if self.print_ack:
+                    print("Message GETLIST acknowlidged.")
+                    self.print_ack = False
             else:
                 print("other")
                 print(data)
@@ -152,14 +148,24 @@ class Peer(object):
                     print(data)
                     msg = Message_GetList('getlist', self.txid)
                     msg_b = msg.encoded_msg()
+                    self.print_ack = True
                     self.chat_sock.sendto(msg_b, (self.reg_ipv4, self.reg_port))
 
                     self.next_txid()
 
-                    self.print_nextlist = True
+                    
 
                 elif data[0] == "peers":
                     print(data)
+                    msg = Message_GetList('getlist', self.txid)
+                    msg_b = msg.encoded_msg()
+                    self.print_nextlist = True
+                    self.chat_sock.sendto(msg_b, (self.reg_ipv4, self.reg_port))
+
+                    self.next_txid()
+
+                    
+
                 elif data[0] == "reconnect":
                     print(data)
                     #disconnect from node
