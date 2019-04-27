@@ -36,6 +36,7 @@ class Node(object):
         self.pipe = get_pipe_name("node", self.id)
 
         self.peers = []
+        self.nodes = []
 
         try:
             self.reg_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -61,7 +62,13 @@ class Node(object):
 
             if type_ == "hello":
                 print(data)
-                Peer_Record(data[str.encode("username")], data[str.encode("ipv4")], data[str.encode("port")], bytes_=True)
+                if data[str.encode("ipv4")].decode('UTF-8') == "0.0.0.0" and data[str.encode("port")] == 0:
+                    for i, item in enumerate(self.peers):
+                        if data[str.encode("username")].decode('UTF-8') == item.username_:
+                            del self.peers[i]
+                else:
+                    self.peers.append(Peer_Record(data[str.encode("username")], data[str.encode("ipv4")], data[str.encode("port")], bytes_=True))
+                print(self.peers)
             elif type_ == "getlist":
                 print(data)
             elif type_ == "error":
@@ -88,10 +95,37 @@ class Node(object):
                 data = data.split()
                 if data[0] == "database":
                     print(data)
+                    
+                    string = "{"
+                    for i, item in enumerate(self.peers):
+                        string += str(item) + ','
+
+                    if self.peers != 0:
+                        string = string[:-1]
+
+                    string += "}"
+
+                    err_print(string)
                 elif data[0] == "neighbors":
                     print(data)
+                    err_print("wrong combination of command and peer/node")
                 elif data[0] == "connect":
                     print(data)
+
+                   #msg = Message_Hello('hello', self.txid, self.username, '0.0.0.0', 0)
+                   #msg_b = msg.encoded_msg()
+                   #self.chat_sock.sendto(msg_b, (self.reg_ipv4, self.reg_port))
+
+                   ##changes in peer class
+                   #self.next_txid()
+                   #self.reg_ipv4 = data[1]
+                   #self.reg_port = int(data[2])
+
+                   ##connect from node
+                   #msg = Message_Hello('hello', self.txid, self.username, self.chat_ipv4, self.chat_port)
+                   #msg_b = msg.encoded_msg()
+                   #self.chat_sock.sendto(msg_b, (self.reg_ipv4, self.reg_port))
+
                 elif data[0] == "disconnect":
                     print(data)
                 elif data[0] == "sync":
@@ -99,8 +133,9 @@ class Node(object):
                 else:
                     #ignoring of wrong pipe messages
                     pass
-            except:
+            except Exception as e:
                 #pipe is not created
+                print(e)
                 pass
 
 

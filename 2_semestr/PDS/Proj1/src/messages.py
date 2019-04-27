@@ -80,6 +80,9 @@ class Peer_Records():
 
         return dict_
 
+    def __str__(self):
+        return str(self.dictionary())
+
 class Peer_Record():
     def __init__(self, username_, ipv4_, port_, bytes_=False):
         if bytes_:
@@ -90,6 +93,16 @@ class Peer_Record():
             self.username_ = username_
             self.ipv4_ = ipv4_
             self.port_ = port_
+
+    def __str__(self):
+        dict_ = {
+            "username" : self.username_,
+            "ipv4" : self.ipv4_,
+            "port" : self.port_
+        }
+
+        return str(dict_)
+
 
 class Message_Message(Message):
     def __init__(self, type_, txid_, from_, to_, message_, bytes_=False):
