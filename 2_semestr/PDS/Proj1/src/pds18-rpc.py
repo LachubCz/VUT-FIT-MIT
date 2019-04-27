@@ -68,6 +68,7 @@ if __name__ == "__main__":
     elif args.node:
         path = get_pipe_name("node", args.id)
 
+    os.mkfifo(path)
     pipe = open(path, "w")
 
     if args.command == "message":
@@ -90,4 +91,5 @@ if __name__ == "__main__":
         pipe.write("{}" .format(args.command))
 
     pipe.close()
+
     os.remove(path)

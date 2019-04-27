@@ -5,11 +5,10 @@ import _thread
 import socket
 import argparse
 
-
 from messages import Message_Hello, Message_GetList, Message_List, Message_Message, Message_Update, Message_Disconnect, Message_Ack, Message_Error
 from messages import Peer_Record, Peer_Records, Db_Record, Db_Records
 from bencode import encode, decode
-from tools import err_print
+from tools import err_print, get_pipe_name
 
 def get_args():
     """
@@ -17,7 +16,7 @@ def get_args():
     """
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--id', action="store", type=int, required=True,
+    parser.add_argument('--id', action="store", type=int, required=True, dest="id_",
         help="unique peer instance identifier, where you need to distinguish between them within a single guest")
     parser.add_argument('--username', action="store", type=str, required=True,
         help="unique username identifying this peera within the chat")
@@ -37,32 +36,40 @@ def get_args():
 
 class Peer(object):
     def __init__(self, args):
-        self.args = args
+        self.id = args.id_
+        self.username = args.username
+        self.chat_ipv4 = args.chat_ipv4
+        self.chat_port = args.chat_port
+        self.reg_ipv4 = args.reg_ipv4
+        self.reg_port = args.reg_port
+
+        self.pipe = get_pipe_name("peer", self.id)
+
         try:
             self.chat_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            self.chat_sock.bind((args.chat_ipv4, args.chat_port))
+            self.chat_sock.bind((self.chat_ipv4, self.chat_port))
         except:
             err_print("Cannot assign requested chat address or port.")
             sys.exit(-1)
 
         try:
             self.reg_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            self.reg_sock.bind((args.reg_ipv4, args.reg_port))
+            self.reg_sock.bind((self.reg_ipv4, self.reg_port))
         except:
             err_print("Cannot assign requested reg address or port.")
             sys.exit(-1)
 
     def run(self):
-        _thread.start_new_thread(self.listen_chat, (self.chat_sock, ))
-        _thread.start_new_thread(self.listen_reg,  (self.reg_sock, ))
-        _thread.start_new_thread(self.listen_pipe, ("/tmp/hourly", ))
+        _thread.start_new_thread(self.listen_chat, ( ))
+        _thread.start_new_thread(self.listen_reg,  ( ))
+        _thread.start_new_thread(self.listen_pipe, ( ))
 
         while True:
             pass
 
-    def listen_chat(self, chat_sock):
+    def listen_chat(self):
         while True:
-            data, addr = chat_sock.recvfrom(1024)
+            data, addr = self.chat_sock.recvfrom(1024)
             data = decode(data)
             type_ = decoded[str.encode("type")]
             if type_ == "hello":
@@ -85,9 +92,9 @@ class Peer(object):
                 pass
 
 
-    def listen_reg(self, reg_sock):
+    def listen_reg(self):
         while True:
-            data, addr = reg_sock.recvfrom(1024)
+            data, addr = self.reg_sock.recvfrom(1024)
             data = decode(data)
             type_ = decoded[str.encode("type")]
             if type_ == "hello":
@@ -110,23 +117,25 @@ class Peer(object):
                 pass
 
 
-    def listen_pipe(self, pipe):
+    def listen_pipe(self):
         while True:
             try:
-                with open(pipe) as p:
+                with open(self.pipe) as p:
                     data = p.read()
                 data = data.split()
                 if data[0] == "message":
-                    print(1)
-                elif data[0] == "getlist":
-                    print(2)
-                elif data[0] == "peers":
-                    print(3)
-                elif data[0] == "reconnect":
-                    print(4)
-                else:
                     print(data)
+                elif data[0] == "getlist":
+                    print(data)
+                elif data[0] == "peers":
+                    print(data)
+                elif data[0] == "reconnect":
+                    print(data)
+                else:
+                    #ignoring of wrong pipe messages
+                    pass
             except:
+                #pipe is not created
                 pass
 
 
@@ -134,23 +143,3 @@ if __name__ == "__main__":
     args = get_args()
     peer = Peer(args)
     peer.run()
-
-
-
-
-
-
-
-
-
-
-    #msg = Message_Hello('hello', 123, 'xlogin00', '127.0.0.1', 5005)
-    #UDP_IP = msg.ipv4_
-    #UDP_PORT = msg.port_
-    #MESSAGE = msg.encoded_msg()
-
-    #print ("UDP target IP:", UDP_IP)
-    #print ("UDP target port:", UDP_PORT)
-    #print ("message:", MESSAGE)
-
-    #sock.sendto(MESSAGE, (UDP_IP, UDP_PORT))
