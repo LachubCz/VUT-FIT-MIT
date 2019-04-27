@@ -8,6 +8,7 @@ import argparse
 
 from messages import Message_Hello, Message_GetList, Message_List, Message_Message, Message_Update, Message_Disconnect, Message_Ack, Message_Error
 from messages import Peer_Record, Peer_Records, Db_Record, Db_Records
+from bencode import encode, decode
 from tools import err_print
 
 def get_args():
@@ -34,8 +35,6 @@ def get_args():
     return args
 
 
-
-
 class Peer(object):
     def __init__(self, args):
         self.args = args
@@ -54,7 +53,6 @@ class Peer(object):
             sys.exit(-1)
 
     def run(self):
-        
         _thread.start_new_thread(self.listen_chat, (self.chat_sock, ))
         _thread.start_new_thread(self.listen_reg,  (self.reg_sock, ))
         _thread.start_new_thread(self.listen_pipe, ("/tmp/hourly", ))
@@ -65,17 +63,72 @@ class Peer(object):
     def listen_chat(self, chat_sock):
         while True:
             data, addr = chat_sock.recvfrom(1024)
+            data = decode(data)
+            type_ = decoded[str.encode("type")]
+            if type_ == "hello":
+                pass
+            elif type_ == "getlist":
+                pass
+            elif type_ == "error":
+                pass
+            elif type_ == "list":
+                pass
+            elif type_ == "message":
+                pass
+            elif type_ == "update":
+                pass
+            elif type_ == "disconnect":
+                pass
+            elif type_ == "ack":
+                pass
+            else:
+                pass
 
 
     def listen_reg(self, reg_sock):
         while True:
             data, addr = reg_sock.recvfrom(1024)
+            data = decode(data)
+            type_ = decoded[str.encode("type")]
+            if type_ == "hello":
+                pass
+            elif type_ == "getlist":
+                pass
+            elif type_ == "error":
+                pass
+            elif type_ == "list":
+                pass
+            elif type_ == "message":
+                pass
+            elif type_ == "update":
+                pass
+            elif type_ == "disconnect":
+                pass
+            elif type_ == "ack":
+                pass
+            else:
+                pass
 
 
-    def listen_pipe(self, FIFO):
+    def listen_pipe(self, pipe):
         while True:
-            with open(FIFO) as fifo:
-                print("heher")
+            try:
+                with open(pipe) as p:
+                    data = p.read()
+                data = data.split()
+                if data[0] == "message":
+                    print(1)
+                elif data[0] == "getlist":
+                    print(2)
+                elif data[0] == "peers":
+                    print(3)
+                elif data[0] == "reconnect":
+                    print(4)
+                else:
+                    print(data)
+            except:
+                pass
+
 
 if __name__ == "__main__":
     args = get_args()
