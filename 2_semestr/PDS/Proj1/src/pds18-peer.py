@@ -40,7 +40,6 @@ def get_args():
 
 class Peer(object):
     def __init__(self, args):
-        #arguments from terminal
         self.id = args.id_
         self.username = args.username
         self.chat_ipv4 = args.chat_ipv4
@@ -152,11 +151,16 @@ class Peer(object):
                     if data[1] == self.username:
                         for i, item in enumerate(self.peers.records):
                             if data[2] == item.username_:
-                                msg = Message_Message('message', self.txid, self.username, item.username_, data[3])
-                                msg_b = msg.encoded_msg()
-                                self.chat_sock.sendto(msg_b, (item.ipv4_, item.port_))
+                                text = ""
+                                for e, elem in enumerate(data[3:]):
+                                    if e == 0:
+                                        text += elem
+                                    else:
+                                        text += " " + elem
 
-                                self.next_txid()
+                                msg = Message_Message('message', self.txid, self.username, item.username_, text)
+                                msg_b = msg.encoded_msg()
+                                self.send_message_to(msg_b, item.ipv4_, item.port_)
 
 
                 elif data[0] == "getlist":
@@ -174,16 +178,13 @@ class Peer(object):
 
 
                 elif data[0] == "reconnect":
-                    #disconnect from node
                     msg = Message_Hello('hello', self.txid, self.username, '0.0.0.0', 0)
                     msg_b = msg.encoded_msg()
                     self.send_message(msg_b)
 
-                    #changes in peer class
                     self.reg_ipv4 = data[1]
                     self.reg_port = int(data[2])
 
-                    #connect from node
                     msg = Message_Hello('hello', self.txid, self.username, self.chat_ipv4, self.chat_port)
                     msg_b = msg.encoded_msg()
                     self.send_message(msg_b)
@@ -207,6 +208,11 @@ class Peer(object):
 
     def send_message(self, msg_b):
         self.chat_sock.sendto(msg_b, (self.reg_ipv4, self.reg_port))
+        self.next_txid()
+
+
+    def send_message_to(self, msg_b, ipv4, port):
+        self.chat_sock.sendto(msg_b, (ipv4, port))
         self.next_txid()
 
 

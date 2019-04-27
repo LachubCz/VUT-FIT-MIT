@@ -25,7 +25,7 @@ def get_args():
         help="")
     parser.add_argument('--to', action="store", type=str,
         help="")
-    parser.add_argument('--message', action="store", type=str,
+    parser.add_argument('--message', action="store", nargs='+', 
         help="")
 
     parser.add_argument('--reg-ipv4', action="store", type=str,
@@ -72,7 +72,14 @@ if __name__ == "__main__":
     pipe = open(path, "w")
 
     if args.command == "message":
-        pipe.write("{} {} {} {}" .format(args.command, args.from_, args.to, args.message))
+        msg = ""
+        for i, item in enumerate(args.message):
+            if i == 0:
+                msg += item
+            else:
+                msg += " " + item
+
+        pipe.write("{} {} {} {}" .format(args.command, args.from_, args.to, msg))
     elif args.command == "getlist":
         pipe.write("{}" .format(args.command))
     elif args.command == "peers":
