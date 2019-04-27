@@ -48,6 +48,7 @@ class Peer(object):
         self.txid = 0
 
         self.print_nextlist = False
+        self.actual_peers = False
 
         self.peers = Peer_Records()
 
@@ -75,7 +76,8 @@ class Peer(object):
         while True:
             data, addr = self.chat_sock.recvfrom(1024)
             data = decode(data)
-            type_ = decoded[str.encode("type")]
+            type_ = data[str.encode("type")]
+            type_ = type_.decode('UTF-8')
             if type_ == "hello":
                 print(data)
             elif type_ == "getlist":
@@ -84,12 +86,12 @@ class Peer(object):
                 print(data)
             elif type_ == "list":
                 print(data)
-
-                decoded = decode(data)
-
-                for i in range(len(decoded[str.encode("peers")].keys())):
-                    rec = Peer_Record(decoded[str.encode("peers")][str.encode(str(i))][str.encode("username")], decoded[str.encode("peers")][str.encode(str(i))][str.encode("ipv4")], decoded[str.encode("peers")][str.encode(str(i))][str.encode("port")], bytes_=True)
+                self.peers = Peer_Records()
+                for i in range(len(data[str.encode("peers")].keys())):
+                    rec = Peer_Record(data[str.encode("peers")][str.encode(str(i))][str.encode("username")], data[str.encode("peers")][str.encode(str(i))][str.encode("ipv4")], data[str.encode("peers")][str.encode(str(i))][str.encode("port")], bytes_=True)
                     self.peers.add_record(rec)
+
+                self.actual_peers = True
 
                 if self.print_nextlist:
                     string = "{"
@@ -101,9 +103,11 @@ class Peer(object):
 
                     string += "}"
                     err_print(string)
-                
+                    self.print_nextlist = False
+
             elif type_ == "message":
                 print(data)
+                print(data[str.encode("message")].decode('UTF-8'))
             elif type_ == "update":
                 print(data)
             elif type_ == "disconnect":
@@ -111,6 +115,7 @@ class Peer(object):
             elif type_ == "ack":
                 print(data)
             else:
+                print("other")
                 print(data)
 
 
@@ -122,9 +127,30 @@ class Peer(object):
                 data = data.split()
                 if data[0] == "message":
                     print(data)
+                    self.actual_peers = False
+
+                    msg = Message_GetList('getlist', self.txid)
+                    msg_b = msg.encoded_msg()
+                    self.chat_sock.sendto(msg_b, (self.reg_ipv4, self.reg_port))
+
+                    while True:
+                        if self.actual_peers:
+                            break
+
+                    self.next_txid()
+
+                    if data[1] == self.username:
+                        for i, item in enumerate(self.peers.records):
+                            if data[2] == item.username_:
+                                msg = Message_Message('message', self.txid, self.username, item.username_, data[3])
+                                msg_b = msg.encoded_msg()
+                                self.chat_sock.sendto(msg_b, (item.ipv4_, item.port_))
+
+                                self.next_txid()
+
                 elif data[0] == "getlist":
                     print(data)
-                    msg = Message_GetList('getlist', 123)
+                    msg = Message_GetList('getlist', self.txid)
                     msg_b = msg.encoded_msg()
                     self.chat_sock.sendto(msg_b, (self.reg_ipv4, self.reg_port))
 

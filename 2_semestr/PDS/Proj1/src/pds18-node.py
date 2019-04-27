@@ -71,6 +71,21 @@ class Node(object):
                 print(self.peers)
             elif type_ == "getlist":
                 print(data)
+                is_authorized = False
+                for i, item in enumerate(self.peers):
+                    if item.ipv4_ == addr[0] and item.port_ == addr[1]:
+                        is_authorized = True
+
+                records = Peer_Records()
+                for i, item in enumerate(self.peers):
+                    records.add_record(item)
+
+                msg = Message_List('list', 123, records)
+                msg_b = msg.encoded_msg()
+
+                if is_authorized:
+                    self.reg_sock.sendto(msg_b, (addr[0], addr[1]))
+
             elif type_ == "error":
                 print(data)
             elif type_ == "list":
@@ -95,7 +110,7 @@ class Node(object):
                 data = data.split()
                 if data[0] == "database":
                     print(data)
-                    
+
                     string = "{"
                     for i, item in enumerate(self.peers):
                         string += str(item) + ','
@@ -133,9 +148,9 @@ class Node(object):
                 else:
                     #ignoring of wrong pipe messages
                     pass
-            except Exception as e:
+            except:# Exception as e:
                 #pipe is not created
-                print(e)
+                #print(e)
                 pass
 
 
