@@ -1,3 +1,5 @@
+from bencode import encode
+
 class Message(object):
     def __init__(self, type_, txid_, bytes_):
         if bytes_:
@@ -14,6 +16,9 @@ class Message(object):
         }
 
         return dict_
+
+    def encoded_msg(self):
+        return encode(self.dictionary())
 
 class Message_Hello(Message):
     def __init__(self, type_, txid_, username_, ipv4_, port_, bytes_=False):
