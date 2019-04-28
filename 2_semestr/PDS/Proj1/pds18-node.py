@@ -58,6 +58,7 @@ class Node(object):
             err_print("Cannot assign requested reg address or port.")
             sys.exit(-1)
 
+
     def run(self):
         _thread.start_new_thread(self.listen_reg,  ( ))
         _thread.start_new_thread(self.listen_pipe, ( ))
@@ -65,6 +66,7 @@ class Node(object):
 
         while True:
             pass
+
 
     def timeout_hanle(self):
         while True:
@@ -112,7 +114,7 @@ class Node(object):
                     recs.records.append(rec_db)
 
                     for e, elem in enumerate(self.nodes.keys()):
-                        if self.nodes[elem] != -1 and self.nodes[elem] != -2:
+                        if self.nodes[elem] != -1:
                             rec_db = Db_Record(elem.split(",")[0], int(elem.split(",")[1]), self.nodes[elem])
                             recs.records.append(rec_db)
 
@@ -120,7 +122,7 @@ class Node(object):
                     msg_b = msg.encoded_msg()
                     self.send_message_to(msg_b, item.split(",")[0], int(item.split(",")[1]))
                     self.nodes_last_notification[item] = timer()
-            #print(self.nodes.keys())
+
             time.sleep(0.5)
 
 
@@ -151,6 +153,7 @@ class Node(object):
                         self.local_peers.append(record)
                         self.local_peers_timeouts.append(timer())
 
+
             elif type_ == "getlist":
                 is_authorized = False
                 for i, item in enumerate(self.local_peers):
@@ -159,8 +162,10 @@ class Node(object):
                         self.acknowlidge(addr[0], addr[1], data[str.encode("txid")])
 
                 if not is_authorized:
-                    err_print("Not logged in peer asked for LIST message.")
-                    #err message
+                    msg = Message_Error('error', data[str.encode("txid")], "You aren't logged to this node, you don't have a permission to get LIST.")
+                    encoded = msg.encoded_msg()
+                    self.send_message_to(msg_b, addr[0], addr[1])
+                    err_print("Not logged peer asked for LIST message.")
                 else:
                     records = Peer_Records()
                     for i, item in enumerate(self.local_peers):
@@ -181,15 +186,13 @@ class Node(object):
 
 
             elif type_ == "update":
-                #adresa ze ktere je update zprava odeslana neni v db
                 if (addr[0]+','+str(addr[1])) in self.nodes.keys():
                     new = False
                 else:
                     new = True
 
-                #prochazi se adresy ze zpravy
                 for e, elem in enumerate(sorted(data[str.encode("db")].keys())):
-                    #autoritativni zaznam
+                    #authoritative record
                     if elem.decode('UTF-8').split(",")[0] == addr[0] and int(elem.decode('UTF-8').split(",")[1]) == addr[1]:
                         p_records = Peer_Records()
                         for i in range(len(data[str.encode("db")][elem].keys())):
@@ -199,21 +202,16 @@ class Node(object):
 
                         self.nodes[elem.decode('UTF-8')] = p_records
                         self.nodes_timeouts[elem.decode('UTF-8')] = timer()
-                    #neautoritativni zaznam
+                    #nonauthoritative record
                     else:
-                        #print(elem.decode('UTF-8').split(",")[0], self.reg_ipv4, int(elem.decode('UTF-8').split(",")[1]), self.reg_port)
                         if elem.decode('UTF-8').split(",")[0] == self.reg_ipv4 and int(elem.decode('UTF-8').split(",")[1]) == self.reg_port:
-                        #
                             pass
                         elif elem.decode('UTF-8') not in self.nodes:
                         
                             self.nodes[elem.decode('UTF-8')] = -1
                             self.nodes_timeouts[elem.decode('UTF-8')] = timer()
-                            #print("wewe")
 
-                #print(self.nodes)
                 for i, item in enumerate(self.nodes.keys()):
-                    #print(self.nodes[item], item)
                     if self.nodes[item] == -1 or (addr[0] == item.split(",")[0] and addr[1] == int(item.split(",")[1]) and new):
                         recs = Db_Records()
 
@@ -225,7 +223,7 @@ class Node(object):
                         recs.records.append(rec_db)
 
                         for e, elem in enumerate(self.nodes.keys()):
-                            if self.nodes[elem] != -1 and self.nodes[elem] != -2:
+                            if self.nodes[elem] != -1:
                                 rec_db = Db_Record(elem.split(",")[0], int(elem.split(",")[1]), self.nodes[elem])
                                 recs.records.append(rec_db)
 
@@ -310,13 +308,12 @@ class Node(object):
                     recs.records.append(rec_db)
 
                     for i, item in enumerate(self.nodes.keys()):
-                        if self.nodes[item] != -1 and self.nodes[item] != -2:
+                        if self.nodes[item] != -1:
                             rec_db = Db_Record(item.split(",")[0], int(item.split(",")[1]), self.nodes[item])
                             recs.records.append(rec_db)
 
                     msg = Message_Update('update', self.txid, recs)
                     msg_b = msg.encoded_msg()
-                    #self.nodes[data[1]+','+str(data[2])] = -2
                     self.send_message_to(msg_b, data[1], int(data[2]))
                     self.nodes_last_notification[data[1]+','+str(data[2])] = timer()
 
@@ -343,7 +340,7 @@ class Node(object):
                     recs.records.append(rec_db)
 
                     for i, item in enumerate(self.nodes.keys()):
-                        if self.nodes[item] != -1 and self.nodes[item] != -2:
+                        if self.nodes[item] != -1:
                             rec_db = Db_Record(item.split(",")[0], int(item.split(",")[1]), self.nodes[item])
                             recs.records.append(rec_db)
 

@@ -168,7 +168,7 @@ class TestAppRuns(unittest.TestCase):
         self.assertEqual(msg.type_, 'ack')
         self.assertEqual(msg.txid_, 123)
 
-    def test_18_Message_Error_encode_01(self):
+    def test_18_Message_Ack_encode_01(self):
         msg = Message_Ack('ack', 123)
         encoded = msg.encoded_msg()
         self.assertEqual(str.encode("d4:txidi123e4:type3:acke"), encoded)
