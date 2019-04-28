@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 #################################################################################
 # Description:  File contains messages classes
 #               
