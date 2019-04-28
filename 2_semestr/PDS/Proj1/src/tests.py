@@ -25,12 +25,12 @@ class TestAppRuns(unittest.TestCase):
 
     def test_03_Message_Hello_encode_01(self):
         msg = Message_Hello('hello', 123, 'xlogin00', '192.0.2.1', 34567)
-        encoded = encode(msg.dictionary())
+        encoded = msg.encoded_msg()
         self.assertEqual(str.encode("d4:ipv49:192.0.2.14:porti34567e4:txidi123e4:type5:hello8:username8:xlogin00e"), encoded)
 
     def test_04_Message_Hello_encode_02(self):
         msg = Message_Hello('hello', 123, 'xlogin00', '0.0.0.0', 0)
-        encoded = encode(msg.dictionary())
+        encoded = msg.encoded_msg()
         self.assertEqual(str.encode("d4:ipv47:0.0.0.04:porti0e4:txidi123e4:type5:hello8:username8:xlogin00e"), encoded)
 
     def test_05_Message_GetList_decode_01(self):
@@ -41,7 +41,7 @@ class TestAppRuns(unittest.TestCase):
 
     def test_06_Message_GetList_encode_01(self):
         msg = Message_GetList('getlist', 123)
-        encoded = encode(msg.dictionary())
+        encoded = msg.encoded_msg()
         self.assertEqual(str.encode("d4:txidi123e4:type7:getliste"), encoded)
 
     def test_07_Message_Error_decode_01(self):
@@ -53,7 +53,7 @@ class TestAppRuns(unittest.TestCase):
 
     def test_08_Message_Error_encode_01(self):
         msg = Message_Error('error', 123, "I refuse to send list of peers, requestor is not registered to me!")
-        encoded = encode(msg.dictionary())
+        encoded = msg.encoded_msg()
         self.assertEqual(str.encode("d4:txidi123e4:type5:error7:verbose66:I refuse to send list of peers, requestor is not registered to me!e"), encoded)
 
     def test_09_Message_List_decode_01(self):
@@ -82,7 +82,7 @@ class TestAppRuns(unittest.TestCase):
         records.add_record(rec_02)
 
         msg = Message_List('list', 123, records)
-        encoded = encode(msg.dictionary())
+        encoded = msg.encoded_msg()
         self.assertEqual(str.encode("d5:peersd1:0d4:ipv49:192.0.2.14:porti34567e8:username8:xlogin00e1:1d4:ipv49:192.0.2.24:porti45678e8:username8:xnigol99ee4:txidi123e4:type4:liste"), encoded)
 
     def test_11_Message_Message_decode_01(self):
@@ -96,7 +96,7 @@ class TestAppRuns(unittest.TestCase):
 
     def test_12_Message_Message_encode_01(self):
         msg = Message_Message('message', 123, 'xlogin00', 'xnigol99', 'blablabla')
-        encoded = encode(msg.dictionary())
+        encoded = msg.encoded_msg()
         self.assertEqual(str.encode("d4:from8:xlogin007:message9:blablabla2:to8:xnigol994:txidi123e4:type7:messagee"), encoded)
 
     def test_13_Message_Update_decode_01(self):
@@ -148,7 +148,7 @@ class TestAppRuns(unittest.TestCase):
         recs.records.append(rec_db_02)
 
         msg = Message_Update('update', 123, recs)
-        encoded = encode(msg.dictionary())
+        encoded = msg.encoded_msg()
         self.assertEqual(str.encode("d2:dbd17:192.0.2.198,12345d1:0d4:ipv49:192.0.2.14:porti34567e8:username8:xlogin00e1:1d4:ipv49:192.0.2.24:porti45678e8:username8:xnigol99ee17:192.0.2.199,12345d1:0d4:ipv49:192.0.2.34:porti65432e8:username8:xtestx00eee4:txidi123e4:type6:updatee"), encoded)
 
     def test_15_Message_Disconnect_decode_01(self):
@@ -159,7 +159,7 @@ class TestAppRuns(unittest.TestCase):
 
     def test_16_Message_Disconnect_encode_01(self):
         msg = Message_Disconnect('disconnect', 123)
-        encoded = encode(msg.dictionary())
+        encoded = msg.encoded_msg()
         self.assertEqual(str.encode("d4:txidi123e4:type10:disconnecte"), encoded)
 
     def test_17_Message_Ack_decode_01(self):
@@ -170,7 +170,7 @@ class TestAppRuns(unittest.TestCase):
 
     def test_18_Message_Error_encode_01(self):
         msg = Message_Ack('ack', 123)
-        encoded = encode(msg.dictionary())
+        encoded = msg.encoded_msg()
         self.assertEqual(str.encode("d4:txidi123e4:type3:acke"), encoded)
 
 if __name__ == "__main__":

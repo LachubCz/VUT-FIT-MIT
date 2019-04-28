@@ -153,7 +153,8 @@ class Node(object):
 
 
             elif type_ == "disconnect":
-                pass
+                if addr[0]+','+str(addr[1]) in self.nodes:
+                    del self.nodes[addr[0]+','+str(addr[1])]
 
 
             elif type_ == "ack":
@@ -176,11 +177,17 @@ class Node(object):
 
 
                 if data[0] == "database":
+                    counter = 0
                     string = "{"
                     for i, item in enumerate(self.local_peers):
                         string += str(item) + ','
+                        counter += 1
+                    for i, item in enumerate(self.nodes.keys()):
+                        for e, elem in enumerate(self.nodes[item].records):
+                            string += str(elem) + ','
+                            counter += 1
 
-                    if len(self.local_peers) != 0:
+                    if counter != 0:
                         string = string[:-1]
 
                     string += "}"
@@ -191,8 +198,8 @@ class Node(object):
                 elif data[0] == "neighbors":
                     string = "{"
                     for i, item in enumerate(self.nodes.keys()):
-                        string += "{\'ipv4\': \'" + item.split(',')[0] + "\', \'port\': " + int(item.split(',')[1]) + "}"
-                        string += item + ','
+                        string += "{\'ipv4\': \'" + item.split(',')[0] + "\', \'port\': " + str(int(item.split(',')[1])) + "}"
+                        string += ','
 
                     if len(self.nodes) != 0:
                         string = string[:-1]
@@ -221,12 +228,16 @@ class Node(object):
                     msg_b = msg.encoded_msg()
                     self.nodes[data[1]+','+str(data[2])] = -2
                     self.send_message_to(msg_b, data[1], int(data[2]))
-                    
-                    #send update message
+
 
                 elif data[0] == "disconnect":
-                    #send disconnect message
-                    pass
+                    for i, item in enumerate(list(self.nodes.keys())):
+                        msg = Message_Disconnect('disconnect', self.txid)
+                        msg_b = msg.encoded_msg()
+                        self.send_message_to(msg_b, item.split(",")[0], int(item.split(",")[1]))
+                        del self.nodes[item]                   
+
+
                 elif data[0] == "sync":
                     #send update message to all nodes
                     pass
