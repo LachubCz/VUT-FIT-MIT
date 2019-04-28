@@ -6,9 +6,9 @@ Program obsahuje pouze standardní knihovny jazyka Python.
 
 Použití
 -----
-##### ./pds18-peer --id <identifikátor> --username <user> --chat-ipv4 <IP> --chat-port <port> --reg-ipv4 <IP> --reg-port <port>
-##### ./pds18-node --id <identifikátor> --reg-ipv4 <IP> --reg-port <port>
-##### ./pds18-rpc --id <identifikátor> <"--peer"|"--node"> --command <příkaz> --<parametr1> <hodnota_parametru1> ...
+##### ./pds18-peer.py --id <identifikátor> --username <user> --chat-ipv4 <IP> --chat-port <port> --reg-ipv4 <IP> --reg-port <port>
+##### ./pds18-node.py --id <identifikátor> --reg-ipv4 <IP> --reg-port <port>
+##### ./pds18-rpc.py --id <identifikátor> <"--peer"|"--node"> --command <příkaz> --<parametr1> <hodnota_parametru1> ...
 
 Implementace
 -------------------------------------
