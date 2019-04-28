@@ -81,82 +81,91 @@ class Peer(object):
 
     def timeout_hanle(self):
         while True:
-            if (timer() - self.last_hello) > 10:
-                msg = Message_Hello('hello', self.txid, self.username, self.chat_ipv4, self.chat_port)
-                msg_b = msg.encoded_msg()
-                self.send_message(msg_b)
-                self.last_hello = timer()
+            try:
+                if (timer() - self.last_hello) > 10:
+                    msg = Message_Hello('hello', self.txid, self.username, self.chat_ipv4, self.chat_port)
+                    msg_b = msg.encoded_msg()
+                    self.send_message(msg_b)
+                    self.last_hello = timer()
 
-            #waiting for ACKs
-            to_delete = []
-            for i, item in enumerate(self.acks.keys()):
-                if (timer() - self.acks[item][0]) > 2:
-                    err_print("ACK for message with txid {} wasn't recieved." .format(item))
-                    to_delete.append(item)
-                    self.missing_acks.append(item)
+                #waiting for ACKs
+                to_delete = []
+                for i, item in enumerate(self.acks.keys()):
+                    if (timer() - self.acks[item][0]) > 2:
+                        msg = Message_Error('error', self.txid, "ACK for message with txid {} wasn't recieved." .format(item))
+                        msg_b = msg.encoded_msg()
+                        self.send_message_to(msg_b, self.acks[item][2], self.acks[item][3])
 
-            for i, item in enumerate(to_delete):
-                del self.acks[item]
+                        err_print("ACK for message with txid {} wasn't recieved." .format(item))
+                        to_delete.append(item)
+                        self.missing_acks.append(item)
 
-            time.sleep(0.5)
+                for i, item in enumerate(to_delete):
+                    del self.acks[item]
+
+                time.sleep(0.5)
+            except Exception as e:
+                err_print(e)
 
 
     def listen_chat(self):
         while True:
-            data, addr = self.chat_sock.recvfrom(buffer_size)
-            data = decode(data)
-            if self.debug:
-                print(data)
-            type_ = data[str.encode("type")]
-            type_ = type_.decode('UTF-8')
+            try:
+                data, addr = self.chat_sock.recvfrom(buffer_size)
+                data = decode(data)
+                if self.debug:
+                    err_print(data)
+                type_ = data[str.encode("type")]
+                type_ = type_.decode('UTF-8')
 
 
-            if type_ == "error":
-                err_print(data[str.encode("verbose")].decode('UTF-8'))
+                if type_ == "error":
+                    err_print(data[str.encode("verbose")].decode('UTF-8'))
 
 
-            elif type_ == "list":
-                self.peers = Peer_Records()
-                for i in range(len(data[str.encode("peers")].keys())):
-                    rec = Peer_Record(data[str.encode("peers")][str.encode(str(i))][str.encode("username")], data[str.encode("peers")][str.encode(str(i))][str.encode("ipv4")], data[str.encode("peers")][str.encode(str(i))][str.encode("port")], bytes_=True)
-                    self.peers.add_record(rec)
+                elif type_ == "list":
+                    self.peers = Peer_Records()
+                    for i in range(len(data[str.encode("peers")].keys())):
+                        rec = Peer_Record(data[str.encode("peers")][str.encode(str(i))][str.encode("username")], data[str.encode("peers")][str.encode(str(i))][str.encode("ipv4")], data[str.encode("peers")][str.encode(str(i))][str.encode("port")], bytes_=True)
+                        self.peers.add_record(rec)
 
-                self.actual_peers = True
+                    self.actual_peers = True
 
-                if self.print_nextlist:
-                    string = "{"
-                    for i, item in enumerate(self.peers.records):
-                        string += str(item) + ','
+                    if self.print_nextlist:
+                        string = "{"
+                        for i, item in enumerate(self.peers.records):
+                            string += str(item) + ','
 
-                    if self.peers != 0:
-                        string = string[:-1]
+                        if self.peers != 0:
+                            string = string[:-1]
 
-                    string += "}"
-                    err_print(string)
-                    self.print_nextlist = False
+                        string += "}"
+                        err_print(string)
+                        self.print_nextlist = False
 
-                self.acknowlidge(addr[0], addr[1], data[str.encode("txid")])
-
-
-            elif type_ == "message":
-                print(data[str.encode("message")].decode('UTF-8'))
-                self.acknowlidge(addr[0], addr[1], data[str.encode("txid")])
+                    self.acknowlidge(addr[0], addr[1], data[str.encode("txid")])
 
 
-            elif type_ == "ack":
-                if data[str.encode("txid")] in self.acks:
-                    del self.acks[data[str.encode("txid")]]
+                elif type_ == "message":
+                    print(data[str.encode("message")].decode('UTF-8'))
+                    self.acknowlidge(addr[0], addr[1], data[str.encode("txid")])
+
+
+                elif type_ == "ack":
+                    if data[str.encode("txid")] in self.acks:
+                        del self.acks[data[str.encode("txid")]]
+                    else:
+                        err_print("Unexpected ACK with txid {} received." .format(data[str.encode("txid")]))
+
+                    if self.print_ack:
+                        err_print("Message GETLIST with txid {} acknowlidged." .format(data[str.encode("txid")]))
+                        self.print_ack = False
+
                 else:
-                    err_print("Unexpected ACK with txid {} received." .format(data[str.encode("txid")]))
-
-                if self.print_ack:
-                    err_print("Message GETLIST with txid {} acknowlidged." .format(data[str.encode("txid")]))
-                    self.print_ack = False
-
-            else:
-                #ignore other messages
-                pass
-
+                    #ignore other messages
+                    pass
+            except Exception as e:
+                err_print(e)
 
     def listen_pipe(self):
         while True:
@@ -165,7 +174,7 @@ class Peer(object):
                     data = p.read()
                 data = data.split()
                 if self.debug:
-                    print(data)
+                    err_print(data)
 
 
                 if data[0] == "message":
@@ -174,7 +183,7 @@ class Peer(object):
                     msg = Message_GetList('getlist', self.txid)
                     msg_b = msg.encoded_msg()
                     stamp = self.txid
-                    self.acks[stamp] = [timer(), "list"]
+                    self.acks[stamp] = [timer(), "list", self.reg_ipv4, self.reg_port]
                     self.send_message(msg_b)
 
                     while True:
@@ -198,7 +207,7 @@ class Peer(object):
 
                                 msg = Message_Message('message', self.txid, self.username, item.username_, text)
                                 msg_b = msg.encoded_msg()
-                                self.acks[self.txid] = [timer(), "message"]
+                                self.acks[self.txid] = [timer(), "message", item.ipv4_, item.port_]
                                 self.send_message_to(msg_b, item.ipv4_, item.port_)
                             else:
                                 err_print("User is unreachable.")
@@ -208,7 +217,7 @@ class Peer(object):
                     msg = Message_GetList('getlist', self.txid)
                     msg_b = msg.encoded_msg()
                     self.print_ack = True
-                    self.acks[self.txid] = [timer(), "list"]
+                    self.acks[self.txid] = [timer(), "list", self.reg_ipv4, self.reg_port]
                     self.send_message(msg_b)
 
 
@@ -216,7 +225,7 @@ class Peer(object):
                     msg = Message_GetList('getlist', self.txid)
                     msg_b = msg.encoded_msg()
                     self.print_nextlist = True
-                    self.acks[self.txid] = [timer(), "list"]
+                    self.acks[self.txid] = [timer(), "list", self.reg_ipv4, self.reg_port]
                     self.send_message(msg_b)
 
 
@@ -238,7 +247,7 @@ class Peer(object):
                     pass
             except Exception as e:
                 if type(e).__name__ != 'FileNotFoundError':
-                    print(e)
+                    err_print(e)
                 #pipe is not created
                 pass
 

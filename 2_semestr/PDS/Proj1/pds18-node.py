@@ -70,149 +70,45 @@ class Node(object):
 
     def timeout_hanle(self):
         while True:
-            #delete inactive peers
-            to_delete = []
-            for i, item in enumerate(self.local_peers_timeouts):
-                if (timer() - item) > 30:
-                    to_delete.append(i)
+            try:
+                #delete inactive peers
+                to_delete = []
+                for i, item in enumerate(self.local_peers_timeouts):
+                    if (timer() - item) > 30:
+                        to_delete.append(i)
 
-            for i, item in enumerate(reversed(to_delete)):
-                del self.local_peers[i]
-                del self.local_peers_timeouts[i]
+                for i, item in enumerate(reversed(to_delete)):
+                    del self.local_peers[i]
+                    del self.local_peers_timeouts[i]
 
-            #delete inactive nodes
-            to_delete = []
-            for i, item in enumerate(self.nodes_timeouts.keys()):
-                if (timer() - self.nodes_timeouts[item]) > 12:
-                    to_delete.append(item)
+                #delete inactive nodes
+                to_delete = []
+                for i, item in enumerate(self.nodes_timeouts.keys()):
+                    if (timer() - self.nodes_timeouts[item]) > 12:
+                        to_delete.append(item)
 
-            for i, item in enumerate(to_delete):
-                del self.nodes[item]
-                del self.nodes_timeouts[item]
-                del self.nodes_last_notification[item]
+                for i, item in enumerate(to_delete):
+                    del self.nodes[item]
+                    del self.nodes_timeouts[item]
+                    del self.nodes_last_notification[item]
 
-            #waiting for ACKs
-            to_delete = []
-            for i, item in enumerate(self.acks.keys()):
-                if (timer() - self.acks[item][0]) > 2:
-                    err_print("ACK for message with txid {} wasn't recieved." .format(item))
-                    to_delete.append(item)
+                #waiting for ACKs
+                to_delete = []
+                for i, item in enumerate(self.acks.keys()):
+                    if (timer() - self.acks[item][0]) > 2:
+                        msg = Message_Error('error', self.txid, "ACK for message with txid {} wasn't recieved." .format(item))
+                        msg_b = msg.encoded_msg()
+                        self.send_message_to(msg_b, self.acks[item][2], self.acks[item][3])
 
-            for i, item in enumerate(to_delete):
-                del self.acks[item]
+                        err_print("ACK for message with txid {} wasn't recieved." .format(item))
+                        to_delete.append(item)
 
-            #send notification to nodes
-            for i, item in enumerate(self.nodes_last_notification.keys()):
-                if (timer() - self.nodes_last_notification[item]) > 4:
-                    recs = Db_Records()
+                for i, item in enumerate(to_delete):
+                    del self.acks[item]
 
-                    records = Peer_Records()
-                    for e, elem in enumerate(self.local_peers):
-                        records.add_record(elem)
-
-                    rec_db = Db_Record(self.reg_ipv4, self.reg_port, records)
-                    recs.records.append(rec_db)
-
-                    for e, elem in enumerate(self.nodes.keys()):
-                        if self.nodes[elem] != -1:
-                            rec_db = Db_Record(elem.split(",")[0], int(elem.split(",")[1]), self.nodes[elem])
-                            recs.records.append(rec_db)
-
-                    msg = Message_Update('update', self.txid, recs)
-                    msg_b = msg.encoded_msg()
-                    self.send_message_to(msg_b, item.split(",")[0], int(item.split(",")[1]))
-                    self.nodes_last_notification[item] = timer()
-
-            time.sleep(0.5)
-
-
-    def listen_reg(self):
-        while True:
-            data, addr = self.reg_sock.recvfrom(buffer_size)
-            data = decode(data)
-            if self.debug:
-                print(addr, data)
-            type_ = data[str.encode("type")]
-            type_ = type_.decode('UTF-8')
-
-
-            if type_ == "hello":
-                if data[str.encode("ipv4")].decode('UTF-8') == "0.0.0.0" and data[str.encode("port")] == 0:
-                    for i, item in enumerate(self.local_peers):
-                        if data[str.encode("username")].decode('UTF-8') == item.username_:
-                            del self.local_peers[i]
-                            del self.local_peers_timeouts[i]
-                else:
-                    record = Peer_Record(data[str.encode("username")], data[str.encode("ipv4")], data[str.encode("port")], bytes_=True)
-                    existing = False
-                    for i, item in enumerate(self.local_peers):
-                        if item.username_ == record.username_ and item.ipv4_ == record.ipv4_ and item.port_ == record.port_:
-                            self.local_peers_timeouts[i] = timer()
-                            existing = True
-                    if not existing:
-                        self.local_peers.append(record)
-                        self.local_peers_timeouts.append(timer())
-
-
-            elif type_ == "getlist":
-                is_authorized = False
-                for i, item in enumerate(self.local_peers):
-                    if item.ipv4_ == addr[0] and item.port_ == addr[1]:
-                        is_authorized = True
-                        self.acknowlidge(addr[0], addr[1], data[str.encode("txid")])
-
-                if not is_authorized:
-                    msg = Message_Error('error', data[str.encode("txid")], "You aren't logged to this node, you don't have a permission to get LIST.")
-                    encoded = msg.encoded_msg()
-                    self.send_message_to(msg_b, addr[0], addr[1])
-                    err_print("Not logged peer asked for LIST message.")
-                else:
-                    records = Peer_Records()
-                    for i, item in enumerate(self.local_peers):
-                        records.add_record(item)
-
-                    for i, item in enumerate(self.nodes.keys()):
-                        for i, item in enumerate(self.nodes[item].records):
-                            records.add_record(item)
-
-                    msg = Message_List('list', self.txid, records)
-                    msg_b = msg.encoded_msg()
-                    self.acks[self.txid] = [timer(), "list"]
-                    self.send_message_to(msg_b, addr[0], addr[1])
-
-
-            elif type_ == "error":
-                err_print(data[str.encode("verbose")].decode('UTF-8'))
-
-
-            elif type_ == "update":
-                if (addr[0]+','+str(addr[1])) in self.nodes.keys():
-                    new = False
-                else:
-                    new = True
-
-                for e, elem in enumerate(sorted(data[str.encode("db")].keys())):
-                    #authoritative record
-                    if elem.decode('UTF-8').split(",")[0] == addr[0] and int(elem.decode('UTF-8').split(",")[1]) == addr[1]:
-                        p_records = Peer_Records()
-                        for i in range(len(data[str.encode("db")][elem].keys())):
-
-                            rec_l = Peer_Record(data[str.encode("db")][elem][str.encode(str(i))][str.encode("username")], data[str.encode("db")][elem][str.encode(str(i))][str.encode("ipv4")], data[str.encode("db")][elem][str.encode(str(i))][str.encode("port")], bytes_=True)
-                            p_records.add_record(rec_l)
-
-                        self.nodes[elem.decode('UTF-8')] = p_records
-                        self.nodes_timeouts[elem.decode('UTF-8')] = timer()
-                    #nonauthoritative record
-                    else:
-                        if elem.decode('UTF-8').split(",")[0] == self.reg_ipv4 and int(elem.decode('UTF-8').split(",")[1]) == self.reg_port:
-                            pass
-                        elif elem.decode('UTF-8') not in self.nodes:
-                        
-                            self.nodes[elem.decode('UTF-8')] = -1
-                            self.nodes_timeouts[elem.decode('UTF-8')] = timer()
-
-                for i, item in enumerate(self.nodes.keys()):
-                    if self.nodes[item] == -1 or (addr[0] == item.split(",")[0] and addr[1] == int(item.split(",")[1]) and new):
+                #send notification to nodes
+                for i, item in enumerate(self.nodes_last_notification.keys()):
+                    if (timer() - self.nodes_last_notification[item]) > 4:
                         recs = Db_Records()
 
                         records = Peer_Records()
@@ -232,27 +128,140 @@ class Node(object):
                         self.send_message_to(msg_b, item.split(",")[0], int(item.split(",")[1]))
                         self.nodes_last_notification[item] = timer()
 
-
-            elif type_ == "disconnect":
-                if addr[0]+','+str(addr[1]) in self.nodes:
-                    del self.nodes[addr[0]+','+str(addr[1])]
-                    del self.nodes_timeouts[addr[0]+','+str(addr[1])]
-                    del self.nodes_last_notification[addr[0]+','+str(addr[1])]
-                
-                self.acknowlidge(addr[0], addr[1], data[str.encode("txid")])
+                time.sleep(0.5)
+            except Exception as e:
+                err_print(e)
 
 
-            elif type_ == "ack":
-                if data[str.encode("txid")] in self.acks:
-                    del self.acks[data[str.encode("txid")]]
+    def listen_reg(self):
+        while True:
+            try:
+                data, addr = self.reg_sock.recvfrom(buffer_size)
+                data = decode(data)
+                if self.debug:
+                    err_print(addr, data)
+                type_ = data[str.encode("type")]
+                type_ = type_.decode('UTF-8')
+
+
+                if type_ == "hello":
+                    if data[str.encode("ipv4")].decode('UTF-8') == "0.0.0.0" and data[str.encode("port")] == 0:
+                        for i, item in enumerate(self.local_peers):
+                            if data[str.encode("username")].decode('UTF-8') == item.username_:
+                                del self.local_peers[i]
+                                del self.local_peers_timeouts[i]
+                    else:
+                        record = Peer_Record(data[str.encode("username")], data[str.encode("ipv4")], data[str.encode("port")], bytes_=True)
+                        existing = False
+                        for i, item in enumerate(self.local_peers):
+                            if item.username_ == record.username_ and item.ipv4_ == record.ipv4_ and item.port_ == record.port_:
+                                self.local_peers_timeouts[i] = timer()
+                                existing = True
+                        if not existing:
+                            self.local_peers.append(record)
+                            self.local_peers_timeouts.append(timer())
+
+
+                elif type_ == "getlist":
+                    is_authorized = False
+                    for i, item in enumerate(self.local_peers):
+                        if item.ipv4_ == addr[0] and item.port_ == addr[1]:
+                            is_authorized = True
+                            self.acknowlidge(addr[0], addr[1], data[str.encode("txid")])
+
+                    if not is_authorized:
+                        msg = Message_Error('error', data[str.encode("txid")], "You aren't logged to this node, you don't have a permission to get LIST.")
+                        encoded = msg.encoded_msg()
+                        self.send_message_to(msg_b, addr[0], addr[1])
+                        err_print("Not logged peer asked for LIST message.")
+                    else:
+                        records = Peer_Records()
+                        for i, item in enumerate(self.local_peers):
+                            records.add_record(item)
+
+                        for i, item in enumerate(self.nodes.keys()):
+                            for i, item in enumerate(self.nodes[item].records):
+                                records.add_record(item)
+
+                        msg = Message_List('list', self.txid, records)
+                        msg_b = msg.encoded_msg()
+                        self.acks[self.txid] = [timer(), "list", addr[0], addr[1]]
+                        self.send_message_to(msg_b, addr[0], addr[1])
+
+
+                elif type_ == "error":
+                    err_print(data[str.encode("verbose")].decode('UTF-8'))
+
+
+                elif type_ == "update":
+                    if (addr[0]+','+str(addr[1])) in self.nodes.keys():
+                        new = False
+                    else:
+                        new = True
+
+                    for e, elem in enumerate(sorted(data[str.encode("db")].keys())):
+                        #authoritative record
+                        if elem.decode('UTF-8').split(",")[0] == addr[0] and int(elem.decode('UTF-8').split(",")[1]) == addr[1]:
+                            p_records = Peer_Records()
+                            for i in range(len(data[str.encode("db")][elem].keys())):
+
+                                rec_l = Peer_Record(data[str.encode("db")][elem][str.encode(str(i))][str.encode("username")], data[str.encode("db")][elem][str.encode(str(i))][str.encode("ipv4")], data[str.encode("db")][elem][str.encode(str(i))][str.encode("port")], bytes_=True)
+                                p_records.add_record(rec_l)
+
+                            self.nodes[elem.decode('UTF-8')] = p_records
+                            self.nodes_timeouts[elem.decode('UTF-8')] = timer()
+                        #nonauthoritative record
+                        else:
+                            if elem.decode('UTF-8').split(",")[0] == self.reg_ipv4 and int(elem.decode('UTF-8').split(",")[1]) == self.reg_port:
+                                pass
+                            elif elem.decode('UTF-8') not in self.nodes:
+                            
+                                self.nodes[elem.decode('UTF-8')] = -1
+                                self.nodes_timeouts[elem.decode('UTF-8')] = timer()
+
+                    for i, item in enumerate(self.nodes.keys()):
+                        if self.nodes[item] == -1 or (addr[0] == item.split(",")[0] and addr[1] == int(item.split(",")[1]) and new):
+                            recs = Db_Records()
+
+                            records = Peer_Records()
+                            for e, elem in enumerate(self.local_peers):
+                                records.add_record(elem)
+
+                            rec_db = Db_Record(self.reg_ipv4, self.reg_port, records)
+                            recs.records.append(rec_db)
+
+                            for e, elem in enumerate(self.nodes.keys()):
+                                if self.nodes[elem] != -1:
+                                    rec_db = Db_Record(elem.split(",")[0], int(elem.split(",")[1]), self.nodes[elem])
+                                    recs.records.append(rec_db)
+
+                            msg = Message_Update('update', self.txid, recs)
+                            msg_b = msg.encoded_msg()
+                            self.send_message_to(msg_b, item.split(",")[0], int(item.split(",")[1]))
+                            self.nodes_last_notification[item] = timer()
+
+
+                elif type_ == "disconnect":
+                    if addr[0]+','+str(addr[1]) in self.nodes:
+                        del self.nodes[addr[0]+','+str(addr[1])]
+                        del self.nodes_timeouts[addr[0]+','+str(addr[1])]
+                        del self.nodes_last_notification[addr[0]+','+str(addr[1])]
+                    
+                    self.acknowlidge(addr[0], addr[1], data[str.encode("txid")])
+
+
+                elif type_ == "ack":
+                    if data[str.encode("txid")] in self.acks:
+                        del self.acks[data[str.encode("txid")]]
+                    else:
+                        err_print("Unexpected ACK with txid {} received." .format(data[str.encode("txid")]))
+
+
                 else:
-                    err_print("Unexpected ACK with txid {} received." .format(data[str.encode("txid")]))
-
-
-            else:
-                #ignore other messages
-                pass
-
+                    #ignore other messages
+                    pass
+            except Exception as e:
+                err_print(e)
 
     def listen_pipe(self):
         while True:
@@ -261,7 +270,7 @@ class Node(object):
                     data = p.read()
                 data = data.split()
                 if self.debug:
-                    print(data)
+                    err_print(data)
 
 
                 if data[0] == "database":
@@ -322,7 +331,7 @@ class Node(object):
                     for i, item in enumerate(list(self.nodes.keys())):
                         msg = Message_Disconnect('disconnect', self.txid)
                         msg_b = msg.encoded_msg()
-                        self.acks[self.txid] = [timer(), "disconnect"]
+                        self.acks[self.txid] = [timer(), "disconnect", item.split(",")[0], int(item.split(",")[1])]
                         self.send_message_to(msg_b, item.split(",")[0], int(item.split(",")[1]))
                     self.nodes = {}
                     self.nodes_timeouts = {}
@@ -355,7 +364,7 @@ class Node(object):
                     pass
             except Exception as e:
                 if type(e).__name__ != 'FileNotFoundError':
-                    print(e)
+                    err_print(e)
                 #pipe is not created
                 pass
 
