@@ -53,6 +53,9 @@ class Peer(object):
         self.pipe = get_pipe_name("peer", self.id)
         
         self.txid = 0
+        self.last_hello = 0
+
+        self.acks = {}
 
         self.print_ack = False
         self.actual_peers = False
@@ -77,10 +80,23 @@ class Peer(object):
 
     def timeout_hanle(self):
         while True:
-            msg = Message_Hello('hello', self.txid, self.username, self.chat_ipv4, self.chat_port)
-            msg_b = msg.encoded_msg()
-            self.send_message(msg_b)
-            time.sleep(10)
+            if (timer() - self.last_hello) > 10:
+                msg = Message_Hello('hello', self.txid, self.username, self.chat_ipv4, self.chat_port)
+                msg_b = msg.encoded_msg()
+                self.send_message(msg_b)
+                self.last_hello = timer()
+
+            #waiting for ACKs
+            to_delete = []
+            for i, item in enumerate(self.acks.keys()):
+                if (timer() - self.acks[item][0]) > 2:
+                    err_print("ACK for message with txid {} wasn't recieved." .format(item))
+                    to_delete.append(item)
+
+            for i, item in enumerate(to_delete):
+                del self.acks[item]
+
+            time.sleep(0.5)
 
 
     def listen_chat(self):
@@ -94,11 +110,10 @@ class Peer(object):
 
 
             if type_ == "error":
-                pass
+                err_print(data[str.encode("verbose")].decode('UTF-8'))
 
 
             elif type_ == "list":
-                
                 self.peers = Peer_Records()
                 for i in range(len(data[str.encode("peers")].keys())):
                     rec = Peer_Record(data[str.encode("peers")][str.encode(str(i))][str.encode("username")], data[str.encode("peers")][str.encode(str(i))][str.encode("ipv4")], data[str.encode("peers")][str.encode(str(i))][str.encode("port")], bytes_=True)
@@ -118,16 +133,23 @@ class Peer(object):
                     err_print(string)
                     self.print_nextlist = False
 
+                self.acknowlidge(addr[0], addr[1], data[str.encode("txid")])
+
 
             elif type_ == "message":
                 print(data[str.encode("message")].decode('UTF-8'))
+                self.acknowlidge(addr[0], addr[1], data[str.encode("txid")])
 
 
             elif type_ == "ack":
-                if self.print_ack:
-                    print("Message GETLIST acknowlidged.")
-                    self.print_ack = False
+                if self.acks[data[str.encode("txid")]][1] == "message":
+                    del self.acks[data[str.encode("txid")]]
+                elif self.acks[data[str.encode("txid")]][1] == "list":
+                    del self.acks[data[str.encode("txid")]]
 
+                if self.print_ack:
+                    err_print("Message GETLIST with txid {} acknowlidged." .format(data[str.encode("txid")]))
+                    self.print_ack = False
 
             else:
                 #ignore other messages
@@ -150,9 +172,15 @@ class Peer(object):
                     msg = Message_GetList('getlist', self.txid)
                     msg_b = msg.encoded_msg()
                     self.send_message(msg_b)
+                    self.acks[self.txid] = [timer(), "list"]
 
                     while True:
-                        if self.actual_peers:
+                        if self.txid not in self.acks:
+                            break
+
+                    start = timer()
+                    while True
+                        if self.actual_peers or (timer() - start) > 2:
                             break
 
                     if data[1] == self.username:
@@ -167,6 +195,7 @@ class Peer(object):
 
                                 msg = Message_Message('message', self.txid, self.username, item.username_, text)
                                 msg_b = msg.encoded_msg()
+                                self.acks[self.txid] = [timer(), "message"]
                                 self.send_message_to(msg_b, item.ipv4_, item.port_)
 
 
@@ -174,6 +203,7 @@ class Peer(object):
                     msg = Message_GetList('getlist', self.txid)
                     msg_b = msg.encoded_msg()
                     self.print_ack = True
+                    self.acks[self.txid] = [timer(), "list"]
                     self.send_message(msg_b)
 
 
@@ -181,6 +211,7 @@ class Peer(object):
                     msg = Message_GetList('getlist', self.txid)
                     msg_b = msg.encoded_msg()
                     self.print_nextlist = True
+                    self.acks[self.txid] = [timer(), "list"]
                     self.send_message(msg_b)
 
 
@@ -222,6 +253,12 @@ class Peer(object):
     def send_message_to(self, msg_b, ipv4, port):
         self.chat_sock.sendto(msg_b, (ipv4, port))
         self.next_txid()
+
+
+    def acknowlidge(self, ipv4, port, txid):
+        msg = Message_Ack('ack', txid)
+        msg_b = msg.encoded_msg()
+        self.chat_sock.sendto(msg_b, (ipv4, port))
 
 
 if __name__ == "__main__":

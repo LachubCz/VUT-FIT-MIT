@@ -46,6 +46,7 @@ class Node(object):
 
         self.local_peers = []
         self.local_peers_timeouts = []
+        self.acks = {}
         self.nodes = {}
         self.nodes_timeouts = {}
         self.nodes_last_notification = {}
@@ -88,6 +89,16 @@ class Node(object):
                 del self.nodes_timeouts[item]
                 del self.nodes_last_notification[item]
 
+            #waiting for ACKs
+            to_delete = []
+            for i, item in enumerate(self.acks.keys()):
+                if (timer() - self.acks[item][0]) > 2:
+                    err_print("ACK for message with txid {} wasn't recieved." .format(item))
+                    to_delete.append(item)
+
+            for i, item in enumerate(to_delete):
+                del self.acks[item]
+
             #send notification to nodes
             for i, item in enumerate(self.nodes_last_notification.keys()):
                 if (timer() - self.nodes_last_notification[item]) > 4:
@@ -110,7 +121,8 @@ class Node(object):
                     self.send_message_to(msg_b, item.split(",")[0], int(item.split(",")[1]))
                     self.nodes_last_notification[item] = timer()
 
-            time.sleep(1)
+            time.sleep(0.5)
+
 
     def listen_reg(self):
         while True:
@@ -147,9 +159,8 @@ class Node(object):
                         self.acknowlidge(addr[0], addr[1], data[str.encode("txid")])
 
                 if not is_authorized:
-                    #error send
-                    #continue
-                    pass
+                    err_print("Not logged in peer asked for LIST message.")
+                    #err message
                 else:
                     records = Peer_Records()
                     for i, item in enumerate(self.local_peers):
@@ -157,12 +168,12 @@ class Node(object):
     
                     msg = Message_List('list', data[str.encode("txid")], records)
                     msg_b = msg.encoded_msg()
+                    self.acks[self.txid] = [timer(), "list"]
                     self.send_message_to(msg_b, addr[0], addr[1])
 
 
-
             elif type_ == "error":
-                pass
+                err_print(data[str.encode("verbose")].decode('UTF-8'))
 
 
             elif type_ == "update":
@@ -215,10 +226,15 @@ class Node(object):
                     del self.nodes[addr[0]+','+str(addr[1])]
                     del self.nodes_timeouts[addr[0]+','+str(addr[1])]
                     del self.nodes_last_notification[addr[0]+','+str(addr[1])]
+                
+                self.acknowlidge(addr[0], addr[1], data[str.encode("txid")])
 
 
             elif type_ == "ack":
-                pass
+                if self.acks[data[str.encode("txid")]][1] == "disconnect":
+                    del self.acks[data[str.encode("txid")]]
+                elif self.acks[data[str.encode("txid")]][1] == "list":
+                    del self.acks[data[str.encode("txid")]]
 
 
             else:
@@ -295,8 +311,9 @@ class Node(object):
                     for i, item in enumerate(list(self.nodes.keys())):
                         msg = Message_Disconnect('disconnect', self.txid)
                         msg_b = msg.encoded_msg()
+                        self.acks[self.txid] = [timer(), "disconnect"]
                         self.send_message_to(msg_b, item.split(",")[0], int(item.split(",")[1]))
-                        del self.nodes[item]                   
+                        del self.nodes[item]
 
 
                 elif data[0] == "sync":
@@ -328,6 +345,7 @@ class Node(object):
                     print(e)
                 #pipe is not created
                 pass
+
 
     def acknowlidge(self, ipv4, port, txid):
         msg = Message_Ack('ack', txid)
