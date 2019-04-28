@@ -6,7 +6,7 @@ def encode(obj):
     """
     bencodes given object. Given object should be a int,
     bytes, list or dict. If a str is given, it'll be
-    encoded as ASCII.
+    encoded as utf-8.
 
     >>> [encode(i) for i in (-2, 42, b"answer", b"")] \
             == [b'i-2e', b'i42e', b'6:answer', b'0:']
@@ -23,7 +23,7 @@ def encode(obj):
     elif isinstance(obj, bytes):
         return str(len(obj)).encode() + b":" + obj
     elif isinstance(obj, str):
-        return encode(obj.encode("ascii"))
+        return encode(obj.encode("utf-8"))
     elif isinstance(obj, list):
         return b"l" + b"".join(map(encode, obj)) + b"e"
     elif isinstance(obj, dict):
@@ -75,7 +75,7 @@ def decode(s):
             raise ValueError("Malformed input.")
 
     if isinstance(s, str):
-        s = s.encode("ascii")
+        s = s.encode("utf-8")
 
     ret, rest = decode_first(s)
     if rest:
