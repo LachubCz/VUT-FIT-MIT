@@ -1,3 +1,13 @@
+#################################################################################
+# Description:  File tests for messages classes
+#               
+# Author:      Petr Buchal         <petr.buchal@lachub.cz>
+#
+# Date:     2019/04/28
+# 
+# Note:     This source code is part of PDS project 2019.
+#################################################################################
+
 import unittest
 
 from messages import Message_Hello, Message_GetList, Message_List, Message_Message, Message_Update, Message_Disconnect, Message_Ack, Message_Error

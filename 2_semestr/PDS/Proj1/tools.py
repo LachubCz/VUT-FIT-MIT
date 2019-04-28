@@ -1,3 +1,13 @@
+#################################################################################
+# Description:  File contains various methods for various purposes
+#               
+# Author:      Petr Buchal         <petr.buchal@lachub.cz>
+#
+# Date:     2019/04/28
+# 
+# Note:     This source code is part of PDS project 2019.
+#################################################################################
+
 import sys
 
 def err_print(*args, **kwargs):

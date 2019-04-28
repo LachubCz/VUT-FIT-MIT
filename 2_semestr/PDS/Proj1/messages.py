@@ -1,3 +1,13 @@
+#################################################################################
+# Description:  File contains messages classes
+#               
+# Author:      Petr Buchal         <petr.buchal@lachub.cz>
+#
+# Date:     2019/04/28
+# 
+# Note:     This source code is part of PDS project 2019.
+#################################################################################
+
 from bencode import encode
 
 class Message(object):
@@ -19,6 +29,7 @@ class Message(object):
 
     def encoded_msg(self):
         return encode(self.dictionary())
+
 
 class Message_Hello(Message):
     def __init__(self, type_, txid_, username_, ipv4_, port_, bytes_=False):
@@ -43,9 +54,11 @@ class Message_Hello(Message):
 
         return dict_
 
+
 class Message_GetList(Message):
     def __init__(self, type_, txid_, bytes_=False):
         super().__init__(type_, txid_, bytes_)
+
 
 class Message_List(Message):
     def __init__(self, type_, txid_, peers_, bytes_=False):
@@ -60,6 +73,7 @@ class Message_List(Message):
         }
 
         return dict_
+
 
 class Peer_Records():
     def __init__(self):
@@ -82,6 +96,7 @@ class Peer_Records():
 
     def __str__(self):
         return str(self.dictionary())
+
 
 class Peer_Record():
     def __init__(self, username_, ipv4_, port_, bytes_=False):
@@ -129,6 +144,7 @@ class Message_Message(Message):
 
         return dict_
 
+
 class Message_Update(Message):
     def __init__(self, type_, txid_, db_, bytes_=False):
         super().__init__(type_, txid_, bytes_)
@@ -142,6 +158,7 @@ class Message_Update(Message):
         }
 
         return dict_
+
 
 class Db_Records():
     def __init__(self):
@@ -162,19 +179,23 @@ class Db_Records():
 
         return dict_
 
+
 class Db_Record():
     def __init__(self, dotted_decimal_IP_, ushort_port_, peers_):
         self.dotted_decimal_IP_ = dotted_decimal_IP_
         self.ushort_port_ = ushort_port_
         self.peers_ = peers_
 
+
 class Message_Disconnect(Message):
     def __init__(self, type_, txid_, bytes_=False):
         super().__init__(type_, txid_, bytes_)
 
+
 class Message_Ack(Message):
     def __init__(self, type_, txid_, bytes_=False):
         super().__init__(type_, txid_, bytes_)
+
 
 class Message_Error(Message):
     def __init__(self, type_, txid_, verbose_, bytes_=False):

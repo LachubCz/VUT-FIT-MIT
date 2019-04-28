@@ -1,3 +1,14 @@
+#################################################################################
+# Description:  File contains methods for bencoding
+#               
+# Author:      Utku Demir
+#
+# Date:     2016/09/07
+# 
+# Note:     This source code originally comes from https://bit.ly/2ZHgm4D and
+#           was used as part of PDS 2019.
+#################################################################################
+
 import re
 import string
 import itertools as it

@@ -1,3 +1,13 @@
+#################################################################################
+# Description:  File contains pds18-peer implemetation
+#               
+# Author:      Petr Buchal         <petr.buchal@lachub.cz>
+#
+# Date:     2019/04/28
+# 
+# Note:     This source code is part of PDS project 2019.
+#################################################################################
+
 import os
 import sys
 import time
@@ -71,6 +81,9 @@ class Peer(object):
 
 
     def run(self):
+        """
+        main method
+        """
         _thread.start_new_thread(self.timeout_hanle, ( ))
         _thread.start_new_thread(self.listen_chat, ( ))
         _thread.start_new_thread(self.listen_pipe, ( ))
@@ -80,8 +93,12 @@ class Peer(object):
 
 
     def timeout_hanle(self):
+        """
+        method for handeling of timeouts
+        """
         while True:
             try:
+                #hello sending
                 if (timer() - self.last_hello) > 10:
                     msg = Message_Hello('hello', self.txid, self.username, self.chat_ipv4, self.chat_port)
                     msg_b = msg.encoded_msg()
@@ -111,6 +128,9 @@ class Peer(object):
 
 
     def listen_chat(self):
+        """
+        method for handeling of network listening
+        """
         while True:
             try:
                 data, addr = self.chat_sock.recvfrom(buffer_size)
@@ -171,7 +191,11 @@ class Peer(object):
                 fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
                 err_print(exc_type, fname, exc_tb.tb_lineno)
 
+
     def listen_pipe(self):
+        """
+        method for handeling of named pipe listening
+        """
         while True:
             try:
                 with open(self.pipe) as p:
@@ -252,14 +276,16 @@ class Peer(object):
                     #ignore other pipe messages
                     pass
             except Exception as e:
-                if type(e).__name__ != 'FileNotFoundError':
+                if type(e).__name__ != 'FileNotFoundError':  #pipe is not created exception
                     exc_type, exc_obj, exc_tb = sys.exc_info()
                     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
                     err_print(exc_type, fname, exc_tb.tb_lineno)
-                    #pipe is not created
 
 
     def next_txid(self):
+        """
+        iterator method for txid indexing
+        """
         if self.txid == 65535:
             self.txid = 0
         else:
@@ -267,16 +293,25 @@ class Peer(object):
 
 
     def send_message(self, msg_b):
+        """
+        method sends message to registred node
+        """
         self.chat_sock.sendto(msg_b, (self.reg_ipv4, self.reg_port))
         self.next_txid()
 
 
     def send_message_to(self, msg_b, ipv4, port):
+        """
+        method sends message to someone
+        """
         self.chat_sock.sendto(msg_b, (ipv4, port))
         self.next_txid()
 
 
     def acknowlidge(self, ipv4, port, txid):
+        """
+        method sends ACK message to someone
+        """
         msg = Message_Ack('ack', txid)
         msg_b = msg.encoded_msg()
         self.chat_sock.sendto(msg_b, (ipv4, port))

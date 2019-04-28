@@ -1,3 +1,13 @@
+#################################################################################
+# Description:  File contains pds18-rpc implemetation using named pipes
+#               
+# Author:      Petr Buchal         <petr.buchal@lachub.cz>
+#
+# Date:     2019/04/28
+# 
+# Note:     This source code is part of PDS project 2019.
+#################################################################################
+
 import os
 import sys
 import argparse
