@@ -105,7 +105,9 @@ class Peer(object):
 
                 time.sleep(0.5)
             except Exception as e:
-                err_print(e)
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                err_print(exc_type, fname, exc_tb.tb_lineno)
 
 
     def listen_chat(self):
@@ -125,8 +127,8 @@ class Peer(object):
 
                 elif type_ == "list":
                     self.peers = Peer_Records()
-                    for i in range(len(data[str.encode("peers")].keys())):
-                        rec = Peer_Record(data[str.encode("peers")][str.encode(str(i))][str.encode("username")], data[str.encode("peers")][str.encode(str(i))][str.encode("ipv4")], data[str.encode("peers")][str.encode(str(i))][str.encode("port")], bytes_=True)
+                    for i, item in enumerate(data[str.encode("peers")].keys()):
+                        rec = Peer_Record(data[str.encode("peers")][str.encode(item.decode('UTF-8'))][str.encode("username")], data[str.encode("peers")][str.encode(item.decode('UTF-8'))][str.encode("ipv4")], data[str.encode("peers")][str.encode(item.decode('UTF-8'))][str.encode("port")], bytes_=True)
                         self.peers.add_record(rec)
 
                     self.actual_peers = True
@@ -165,7 +167,9 @@ class Peer(object):
                     #ignore other messages
                     pass
             except Exception as e:
-                err_print(e)
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                err_print(exc_type, fname, exc_tb.tb_lineno)
 
     def listen_pipe(self):
         while True:
@@ -196,8 +200,10 @@ class Peer(object):
                             break
 
                     if data[1] == self.username:
+                        reachable = False
                         for i, item in enumerate(self.peers.records):
                             if data[2] == item.username_:
+                                reachable = True
                                 text = ""
                                 for e, elem in enumerate(data[3:]):
                                     if e == 0:
@@ -209,8 +215,8 @@ class Peer(object):
                                 msg_b = msg.encoded_msg()
                                 self.acks[self.txid] = [timer(), "message", item.ipv4_, item.port_]
                                 self.send_message_to(msg_b, item.ipv4_, item.port_)
-                            else:
-                                err_print("User is unreachable.")
+                        if not reachable:
+                            err_print("User is unreachable.")
 
 
                 elif data[0] == "getlist":
@@ -247,9 +253,10 @@ class Peer(object):
                     pass
             except Exception as e:
                 if type(e).__name__ != 'FileNotFoundError':
-                    err_print(e)
-                #pipe is not created
-                pass
+                    exc_type, exc_obj, exc_tb = sys.exc_info()
+                    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                    err_print(exc_type, fname, exc_tb.tb_lineno)
+                    #pipe is not created
 
 
     def next_txid(self):

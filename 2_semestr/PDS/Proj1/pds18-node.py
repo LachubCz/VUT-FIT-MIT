@@ -130,7 +130,9 @@ class Node(object):
 
                 time.sleep(0.5)
             except Exception as e:
-                err_print(e)
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                err_print(exc_type, fname, exc_tb.tb_lineno)
 
 
     def listen_reg(self):
@@ -180,8 +182,9 @@ class Node(object):
                             records.add_record(item)
 
                         for i, item in enumerate(self.nodes.keys()):
-                            for i, item in enumerate(self.nodes[item].records):
-                                records.add_record(item)
+                            if self.nodes[item] != -1:
+                                for i, item in enumerate(self.nodes[item].records):
+                                    records.add_record(item)
 
                         msg = Message_List('list', self.txid, records)
                         msg_b = msg.encoded_msg()
@@ -261,7 +264,9 @@ class Node(object):
                     #ignore other messages
                     pass
             except Exception as e:
-                err_print(e)
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                err_print(exc_type, fname, exc_tb.tb_lineno)
 
     def listen_pipe(self):
         while True:
@@ -279,10 +284,12 @@ class Node(object):
                     for i, item in enumerate(self.local_peers):
                         string += str(item) + ','
                         counter += 1
+
                     for i, item in enumerate(self.nodes.keys()):
-                        for e, elem in enumerate(self.nodes[item].records):
-                            string += str(elem) + ','
-                            counter += 1
+                        if self.nodes[item] != -1:
+                            for e, elem in enumerate(self.nodes[item].records):
+                                string += str(elem) + ','
+                                counter += 1
 
                     if counter != 0:
                         string = string[:-1]
@@ -364,9 +371,11 @@ class Node(object):
                     pass
             except Exception as e:
                 if type(e).__name__ != 'FileNotFoundError':
-                    err_print(e)
-                #pipe is not created
-                pass
+                    exc_type, exc_obj, exc_tb = sys.exc_info()
+                    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                    err_print(exc_type, fname, exc_tb.tb_lineno)
+                    #pipe is not created
+
 
 
     def acknowlidge(self, ipv4, port, txid):
