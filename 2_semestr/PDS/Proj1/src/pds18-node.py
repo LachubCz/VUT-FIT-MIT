@@ -43,8 +43,8 @@ class Node(object):
 
         self.txid = 0
 
-        self.peers = []
-        self.nodes = []
+        self.local_peers = []
+        self.nodes = {}
 
         try:
             self.reg_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -65,23 +65,23 @@ class Node(object):
             data, addr = self.reg_sock.recvfrom(buffer_size)
             data = decode(data)
             if self.debug:
-                print(data)
+                print(addr, data)
             type_ = data[str.encode("type")]
             type_ = type_.decode('UTF-8')
 
 
             if type_ == "hello":
                 if data[str.encode("ipv4")].decode('UTF-8') == "0.0.0.0" and data[str.encode("port")] == 0:
-                    for i, item in enumerate(self.peers):
+                    for i, item in enumerate(self.local_peers):
                         if data[str.encode("username")].decode('UTF-8') == item.username_:
-                            del self.peers[i]
+                            del self.local_peers[i]
                 else:
-                    self.peers.append(Peer_Record(data[str.encode("username")], data[str.encode("ipv4")], data[str.encode("port")], bytes_=True))
+                    self.local_peers.append(Peer_Record(data[str.encode("username")], data[str.encode("ipv4")], data[str.encode("port")], bytes_=True))
 
 
             elif type_ == "getlist":
                 is_authorized = False
-                for i, item in enumerate(self.peers):
+                for i, item in enumerate(self.local_peers):
                     if item.ipv4_ == addr[0] and item.port_ == addr[1]:
                         is_authorized = True
                         self.acknowlidge(addr[0], addr[1], data[str.encode("txid")])
@@ -92,7 +92,7 @@ class Node(object):
                     pass
                 else:
                     records = Peer_Records()
-                    for i, item in enumerate(self.peers):
+                    for i, item in enumerate(self.local_peers):
                         records.add_record(item)
     
                     msg = Message_List('list', data[str.encode("txid")], records)
@@ -107,9 +107,12 @@ class Node(object):
 
             elif type_ == "update":
                 #db_records = Db_Records()
-
-                new_nodes_ipv4 = []
-                new_nodes_port = []
+                #print((addr[0]+','+str(addr[1])), self.nodes.keys())
+                if (addr[0]+','+str(addr[1])) in self.nodes.keys():
+                    new = False
+                else:
+                    new = True
+                #print(new)
                 for e, elem in enumerate(sorted(data[str.encode("db")].keys())):
                     if elem.decode('UTF-8').split(",")[0] == addr[0] and int(elem.decode('UTF-8').split(",")[1]) == addr[1]:
                         p_records = Peer_Records()
@@ -118,12 +121,33 @@ class Node(object):
                             rec_l = Peer_Record(data[str.encode("db")][elem][str.encode(str(i))][str.encode("username")], data[str.encode("db")][elem][str.encode(str(i))][str.encode("ipv4")], data[str.encode("db")][elem][str.encode(str(i))][str.encode("port")], bytes_=True)
                             p_records.add_record(rec_l)
 
-                        rec_h = Db_Record(elem.decode('UTF-8').split(",")[0], int(elem.decode('UTF-8').split(",")[1]), p_records)
+                        self.nodes[elem.decode('UTF-8')] = p_records
+                        #rec_h = Db_Record(elem.decode('UTF-8').split(",")[0], int(elem.decode('UTF-8').split(",")[1]), p_records)
                         #db_records.add_record(rec_h)
                         #merge records without duplicates
                     else:
-                        new_nodes_ipv4.append(elem.decode('UTF-8').split(",")[0])
-                        new_nodes_port.append(int(elem.decode('UTF-8').split(",")[1]))
+                        if elem.decode('UTF-8').split(",")[0] != self.reg_ipv4 and int(elem.decode('UTF-8').split(",")[1]) != self.reg_port:
+                            self.nodes[elem.decode('UTF-8')] = -1
+
+                for i, item in enumerate(self.nodes.keys()):
+                    if self.nodes[item] == -1 or (addr[0] == item.split(",")[0] and addr[1] == int(item.split(",")[1]) and new):
+                        recs = Db_Records()
+
+                        records = Peer_Records()
+                        for e, elem in enumerate(self.local_peers):
+                            records.add_record(elem)
+
+                        rec_db = Db_Record(self.reg_ipv4, self.reg_port, records)
+                        recs.records.append(rec_db)
+
+                        for e, elem in enumerate(self.nodes.keys()):
+                            if self.nodes[elem] != -1 and self.nodes[elem] != -2:
+                                rec_db = Db_Record(elem.split(",")[0], int(elem.split(",")[1]), self.nodes[elem])
+                                recs.records.append(rec_db)
+
+                        msg = Message_Update('update', self.txid, recs)
+                        msg_b = msg.encoded_msg()
+                        self.send_message_to(msg_b, item.split(",")[0], int(item.split(",")[1]))
 
                 #update messages to new nodes
 
@@ -153,10 +177,10 @@ class Node(object):
 
                 if data[0] == "database":
                     string = "{"
-                    for i, item in enumerate(self.peers):
+                    for i, item in enumerate(self.local_peers):
                         string += str(item) + ','
 
-                    if len(self.peers) != 0:
+                    if len(self.local_peers) != 0:
                         string = string[:-1]
 
                     string += "}"
@@ -166,7 +190,7 @@ class Node(object):
 
                 elif data[0] == "neighbors":
                     string = "{"
-                    for i, item in enumerate(self.nodes):
+                    for i, item in enumerate(self.nodes.keys()):
                         string += "{\'ipv4\': \'" + item.split(',')[0] + "\', \'port\': " + int(item.split(',')[1]) + "}"
                         string += item + ','
 
@@ -179,8 +203,27 @@ class Node(object):
 
 
                 elif data[0] == "connect":
+                    recs = Db_Records()
+
+                    records = Peer_Records()
+                    for i, item in enumerate(self.local_peers):
+                        records.add_record(item)
+
+                    rec_db = Db_Record(self.reg_ipv4, self.reg_port, records)
+                    recs.records.append(rec_db)
+
+                    for i, item in enumerate(self.nodes.keys()):
+                        if self.nodes[item] != -1:
+                            rec_db = Db_Record(item.split(",")[0], int(item.split(",")[1]), self.nodes[item])
+                            recs.records.append(rec_db)
+
+                    msg = Message_Update('update', self.txid, recs)
+                    msg_b = msg.encoded_msg()
+                    self.nodes[data[1]+','+str(data[2])] = -2
+                    self.send_message_to(msg_b, data[1], int(data[2]))
+                    
                     #send update message
-                    pass
+
                 elif data[0] == "disconnect":
                     #send disconnect message
                     pass
@@ -192,8 +235,9 @@ class Node(object):
                 else:
                     #ignore other pipe messages
                     pass
-            except:# Exception as e:
-                #print(e)
+            except Exception as e:
+                if type(e).__name__ != 'FileNotFoundError':
+                    print(e)
                 #pipe is not created
                 pass
 
@@ -212,7 +256,7 @@ class Node(object):
 
 
     def send_message_to(self, msg_b, ipv4, port):
-        self.chat_sock.sendto(msg_b, (ipv4, port))
+        self.reg_sock.sendto(msg_b, (ipv4, port))
         self.next_txid()
 
 
