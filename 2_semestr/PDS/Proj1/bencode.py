@@ -48,6 +48,7 @@ def decode(s):
     >>> decode(b'd3:bar4:spam3:fooi42ee') == {b'bar': b'spam', b'foo': 42}
     True
     """
+
     def decode_first(s):
         if s.startswith(b"i"):
             match = re.match(b"i(-?\\d+)e", s)
@@ -80,6 +81,3 @@ def decode(s):
     if rest:
         raise ValueError("Malformed input.")
     return ret
-
-if __name__ == "__main__":
-    print(encode({str.encode("type"):"hello", str.encode("txid"):123, str.encode("username"):"xlogin00", str.encode("ipv4"): "192.0.2.1", str.encode("port"): 34567}))

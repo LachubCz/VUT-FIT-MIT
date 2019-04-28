@@ -193,8 +193,9 @@ class Peer(object):
                 else:
                     #ignore other pipe messages
                     pass
-            except:# Exception as e:
-                #print(e)
+            except Exception as e:
+                if type(e).__name__ != 'FileNotFoundError':
+                    print(e)
                 #pipe is not created
                 pass
 

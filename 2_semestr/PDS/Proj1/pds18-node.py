@@ -106,13 +106,11 @@ class Node(object):
 
 
             elif type_ == "update":
-                #db_records = Db_Records()
-                #print((addr[0]+','+str(addr[1])), self.nodes.keys())
                 if (addr[0]+','+str(addr[1])) in self.nodes.keys():
                     new = False
                 else:
                     new = True
-                #print(new)
+
                 for e, elem in enumerate(sorted(data[str.encode("db")].keys())):
                     if elem.decode('UTF-8').split(",")[0] == addr[0] and int(elem.decode('UTF-8').split(",")[1]) == addr[1]:
                         p_records = Peer_Records()
@@ -122,9 +120,7 @@ class Node(object):
                             p_records.add_record(rec_l)
 
                         self.nodes[elem.decode('UTF-8')] = p_records
-                        #rec_h = Db_Record(elem.decode('UTF-8').split(",")[0], int(elem.decode('UTF-8').split(",")[1]), p_records)
-                        #db_records.add_record(rec_h)
-                        #merge records without duplicates
+
                     else:
                         if elem.decode('UTF-8').split(",")[0] != self.reg_ipv4 and int(elem.decode('UTF-8').split(",")[1]) != self.reg_port:
                             self.nodes[elem.decode('UTF-8')] = -1
@@ -148,8 +144,6 @@ class Node(object):
                         msg = Message_Update('update', self.txid, recs)
                         msg_b = msg.encoded_msg()
                         self.send_message_to(msg_b, item.split(",")[0], int(item.split(",")[1]))
-
-                #update messages to new nodes
 
 
             elif type_ == "disconnect":
@@ -220,7 +214,7 @@ class Node(object):
                     recs.records.append(rec_db)
 
                     for i, item in enumerate(self.nodes.keys()):
-                        if self.nodes[item] != -1:
+                        if self.nodes[item] != -1 and self.nodes[item] != -2:
                             rec_db = Db_Record(item.split(",")[0], int(item.split(",")[1]), self.nodes[item])
                             recs.records.append(rec_db)
 
@@ -239,9 +233,24 @@ class Node(object):
 
 
                 elif data[0] == "sync":
-                    #send update message to all nodes
-                    pass
+                    recs = Db_Records()
 
+                    records = Peer_Records()
+                    for i, item in enumerate(self.local_peers):
+                        records.add_record(item)
+
+                    rec_db = Db_Record(self.reg_ipv4, self.reg_port, records)
+                    recs.records.append(rec_db)
+
+                    for i, item in enumerate(self.nodes.keys()):
+                        if self.nodes[item] != -1 and self.nodes[item] != -2:
+                            rec_db = Db_Record(item.split(",")[0], int(item.split(",")[1]), self.nodes[item])
+                            recs.records.append(rec_db)
+
+                    for i, item in enumerate(self.nodes.keys()):
+                        msg = Message_Update('update', self.txid, recs)
+                        msg_b = msg.encoded_msg()
+                        self.send_message_to(msg_b, item.split(",")[0], int(item.split(",")[1]))
 
                 else:
                     #ignore other pipe messages

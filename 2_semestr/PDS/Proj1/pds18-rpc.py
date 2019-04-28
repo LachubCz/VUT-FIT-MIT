@@ -68,7 +68,11 @@ if __name__ == "__main__":
     elif args.node:
         path = get_pipe_name("node", args.id)
 
-    os.mkfifo(path)
+    try:
+        os.mkfifo(path)
+    except:
+        pass
+    
     pipe = open(path, "w")
 
     if args.command == "message":
