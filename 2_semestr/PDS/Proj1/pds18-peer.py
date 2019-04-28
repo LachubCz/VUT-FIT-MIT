@@ -1,9 +1,10 @@
 import os
 import sys
 import time
-import _thread
 import socket
+import _thread
 import argparse
+from timeit import default_timer as timer
 
 from messages import Message_Hello, Message_GetList, Message_List, Message_Message, Message_Update, Message_Disconnect, Message_Ack, Message_Error
 from messages import Peer_Record, Peer_Records, Db_Record, Db_Records
@@ -64,17 +65,23 @@ class Peer(object):
             err_print("Cannot assign requested chat address or port.")
             sys.exit(-1)
 
-        msg = Message_Hello('hello', self.txid, self.username, self.chat_ipv4, self.chat_port)
-        msg_b = msg.encoded_msg()
-        self.send_message(msg_b)
-
 
     def run(self):
+        _thread.start_new_thread(self.timeout_hanle, ( ))
         _thread.start_new_thread(self.listen_chat, ( ))
         _thread.start_new_thread(self.listen_pipe, ( ))
-
+        
         while True:
             pass
+
+
+    def timeout_hanle(self):
+        while True:
+            msg = Message_Hello('hello', self.txid, self.username, self.chat_ipv4, self.chat_port)
+            msg_b = msg.encoded_msg()
+            self.send_message(msg_b)
+            time.sleep(10)
+
 
     def listen_chat(self):
         while True:

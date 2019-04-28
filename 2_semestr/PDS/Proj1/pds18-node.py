@@ -1,9 +1,10 @@
 import os
 import sys
 import time
-import _thread
 import socket
+import _thread
 import argparse
+from timeit import default_timer as timer
 
 from messages import Message_Hello, Message_GetList, Message_List, Message_Message, Message_Update, Message_Disconnect, Message_Ack, Message_Error
 from messages import Peer_Record, Peer_Records, Db_Record, Db_Records
@@ -44,7 +45,10 @@ class Node(object):
         self.txid = 0
 
         self.local_peers = []
+        self.local_peers_timeouts = []
         self.nodes = {}
+        self.nodes_timeouts = {}
+        self.nodes_last_notification = {}
 
         try:
             self.reg_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -56,9 +60,57 @@ class Node(object):
     def run(self):
         _thread.start_new_thread(self.listen_reg,  ( ))
         _thread.start_new_thread(self.listen_pipe, ( ))
+        _thread.start_new_thread(self.timeout_hanle, ( ))
 
         while True:
             pass
+
+    def timeout_hanle(self):
+        while True:
+            #delete inactive peers
+            to_delete = []
+            for i, item in enumerate(self.local_peers_timeouts):
+                if (timer() - item) > 30:
+                    to_delete.append(i)
+
+            for i, item in enumerate(reversed(to_delete)):
+                del self.local_peers[i]
+                del self.local_peers_timeouts[i]
+
+            #delete inactive nodes
+            to_delete = []
+            for i, item in enumerate(self.nodes_timeouts.keys()):
+                if (timer() - self.nodes_timeouts[item]) > 12:
+                    to_delete.append(item)
+
+            for i, item in enumerate(to_delete):
+                del self.nodes[item]
+                del self.nodes_timeouts[item]
+                del self.nodes_last_notification[item]
+
+            #send notification to nodes
+            for i, item in enumerate(self.nodes_last_notification.keys()):
+                if (timer() - self.nodes_last_notification[item]) > 4:
+                    recs = Db_Records()
+
+                    records = Peer_Records()
+                    for e, elem in enumerate(self.local_peers):
+                        records.add_record(elem)
+
+                    rec_db = Db_Record(self.reg_ipv4, self.reg_port, records)
+                    recs.records.append(rec_db)
+
+                    for e, elem in enumerate(self.nodes.keys()):
+                        if self.nodes[elem] != -1 and self.nodes[elem] != -2:
+                            rec_db = Db_Record(elem.split(",")[0], int(elem.split(",")[1]), self.nodes[elem])
+                            recs.records.append(rec_db)
+
+                    msg = Message_Update('update', self.txid, recs)
+                    msg_b = msg.encoded_msg()
+                    self.send_message_to(msg_b, item.split(",")[0], int(item.split(",")[1]))
+                    self.nodes_last_notification[item] = timer()
+
+            time.sleep(1)
 
     def listen_reg(self):
         while True:
@@ -75,9 +127,17 @@ class Node(object):
                     for i, item in enumerate(self.local_peers):
                         if data[str.encode("username")].decode('UTF-8') == item.username_:
                             del self.local_peers[i]
+                            del self.local_peers_timeouts[i]
                 else:
-                    self.local_peers.append(Peer_Record(data[str.encode("username")], data[str.encode("ipv4")], data[str.encode("port")], bytes_=True))
-
+                    record = Peer_Record(data[str.encode("username")], data[str.encode("ipv4")], data[str.encode("port")], bytes_=True)
+                    existing = False
+                    for i, item in enumerate(self.local_peers):
+                        if item.username_ == record.username_ and item.ipv4_ == record.ipv4_ and item.port_ == record.port_:
+                            self.local_peers_timeouts[i] = timer()
+                            existing = True
+                    if not existing:
+                        self.local_peers.append(record)
+                        self.local_peers_timeouts.append(timer())
 
             elif type_ == "getlist":
                 is_authorized = False
@@ -120,10 +180,13 @@ class Node(object):
                             p_records.add_record(rec_l)
 
                         self.nodes[elem.decode('UTF-8')] = p_records
+                        self.nodes_timeouts[elem.decode('UTF-8')] = timer()
 
                     else:
                         if elem.decode('UTF-8').split(",")[0] != self.reg_ipv4 and int(elem.decode('UTF-8').split(",")[1]) != self.reg_port:
                             self.nodes[elem.decode('UTF-8')] = -1
+                            self.nodes_timeouts[elem.decode('UTF-8')] = timer()
+
 
                 for i, item in enumerate(self.nodes.keys()):
                     if self.nodes[item] == -1 or (addr[0] == item.split(",")[0] and addr[1] == int(item.split(",")[1]) and new):
@@ -144,11 +207,14 @@ class Node(object):
                         msg = Message_Update('update', self.txid, recs)
                         msg_b = msg.encoded_msg()
                         self.send_message_to(msg_b, item.split(",")[0], int(item.split(",")[1]))
+                        self.nodes_last_notification[item] = timer()
 
 
             elif type_ == "disconnect":
                 if addr[0]+','+str(addr[1]) in self.nodes:
                     del self.nodes[addr[0]+','+str(addr[1])]
+                    del self.nodes_timeouts[addr[0]+','+str(addr[1])]
+                    del self.nodes_last_notification[addr[0]+','+str(addr[1])]
 
 
             elif type_ == "ack":
@@ -222,6 +288,7 @@ class Node(object):
                     msg_b = msg.encoded_msg()
                     self.nodes[data[1]+','+str(data[2])] = -2
                     self.send_message_to(msg_b, data[1], int(data[2]))
+                    self.nodes_last_notification[data[1]+','+str(data[2])] = timer()
 
 
                 elif data[0] == "disconnect":
@@ -251,6 +318,7 @@ class Node(object):
                         msg = Message_Update('update', self.txid, recs)
                         msg_b = msg.encoded_msg()
                         self.send_message_to(msg_b, item.split(",")[0], int(item.split(",")[1]))
+                        self.nodes_last_notification[item] = timer()
 
                 else:
                     #ignore other pipe messages
