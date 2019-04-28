@@ -54,6 +54,7 @@ class Peer(object):
         
         self.txid = 0
         self.last_hello = 0
+        self.missing_acks = []
 
         self.acks = {}
 
@@ -92,6 +93,7 @@ class Peer(object):
                 if (timer() - self.acks[item][0]) > 2:
                     err_print("ACK for message with txid {} wasn't recieved." .format(item))
                     to_delete.append(item)
+                    self.missing_acks.append(item)
 
             for i, item in enumerate(to_delete):
                 del self.acks[item]
@@ -142,10 +144,10 @@ class Peer(object):
 
 
             elif type_ == "ack":
-                if self.acks[data[str.encode("txid")]][1] == "message":
+                if data[str.encode("txid")] in self.acks:
                     del self.acks[data[str.encode("txid")]]
-                elif self.acks[data[str.encode("txid")]][1] == "list":
-                    del self.acks[data[str.encode("txid")]]
+                else:
+                    err_print("Unexpected ACK with txid {} received." .format(data[str.encode("txid")]))
 
                 if self.print_ack:
                     err_print("Message GETLIST with txid {} acknowlidged." .format(data[str.encode("txid")]))
@@ -171,15 +173,16 @@ class Peer(object):
 
                     msg = Message_GetList('getlist', self.txid)
                     msg_b = msg.encoded_msg()
+                    stamp = self.txid
+                    self.acks[stamp] = [timer(), "list"]
                     self.send_message(msg_b)
-                    self.acks[self.txid] = [timer(), "list"]
 
                     while True:
-                        if self.txid not in self.acks:
+                        if stamp not in self.acks and stamp not in self.missing_acks:
                             break
 
                     start = timer()
-                    while True
+                    while True:
                         if self.actual_peers or (timer() - start) > 2:
                             break
 
@@ -197,6 +200,8 @@ class Peer(object):
                                 msg_b = msg.encoded_msg()
                                 self.acks[self.txid] = [timer(), "message"]
                                 self.send_message_to(msg_b, item.ipv4_, item.port_)
+                            else:
+                                err_print("User is unreachable.")
 
 
                 elif data[0] == "getlist":

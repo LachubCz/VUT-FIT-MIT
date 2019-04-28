@@ -120,7 +120,7 @@ class Node(object):
                     msg_b = msg.encoded_msg()
                     self.send_message_to(msg_b, item.split(",")[0], int(item.split(",")[1]))
                     self.nodes_last_notification[item] = timer()
-
+            #print(self.nodes.keys())
             time.sleep(0.5)
 
 
@@ -165,8 +165,12 @@ class Node(object):
                     records = Peer_Records()
                     for i, item in enumerate(self.local_peers):
                         records.add_record(item)
-    
-                    msg = Message_List('list', data[str.encode("txid")], records)
+
+                    for i, item in enumerate(self.nodes.keys()):
+                        for i, item in enumerate(self.nodes[item].records):
+                            records.add_record(item)
+
+                    msg = Message_List('list', self.txid, records)
                     msg_b = msg.encoded_msg()
                     self.acks[self.txid] = [timer(), "list"]
                     self.send_message_to(msg_b, addr[0], addr[1])
@@ -177,12 +181,15 @@ class Node(object):
 
 
             elif type_ == "update":
+                #adresa ze ktere je update zprava odeslana neni v db
                 if (addr[0]+','+str(addr[1])) in self.nodes.keys():
                     new = False
                 else:
                     new = True
 
+                #prochazi se adresy ze zpravy
                 for e, elem in enumerate(sorted(data[str.encode("db")].keys())):
+                    #autoritativni zaznam
                     if elem.decode('UTF-8').split(",")[0] == addr[0] and int(elem.decode('UTF-8').split(",")[1]) == addr[1]:
                         p_records = Peer_Records()
                         for i in range(len(data[str.encode("db")][elem].keys())):
@@ -192,14 +199,21 @@ class Node(object):
 
                         self.nodes[elem.decode('UTF-8')] = p_records
                         self.nodes_timeouts[elem.decode('UTF-8')] = timer()
-
+                    #neautoritativni zaznam
                     else:
-                        if elem.decode('UTF-8').split(",")[0] != self.reg_ipv4 and int(elem.decode('UTF-8').split(",")[1]) != self.reg_port:
+                        #print(elem.decode('UTF-8').split(",")[0], self.reg_ipv4, int(elem.decode('UTF-8').split(",")[1]), self.reg_port)
+                        if elem.decode('UTF-8').split(",")[0] == self.reg_ipv4 and int(elem.decode('UTF-8').split(",")[1]) == self.reg_port:
+                        #
+                            pass
+                        elif elem.decode('UTF-8') not in self.nodes:
+                        
                             self.nodes[elem.decode('UTF-8')] = -1
                             self.nodes_timeouts[elem.decode('UTF-8')] = timer()
+                            #print("wewe")
 
-
+                #print(self.nodes)
                 for i, item in enumerate(self.nodes.keys()):
+                    #print(self.nodes[item], item)
                     if self.nodes[item] == -1 or (addr[0] == item.split(",")[0] and addr[1] == int(item.split(",")[1]) and new):
                         recs = Db_Records()
 
@@ -231,10 +245,10 @@ class Node(object):
 
 
             elif type_ == "ack":
-                if self.acks[data[str.encode("txid")]][1] == "disconnect":
+                if data[str.encode("txid")] in self.acks:
                     del self.acks[data[str.encode("txid")]]
-                elif self.acks[data[str.encode("txid")]][1] == "list":
-                    del self.acks[data[str.encode("txid")]]
+                else:
+                    err_print("Unexpected ACK with txid {} received." .format(data[str.encode("txid")]))
 
 
             else:
@@ -302,7 +316,7 @@ class Node(object):
 
                     msg = Message_Update('update', self.txid, recs)
                     msg_b = msg.encoded_msg()
-                    self.nodes[data[1]+','+str(data[2])] = -2
+                    #self.nodes[data[1]+','+str(data[2])] = -2
                     self.send_message_to(msg_b, data[1], int(data[2]))
                     self.nodes_last_notification[data[1]+','+str(data[2])] = timer()
 
@@ -313,7 +327,9 @@ class Node(object):
                         msg_b = msg.encoded_msg()
                         self.acks[self.txid] = [timer(), "disconnect"]
                         self.send_message_to(msg_b, item.split(",")[0], int(item.split(",")[1]))
-                        del self.nodes[item]
+                    self.nodes = {}
+                    self.nodes_timeouts = {}
+                    self.nodes_last_notification = {}
 
 
                 elif data[0] == "sync":
