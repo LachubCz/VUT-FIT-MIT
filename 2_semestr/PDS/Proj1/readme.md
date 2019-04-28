@@ -2,7 +2,7 @@ Hybridní chatovací P2P síť
 ====================
 Popis programu
 -----------
-Program obsahuje pouze standardní knihovny jazyka Python, není jej tudíž problém spustit na referenční virtuálce přesně podle specifikace v zadání projektu
+Program obsahuje pouze standardní knihovny jazyka Python.
 
 Použití
 -----
@@ -12,7 +12,7 @@ Použití
 
 Implementace
 -------------------------------------
-Detaily implementace jsou popsány v souboru manual.pdf.
+Detaily implementace jsou popsány v souboru dokumentace.pdf.
 
 Seznam odevzdaných souborů:
 ---------------------------
