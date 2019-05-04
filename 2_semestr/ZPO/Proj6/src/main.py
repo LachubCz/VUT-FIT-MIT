@@ -1,361 +1,132 @@
-import argparse
+import os
 
 import cv2
+import imutils
 import numpy as np
-import tensorflow as tf
+from PIL import Image, ImageChops
 
-from keras.models import Sequential, Model
-from keras.layers.core import Flatten, Dense, Dropout
-from keras.layers import Input, Layer
-from keras.layers.convolutional import Conv2D, MaxPooling2D, ZeroPadding2D
-from keras.optimizers import SGD
-from keras.applications.vgg16 import decode_predictions
-from keras import backend as K
+from image import Image as Dato
+from bbox_evaluation import evaluate_augmentation_fit
 
-def get_args():
-    """
-    method for parsing of arguments
-    """
-    parser = argparse.ArgumentParser()
+def ela(image, scale=10, quality=80):
+    original = cv2.imread(image)
+    cv2.imwrite('./temp.jpg', original, [int(cv2.IMWRITE_JPEG_QUALITY), quality])
+    temporary = cv2.imread('./temp.jpg')
 
-    parser.add_argument('--vgg_16', action="store", default="vgg16_weights_tf_dim_ordering_tf_kernels.h5", 
-                        help="file with weigths for vgg_16 network")
-    parser.add_argument('--img_width', action="store", type=int, default=150, 
-                        help="width of images that goes into network")
-    parser.add_argument('--img_height', action="store", type=int, default=150, 
-                        help="height of images that goes into network")
+    os.remove("./temp.jpg")
 
-    args = parser.parse_args()
+    diff = cv2.absdiff(original, temporary)*scale
 
-    return args
+    return diff
 
 
-def conv_layers_VGG_16(weights_path=None, pop_useless=True):
-    model = Sequential()
+def get_rect(im1, im2):
+    diff = cv2.absdiff(im1, im2)
+    diff = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
+    ret,diff = cv2.threshold(diff,10,255,cv2.THRESH_BINARY)
 
-    model.add(ZeroPadding2D((1,1), input_shape=(224, 224, 3), data_format='channels_last'))
-    model.add(Conv2D(64, kernel_size=(3, 3), strides=1, activation='relu'))
-    model.add(ZeroPadding2D((1,1)))
-    model.add(Conv2D(64, kernel_size=(3, 3), strides=1, activation='relu'))
-    model.add(MaxPooling2D((2,2), strides=(2,2), data_format='channels_last'))
+    cnts = cv2.findContours(diff.copy(), cv2.RETR_EXTERNAL,
+        cv2.CHAIN_APPROX_SIMPLE)
+    cnts = imutils.grab_contours(cnts)
 
-    model.add(ZeroPadding2D((1,1)))
-    model.add(Conv2D(128, kernel_size=(3, 3), activation='relu'))
-    model.add(ZeroPadding2D((1,1)))
-    model.add(Conv2D(128, kernel_size=(3, 3), activation='relu'))
-    model.add(MaxPooling2D((2,2), strides=(2,2), data_format='channels_last'))
+    max_idx = 0
+    max_pnts = 0
+    for i, item in enumerate(cnts):
+        if cv2.contourArea(item) < max_pnts:
+            continue
+        else:
+            max_idx = i
+            max_pnts = cv2.contourArea(item)
+    #print("MAX:", max_pnts)
 
-    model.add(ZeroPadding2D((1,1)))
-    model.add(Conv2D(256, kernel_size=(3, 3), activation='relu'))
-    model.add(ZeroPadding2D((1,1)))
-    model.add(Conv2D(256, kernel_size=(3, 3), activation='relu'))
-    model.add(ZeroPadding2D((1,1)))
-    model.add(Conv2D(256, kernel_size=(3, 3), activation='relu'))
-    model.add(MaxPooling2D((2,2), strides=(2,2), data_format='channels_last'))
-
-    model.add(ZeroPadding2D((1,1)))
-    model.add(Conv2D(512, kernel_size=(3, 3), activation='relu'))
-    model.add(ZeroPadding2D((1,1)))
-    model.add(Conv2D(512, kernel_size=(3, 3), activation='relu'))
-    model.add(ZeroPadding2D((1,1)))
-    model.add(Conv2D(512, kernel_size=(3, 3), activation='relu'))
-    model.add(MaxPooling2D((2,2), strides=(2,2), data_format='channels_last'))
-
-    model.add(ZeroPadding2D((1,1)))
-    model.add(Conv2D(512, kernel_size=(3, 3), activation='relu'))
-    model.add(ZeroPadding2D((1,1)))
-    model.add(Conv2D(512, kernel_size=(3, 3), activation='relu'))
-    model.add(ZeroPadding2D((1,1)))
-    model.add(Conv2D(512, kernel_size=(3, 3), activation='relu'))
-    model.add(MaxPooling2D((2,2), strides=(2,2), data_format='channels_last'))
-
-    model.add(Flatten())
-    model.add(Dense(4096, activation='relu'))
-    model.add(Dropout(0.5))
-    model.add(Dense(4096, activation='relu'))
-    model.add(Dropout(0.5))
-    model.add(Dense(1000, activation='softmax'))
-
-    if weights_path:
-        model.load_weights(weights_path)
+    (x, y, w, h) = cv2.boundingRect(cnts[max_idx])
     
-    if pop_useless:
-        model.layers.pop()
-        model.layers.pop()
-        model.layers.pop()
-        model.layers.pop()
-        model.layers.pop()
-        model.layers.pop()
-
-    return model
+    return x, y, w, h
 
 
-class RoiPoolingConv(Layer):
-    '''
-    ROI pooling layer for 2D inputs.
-    See Spatial Pyramid Pooling in Deep Convolutional Networks for Visual Recognition,
-    K. He, X. Zhang, S. Ren, J. Sun
-    # Arguments
-        pool_size: int
-            Size of pooling region to use. pool_size = 7 will result in a 7x7 region.
-        num_rois: number of regions of interest to be used
-    # Input shape
-        list of two 4D tensors [X_img,X_roi] with shape:
-        X_img:
-        `(1, channels, rows, cols)` if dim_ordering='th'
-        or 4D tensor with shape:
-        `(1, rows, cols, channels)` if dim_ordering='tf'.
-        X_roi:
-        `(1,num_rois,4)` list of rois, with ordering (x,y,w,h)
-    # Output shape
-        3D tensor with shape:
-        `(1, num_rois, channels, pool_size, pool_size)`
-    '''
-
-    def __init__(self, pool_size, num_rois, **kwargs):
-
-        self.dim_ordering = K.image_dim_ordering()
-        assert self.dim_ordering in {'tf', 'th'}, 'dim_ordering must be in {tf, th}'
-
-        self.pool_size = pool_size
-        self.num_rois = num_rois
-
-        super(RoiPoolingConv, self).__init__(**kwargs)
-
-    def build(self, input_shape):
-        if self.dim_ordering == 'th':
-            self.nb_channels = input_shape[0][1]
-        elif self.dim_ordering == 'tf':
-            self.nb_channels = input_shape[0][3]
-
-    def compute_output_shape(self, input_shape):
-        if self.dim_ordering == 'th':
-            return None, self.num_rois, self.nb_channels, self.pool_size, self.pool_size
-        else:
-            return None, self.num_rois, self.pool_size, self.pool_size, self.nb_channels
-
-    def call(self, x, mask=None):
-
-        assert(len(x) == 2)
-
-        img = x[0]
-        rois = x[1]
-
-        input_shape = K.shape(img)
-
-        outputs = []
-
-        for roi_idx in range(self.num_rois):
-
-            x = rois[0, roi_idx, 0]
-            y = rois[0, roi_idx, 1]
-            w = rois[0, roi_idx, 2]
-            h = rois[0, roi_idx, 3]
-
-            row_length = w / float(self.pool_size)
-            col_length = h / float(self.pool_size)
-
-            num_pool_regions = self.pool_size
-
-            #NOTE: the RoiPooling implementation differs between theano and tensorflow due to the lack of a resize op
-            # in theano. The theano implementation is much less efficient and leads to long compile times
-
-            if self.dim_ordering == 'th':
-                for jy in range(num_pool_regions):
-                    for ix in range(num_pool_regions):
-                        x1 = x + ix * row_length
-                        x2 = x1 + row_length
-                        y1 = y + jy * col_length
-                        y2 = y1 + col_length
-
-                        x1 = K.cast(x1, 'int32')
-                        x2 = K.cast(x2, 'int32')
-                        y1 = K.cast(y1, 'int32')
-                        y2 = K.cast(y2, 'int32')
-
-                        x2 = x1 + K.maximum(1,x2-x1)
-                        y2 = y1 + K.maximum(1,y2-y1)
-
-                        new_shape = [input_shape[0], input_shape[1],
-                                     y2 - y1, x2 - x1]
-
-                        x_crop = img[:, :, y1:y2, x1:x2]
-                        xm = K.reshape(x_crop, new_shape)
-                        pooled_val = K.max(xm, axis=(2, 3))
-                        outputs.append(pooled_val)
-
-            elif self.dim_ordering == 'tf':
-                x = K.cast(x, 'int32')
-                y = K.cast(y, 'int32')
-                w = K.cast(w, 'int32')
-                h = K.cast(h, 'int32')
-
-                rs = tf.image.resize_images(img[:, y:y+h, x:x+w, :], (self.pool_size, self.pool_size))
-                outputs.append(rs)
-
-        final_output = K.concatenate(outputs, axis=0)
-        final_output = K.reshape(final_output, (1, self.num_rois, self.pool_size, self.pool_size, self.nb_channels))
-
-        if self.dim_ordering == 'th':
-            final_output = K.permute_dimensions(final_output, (0, 1, 4, 2, 3))
-        else:
-            final_output = K.permute_dimensions(final_output, (0, 1, 2, 3, 4))
-
-        return final_output
-
-
-def SRM(imgs):
-    filter1 = [[0, 0, 0, 0, 0],
-               [0, -1, 2, -1, 0],
-               [0, 2, -4, 2, 0],
-               [0, -1, 2, -1, 0],
-               [0, 0, 0, 0, 0]]
-    filter2 = [[-1, 2, -2, 2, -1],
-               [2, -6, 8, -6, 2],
-               [-2, 8, -12, 8, -2],
-               [2, -6, 8, -6, 2],
-               [-1, 2, -2, 2, -1]]
-    filter3 = [[0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0],
-               [0, 1, -2, 1, 0],
-               [0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0]]
-    q = [4.0, 12.0, 2.0]
-    filter1 = np.asarray(filter1, dtype=float) / 4
-    filter2 = np.asarray(filter2, dtype=float) / 12
-    filter3 = np.asarray(filter3, dtype=float) / 2
-    filters = [[filter1, filter1, filter1], [filter2, filter2, filter2], [filter3, filter3, filter3]]
-    filters = np.einsum('klij->ijlk', filters)
-    print("Eeej: ", filters)
-    filters = tf.Variable(filters, dtype=tf.float32)
-    imgs = np.array(imgs, dtype=float)
-    input = tf.Variable(imgs, dtype=tf.float32)
-    op = tf.nn.conv2d(input, filters, strides=[1, 1, 1, 1], padding='SAME')
-
-    q = [4.0, 12.0, 2.0]
-    filter1 = [[0, 0, 0, 0, 0],
-               [0, -1, 2, -1, 0],
-               [0, 2, -4, 2, 0],
-               [0, -1, 2, -1, 0],
-               [0, 0, 0, 0, 0]]
-    filter2 = [[-1, 2, -2, 2, -1],
-               [2, -6, 8, -6, 2],
-               [-2, 8, -12, 8, -2],
-               [2, -6, 8, -6, 2],
-               [-1, 2, -2, 2, -1]]
-    filter3 = [[0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0],
-               [0, 1, -2, 1, 0],
-               [0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0]]
-    filter1 = np.asarray(filter1, dtype=float) / q[0]
-    filter2 = np.asarray(filter2, dtype=float) / q[1]
-    filter3 = np.asarray(filter3, dtype=float) / q[2]
-    filters = [[filter1, filter1, filter1], [filter2, filter2, filter2], [filter3, filter3, filter3]]
-    filters = np.einsum('klij->ijlk', filters)
-    filters = filters.flatten()
-    initializer_srm = tf.constant_initializer(filters)
-
-    op2 = slim.conv2d(input, 3, [5, 5], trainable=False, weights_initializer=initializer_srm,
-                      activation_fn=None, padding='SAME', stride=1, scope='srm')
-
-    neg = ((op2 + 2) + abs(op2 + 2)) / 2 - 2
-    op2 = -(-neg+2 + abs(- neg+2)) / 2 + 2
-
-    filter_coocurr = [[0, 0, 0, 0, 0, 0, 0],
-                      [0, 0, 0, 0, 0, 0, 0],
-                      [0, 0, 0, 0, 0, 0, 0],
-                      [0, 0, 0, 1, 1, 1, 1],
-                      [0, 0, 0, 1, 0, 0, 0],
-                      [0, 0, 0, 1, 0, 0, 0],
-                      [0, 0, 0, 1, 0, 0, 0]]
-    filter_coocurr_zero = [[0, 0, 0, 0, 0, 0, 0],
-                           [0, 0, 0, 0, 0, 0, 0],
-                           [0, 0, 0, 0, 0, 0, 0],
-                           [0, 0, 0, 0, 0, 0, 0],
-                           [0, 0, 0, 0, 0, 0, 0],
-                           [0, 0, 0, 0, 0, 0, 0],
-                           [0, 0, 0, 0, 0, 0, 0]]
-    filters_coocurr = [[filter_coocurr, filter_coocurr_zero, filter_coocurr_zero],
-                       [filter_coocurr_zero, filter_coocurr, filter_coocurr_zero],
-                       [filter_coocurr_zero, filter_coocurr_zero, filter_coocurr]]
-    filters_coocurr = np.einsum('klij->ijlk', filters_coocurr)
-    with tf.Session() as sess:
-        sess.run(tf.initialize_all_variables())
-        re = (sess.run(op))
-        res = np.round(re[0])
-        res[res > 2] = 2
-        res[res < -2] = -2
-
-        res2 = sess.run(op2)
-        # print(sum(sum(sum(sum(res2>2)))))
-    ress2 = np.array(res2, dtype=float)
-    ress = np.array([res], dtype=float)
-    # input = tf.Variable(ress, dtype=tf.float32)
-    # op = tf.nn.conv2d(input, filters_coocurr, strides=[1, 1, 1, 1], padding='SAME')
-    # with tf.Session() as sess:
-    #     sess.run(tf.initialize_all_variables())
-    #     res = (sess.run(op))
-    return ress#, ress2
-
-
-def network():
-    #im = cv2.resize(cv2.imread('2019-03-20-17-40-24-80.jpg'), (224, 224)).astype(np.float32)
-    #im[:,:,0] -= 103.939
-    #im[:,:,1] -= 116.779
-    #im[:,:,2] -= 123.68
-    #im = im.transpose((1,0,2))
-    #im = np.expand_dims(im, axis=0)
-    args = get_args()    
-
-    sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
-    #########
-    #VGG_16 - rgb_conv_layers - sequentiel model
-    rgb_conv_layers = conv_layers_VGG_16(args.vgg_16)
-    rgb_conv_layers.compile(optimizer=sgd, loss='categorical_crossentropy')
-    rgb_conv_layers.summary()
-    #out = rgb_conv_layers.predict(im)
-    #predictions = decode_predictions(out)
-    #########
-
-    #########
-    #VGG_16 - noise_conv_layers - sequentiel model
-    #noise_conv_layers = conv_layers_VGG_16(args.vgg_16)
-    #rgb_conv_layers.compile(optimizer=sgd, loss='categorical_crossentropy')
-    #rgb_conv_layers.summary()
-    #########
-
-    #########
-    #API model
-    input_ = Input(batch_shape=rgb_conv_layers.output_shape)
-    x = RoiPoolingConv(pool_size=8, num_rois=1)(input_)
-    x = Dense(256, activation='relu')(x)
-    x = Dropout(0.5)(x)
-    predict = Dense(1, activation='sigmoid')(x)
-    api_model = Model(input_, predict)
-    api_model.summary()
-    #########
-
-    #########
-    #Connected models
-    rbg_stream_input = Input(shape=(args.img_width, args.img_height, 3))
-    x = rgb_conv_layers(rbg_stream_input)
-    predict = api_model(x)
-    model = Model(rbg_stream_input, predict)
-    model.summary()
-    #########
-
-if __name__ == "__main__":
-    network()
+def parse_data(filename, data_path, ground_truths_path):
     """
-    input_ = SRM(x)
-
-    input_ = Input(shape=(150,150,3))
-
-    x = Dense(256, activation='relu')(input_)
-    x = Dropout(0.5)(x)
-    predict = Dense(1, activation='sigmoid')(x)
-
-    top_model = Model(input_, predict)
-    top_model.summary()
+    method parses csv file and loads images into structure Image
     """
+    with open(filename) as f:
+        content = f.readlines()
+
+    content = [x.strip() for x in content]
+
+    data = []
+    for i, item in enumerate(content):
+        if i == 0:
+            continue
+        parametres = item.split('_')
+
+        image = cv2.imread(os.path.join(data_path, item), -1)
+
+        #os.path.join(ground_truths_path, "Au_"+parametres[4][:3]+"_"+parametres[4][3:]+".jpg")
+
+        gt1 = cv2.imread(os.path.join(ground_truths_path, "Au_"+parametres[4][:3]+"_"+parametres[4][3:]+".jpg"), -1)
+
+        try:
+            x, y, w, h = get_rect(image, gt1)
+        except:
+            continue
+
+        dato = Dato(image, os.path.join(data_path, item), x, y, w, h)
+        data.append(dato)
+
+    return data
+
+
+class Pred(object):
+    def __init__(self):
+        self.augmentation = False
+
+if __name__ == '__main__':
+    #data = parse_data("./Sp_im.txt", "./CASIA1_augmented/", "./CASIA1_original/")
+    whole_score = 0
+    data = os.listdir('./CASIA1_original/')
+    for i, item in enumerate(data):
+        image = ela('./CASIA1_original/'+item)
+        #cv2.imwrite(os.path.join("./Sp_im.txt", item.path.split('/')[-1]), image)
+        image = cv2.medianBlur(image, 3)
+        #cv2.imshow("frame1", image)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        #cv2.imshow("frame2", image)
+        #image = cv2.adaptiveThreshold(image,255,cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY,11,2)
+        ret, image = cv2.threshold(image,50,255,cv2.THRESH_BINARY)
+        #cv2.imshow("frame3", image)
+        kernel = np.ones((3, 3), np.uint8) 
+        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 4)
+        #cv2.imshow("frame4", image)
+        cnts = cv2.findContours(image.copy(), cv2.RETR_EXTERNAL,
+            cv2.CHAIN_APPROX_SIMPLE)
+        cnts = imutils.grab_contours(cnts)
+
+        max_idx = 0
+        max_pnts = 0
+        for e, elem in enumerate(cnts):
+            if cv2.contourArea(elem) < max_pnts:
+                continue
+            else:
+                max_idx = e
+                max_pnts = cv2.contourArea(elem)
+        #print(len(cnts), max_idx)
+        #print("MAX:", max_pnts)
+        if len(cnts) > 0:
+            (x, y, w, h) = cv2.boundingRect(cnts[max_idx])
+            pred =  {
+              "x": x,
+              "y": y,
+              "w": w,
+              "h": h
+            }
+            #cv2.rectangle(item.image, (pred['x'], pred['y']), (pred['x'] + pred['w'], pred['y'] + pred['h']), (0, 255, 0), 2)
+            #cv2.rectangle(item.image, (item.bbox['x'], item.bbox['y']), (item.bbox['x'] + item.bbox['w'], item.bbox['y'] + item.bbox['h']), (255, 0, 0),2)
+        else:
+            pred = None
+
+        score = evaluate_augmentation_fit(pred, Pred())
+        print(score)
+        whole_score += score
+        #cv2.imshow("frame", item.image)
+        #cv2.waitKey(0)
+    print((whole_score/(len(data)))*100)
