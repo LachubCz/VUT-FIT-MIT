@@ -23,7 +23,7 @@
 * MUL - Multimédia
   * [1. Projekt](./2_semestr/MUL/Proj1) - ?/29
 * PDS - Přenos dat, počítačové sítě a protokoly	
-  * [1. Projekt](./2_semestr/PDS/Proj1) - ?/25
+  * [1. Projekt](./2_semestr/PDS/Proj1) - 21.5/25
 * ZPO - Zpracování obrazu
   * [1. Projekt](./2_semestr/ZPO/Proj1) - 2/2
   * [2. Projekt](./2_semestr/ZPO/Proj2) - 2/2
@@ -32,4 +32,3 @@
   * [6. Projekt](./2_semestr/ZPO/Proj6) - ?/29
 * ZRE - Zpracování řečových signálů
   * [1. Projekt](./2_semestr/ZRE/Proj1) - ?/29
-  
