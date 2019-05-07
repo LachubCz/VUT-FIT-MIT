@@ -1,102 +1,139 @@
 import os
+import sys
+import argparse
 
 import cv2
 import imutils
 import numpy as np
-from PIL import Image, ImageChops
 
 from image import Image as Dato
+from tools import load_fakes, load_originals, create_folder_if_nexist, ela
 from bbox_evaluation import evaluate_augmentation_fit
+from extracting_inception import create_graph, extract_features
+from train_svm import get_model
 
-def ela(image, scale=10, quality=80):
-    original = cv2.imread(image)
-    cv2.imwrite('./temp.jpg', original, [int(cv2.IMWRITE_JPEG_QUALITY), quality])
-    temporary = cv2.imread('./temp.jpg')
-
-    os.remove("./temp.jpg")
-
-    diff = cv2.absdiff(original, temporary)*scale
-
-    return diff
-
-
-def get_rect(im1, im2):
-    diff = cv2.absdiff(im1, im2)
-    diff = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
-    ret,diff = cv2.threshold(diff,10,255,cv2.THRESH_BINARY)
-
-    cnts = cv2.findContours(diff.copy(), cv2.RETR_EXTERNAL,
-        cv2.CHAIN_APPROX_SIMPLE)
-    cnts = imutils.grab_contours(cnts)
-
-    max_idx = 0
-    max_pnts = 0
-    for i, item in enumerate(cnts):
-        if cv2.contourArea(item) < max_pnts:
-            continue
-        else:
-            max_idx = i
-            max_pnts = cv2.contourArea(item)
-    #print("MAX:", max_pnts)
-
-    (x, y, w, h) = cv2.boundingRect(cnts[max_idx])
+def parseargs():
+    print( ' '.join(sys.argv))
+    parser = argparse.ArgumentParser()
     
-    return x, y, w, h
+    parser.add_argument('--path-to-originals', type=str, default="./data/CASIA1_originals",
+                        help="")
+    parser.add_argument('--path-to-fakes', type=str, default="./data/CASIA1_fakes",
+                        help="")
+    parser.add_argument('--path-to-originals-ela', type=str, default="./data/CASIA1_originals_ela",
+                        help="")
+    parser.add_argument('--path-to-fakes-ela', type=str, default="./data/CASIA1_fakes_ela",
+                        help="")
+    parser.add_argument('--path-to-nn', type=str, default="./models/tensorflow_inception_graph.pb", 
+                        help="")
+    parser.add_argument('--path-to-svm', type=str, default="./models/classifier_model.pkl", 
+                        help="")
+    parser.add_argument('--use-classifier', action="store_true", default=False,
+                        help="")
+    parser.add_argument('--just-fakes', action="store_true", default=False,
+                        help="")
+    parser.add_argument('--show', action="store_true", default=False,
+                        help="")
 
+    args = parser.parse_args()
 
-def parse_data(filename, data_path, ground_truths_path):
-    """
-    method parses csv file and loads images into structure Image
-    """
-    with open(filename) as f:
-        content = f.readlines()
+    return args
 
-    content = [x.strip() for x in content]
-
-    data = []
-    for i, item in enumerate(content):
-        if i == 0:
-            continue
-        parametres = item.split('_')
-
-        image = cv2.imread(os.path.join(data_path, item), -1)
-
-        #os.path.join(ground_truths_path, "Au_"+parametres[4][:3]+"_"+parametres[4][3:]+".jpg")
-
-        gt1 = cv2.imread(os.path.join(ground_truths_path, "Au_"+parametres[4][:3]+"_"+parametres[4][3:]+".jpg"), -1)
-
-        try:
-            x, y, w, h = get_rect(image, gt1)
-        except:
-            continue
-
-        dato = Dato(image, os.path.join(data_path, item), x, y, w, h)
-        data.append(dato)
-
-    return data
-
-
-class Pred(object):
-    def __init__(self):
-        self.augmentation = False
 
 if __name__ == '__main__':
-    #data = parse_data("./Sp_im.txt", "./CASIA1_augmented/", "./CASIA1_original/")
+    args = parseargs()
+
+    if args.just_fakes:
+        fakes_list = os.listdir(args.path_to_fakes)
+    else: 
+        originals_list = os.listdir(args.path_to_originals)
+        fakes_list = os.listdir(args.path_to_fakes)
+
+    if not args.just_fakes:
+        originals = load_originals(originals_list, args.path_to_originals)
+    fakes = load_fakes(fakes_list, args.path_to_fakes, args.path_to_originals)
+
+    if args.use_classifier:
+        #inception network model
+        create_graph(args.path_to_nn)
+        #svm model
+        model = get_model(args.path_to_svm)
+
+        #originals
+        if not args.just_fakes:
+            originals_path = []
+            for i, item in enumerate(originals):
+                originals_path.append(item.path)
+
+            for i, item in enumerate(os.listdir(args.path_to_originals_ela)):
+                originals_path.append(os.path.join(args.path_to_originals_ela, item))
+
+            #feature extraction
+            features = extract_features(originals_path, verbose=True)
+
+            #SVM training
+            predictions = model.predict(features)
+            true_positive = np.count_nonzero(predictions == 1)
+            false_positive = np.count_nonzero(predictions == 0)
+
+        #fakes
+        fakes_path = []
+        for i, item in enumerate(fakes):
+            fakes_path.append(item.path)
+
+        for i, item in enumerate(os.listdir(args.path_to_fakes_ela)):
+            fakes_path.append(os.path.join(args.path_to_fakes_ela, item))
+        
+        #feature extraction
+        features = extract_features(fakes_path, verbose=True)
+
+        #SVM training
+        predictions = model.predict(features)
+        true_negative = np.count_nonzero(predictions == 1)
+        false_negative = np.count_nonzero(predictions == 0)
+
+        if not args.just_fakes:
+            print("###############")
+            print("Classification")
+            print("--------------")
+            print("True positive:  {}" .format(true_positive))
+            print("False positive: {}" .format(false_positive))
+            print("True negative:  {}" .format(true_negative))
+            print("False negative: {}" .format(false_negative))
+            print("Score: {} %" .format((true_positive+true_negative)/(true_positive+true_negative+false_positive+false_negative)))
+            print("###############")
+        else:
+            print("###############")
+            print("Classification")
+            print("--------------")
+            print("True positive:  {}" .format(true_positive))
+            print("False positive: {}" .format(false_positive))
+            print("True negative:  {}" .format(true_negative))
+            print("False negative: {}" .format(false_negative))
+            print("Score: {} %" .format((true_positive+true_negative)/(true_positive+true_negative+false_positive+false_negative)))
+            print("###############")
+
     whole_score = 0
-    data = os.listdir('./CASIA1_original/')
-    for i, item in enumerate(data):
-        image = ela('./CASIA1_original/'+item)
-        #cv2.imwrite(os.path.join("./Sp_im.txt", item.path.split('/')[-1]), image)
+    for i, item in enumerate(fakes):
+        image = cv2.imread(os.path.join(args.path_to_fakes_ela, item.path.split('\\')[-1]))
+        hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+        
+        lower_red = np.array([30,150,50])
+        upper_red = np.array([255,255,180])
+        
+        mask = cv2.inRange(hsv_image, lower_red, upper_red)
+        res = cv2.bitwise_and(image, image, mask= mask)
+        cv2.imshow("bitwise_and", res)
+
         image = cv2.medianBlur(image, 3)
-        #cv2.imshow("frame1", image)
+        cv2.imshow("medianBlur", image)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        #cv2.imshow("frame2", image)
-        #image = cv2.adaptiveThreshold(image,255,cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY,11,2)
+        cv2.imshow("cvtColor", image)
         ret, image = cv2.threshold(image,50,255,cv2.THRESH_BINARY)
-        #cv2.imshow("frame3", image)
-        kernel = np.ones((3, 3), np.uint8) 
+        cv2.imshow("threshold", image)
+        kernel = np.ones((3, 3), np.uint8)
         image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 4)
-        #cv2.imshow("frame4", image)
+        cv2.imshow("morphologyEx", image)
         cnts = cv2.findContours(image.copy(), cv2.RETR_EXTERNAL,
             cv2.CHAIN_APPROX_SIMPLE)
         cnts = imutils.grab_contours(cnts)
@@ -109,8 +146,7 @@ if __name__ == '__main__':
             else:
                 max_idx = e
                 max_pnts = cv2.contourArea(elem)
-        #print(len(cnts), max_idx)
-        #print("MAX:", max_pnts)
+
         if len(cnts) > 0:
             (x, y, w, h) = cv2.boundingRect(cnts[max_idx])
             pred =  {
@@ -119,14 +155,17 @@ if __name__ == '__main__':
               "w": w,
               "h": h
             }
-            #cv2.rectangle(item.image, (pred['x'], pred['y']), (pred['x'] + pred['w'], pred['y'] + pred['h']), (0, 255, 0), 2)
-            #cv2.rectangle(item.image, (item.bbox['x'], item.bbox['y']), (item.bbox['x'] + item.bbox['w'], item.bbox['y'] + item.bbox['h']), (255, 0, 0),2)
+            cv2.rectangle(item.image, (pred['x'], pred['y']), (pred['x'] + pred['w'], pred['y'] + pred['h']), (0, 255, 0), 2)
+            cv2.rectangle(item.image, (item.bbox['x'], item.bbox['y']), (item.bbox['x'] + item.bbox['w'], item.bbox['y'] + item.bbox['h']), (255, 0, 0),2)
         else:
             pred = None
 
-        score = evaluate_augmentation_fit(pred, Pred())
-        print(score)
+        score = evaluate_augmentation_fit(pred, item)
+
         whole_score += score
-        #cv2.imshow("frame", item.image)
-        #cv2.waitKey(0)
+        if args.show:
+            cv2.imshow("frame", item.image)
+            cv2.waitKey(0)
+            print(score)
+
     print((whole_score/(len(data)))*100)

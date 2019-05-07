@@ -35,24 +35,34 @@ def extract_features(image_paths, verbose=False):
     image_paths: array of image path
     return: 2-d array in the shape of (len(image_paths), 2048)
     """
-    feature_dimension = 2048
-    features = np.empty((len(image_paths), feature_dimension))
+    feature_dimension = 4096
+    lenght = int(len(image_paths)/2)
+    features = np.empty((lenght, feature_dimension))
 
     with tf.Session() as sess:
         flattened_tensor = sess.graph.get_tensor_by_name('pool_3:0')
 
-        for i, image_path in enumerate(image_paths):
+        for i in range(lenght):
+            #original
             if verbose:
-                print('Processing %s...' % (image_path))
+                print('Processing %s...' % (image_paths[i]))
 
-            if not gfile.Exists(image_path):
+            if not gfile.Exists(image_paths[i]):
                 tf.logging.fatal('File does not exist %s', image)
 
-            image_data = gfile.FastGFile(image_path, 'rb').read()
-            feature = sess.run(flattened_tensor, {
-                'DecodeJpeg/contents:0': image_data
-            })
-            features[i, :] = np.squeeze(feature)
+            image_data = gfile.FastGFile(image_paths[i], 'rb').read()
+            feature = sess.run(flattened_tensor, {'DecodeJpeg/contents:0': image_data})
+            features[i, 2048:] = np.squeeze(feature)
+            #ela
+            if verbose:
+                print('Processing %s...' % (image_paths[i+lenght]))
+
+            if not gfile.Exists(image_paths[i+lenght]):
+                tf.logging.fatal('File does not exist %s', image)
+
+            image_data = gfile.FastGFile(image_paths[i+lenght], 'rb').read()
+            feature = sess.run(flattened_tensor, {'DecodeJpeg/contents:0': image_data})
+            features[i, :2048] = np.squeeze(feature)
 
     return features
 

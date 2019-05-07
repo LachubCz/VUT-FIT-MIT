@@ -9,12 +9,14 @@
 # 
 # Note:     This source code is part of project created on UnIT extended 2019.
 #################################################################################
+from image import Image
 
-class Image(object):
-    def __init__(self, image, path, augmentation):
-        self.image = image
-        self.path = path
-        self.width = self.image.shape[0]
-        self.height = self.image.shape[1]
-        self.augmentation = augmentation
-        self.bbox = None
+class Fake(Image):
+    def __init__(self, image, path, augmentation, x, y, w, h):
+        super().__init__(image, path, augmentation)
+        self.bbox =  {
+          "x": x,
+          "y": y,
+          "w": w,
+          "h": h
+        }
