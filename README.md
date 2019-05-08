@@ -21,7 +21,7 @@
 * FYO - Fyzikální optika
   * [1. Projekt](./2_semestr/FYO/Proj1) - 27/30
 * MUL - Multimédia
-  * [1. Projekt](./2_semestr/MUL/Proj1) - ?/29
+  * [1. Projekt](./2_semestr/MUL/Proj1) - 	26/29
 * PDS - Přenos dat, počítačové sítě a protokoly	
   * [1. Projekt](./2_semestr/PDS/Proj1) - 21.5/25
 * ZPO - Zpracování obrazu
