@@ -1,8 +1,10 @@
 import os
+import math
 
 import cv2
 import imutils
 import numpy as np
+from scipy.signal import convolve2d
 
 from fake import Fake
 from image import Image
@@ -99,3 +101,15 @@ def load_originals(originals_list, originals_path):
 def create_folder_if_nexist(name):
     if not os.path.exists(name):
         os.makedirs(name)
+
+def estimate_noise(image):
+    height, width = image.shape
+
+    filter_ = [[1, -2, 1],
+               [-2, 4, -2],
+               [1, -2, 1]]
+
+    sigma = np.sum(np.sum(np.absolute(convolve2d(image, filter_))))
+    sigma = sigma * math.sqrt(0.5 * math.pi) / (6 * (width-2) * (height-2))
+
+    return sigma
