@@ -120,6 +120,7 @@ if __name__ == '__main__':
         print("#######################")
         print("Debugging bounding box")
         print("----------------------")
+
     for i, item in enumerate(fakes):
         image = cv2.imread(os.path.join(args.path_to_fakes_ela, item.path.split('\\')[-1]))
         image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
@@ -130,46 +131,44 @@ if __name__ == '__main__':
         if args.show:
             cv2.imshow("inRange", image)
 
-        if noise < 5:
+        if noise < 3.50:
             pass
-        elif noise < 10:
+        elif noise < 5.25:
             pass
-        elif noise < 15:
+        elif noise < 7.50:
             image = cv2.medianBlur(image, 3)
-        elif noise < 20:
+        elif noise < 10.05:
             image = cv2.medianBlur(image, 5)
-        elif noise < 25:
+        elif noise < 12.25:
             image = cv2.medianBlur(image, 5)
-        elif noise < 30:
+        elif noise < 14.40:
             image = cv2.medianBlur(image, 7)
-        elif noise < 35:
+        elif noise < 16.85:
             image = cv2.medianBlur(image, 7)
-        elif noise < 40:
+        elif noise < 20.35:
             image = cv2.medianBlur(image, 7)
-        elif noise < 45:
+        elif noise < 22.80:
             image = cv2.medianBlur(image, 7)
-        elif noise < 50:
+        elif noise < 25.80:
             image = cv2.medianBlur(image, 13)
-        elif noise < 55:
+        elif noise < 29.40:
             image = cv2.medianBlur(image, 13)
-        elif noise < 60:
+        elif noise < 34.65:
             image = cv2.medianBlur(image, 13)
-        elif noise < 65:
+        elif noise < 39.00:
             image = cv2.medianBlur(image, 13)
-        elif noise < 70:
+        elif noise < 45.00:
             image = cv2.medianBlur(image, 13)
-        elif noise < 75:
+        elif noise < 53.55:
             image = cv2.medianBlur(image, 13)
-        elif noise < 80:
+        elif noise < 62.40:
             image = cv2.medianBlur(image, 13)
-        elif noise < 85:
+        elif noise < 69.75:
             image = cv2.medianBlur(image, 13)
-        elif noise < 90:
+        elif noise < 79.50:
             image = cv2.medianBlur(image, 13)
-        elif noise < 95:
+        elif noise < 94.50:
             image = cv2.medianBlur(image, 13)
-        elif noise < 100:
-            image = cv2.medianBlur(image, 19)
         else:
             image = cv2.medianBlur(image, 19)
 
@@ -178,46 +177,44 @@ if __name__ == '__main__':
 
         kernel = np.ones((3, 3), np.uint8)
 
-        if noise < 5:
+        if noise < 3.50:
             image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 5)
-        elif noise < 10:
+        elif noise < 5.25:
             image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 5)
-        elif noise < 15:
+        elif noise < 7.50:
             image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 6)
-        elif noise < 20:
+        elif noise < 10.05:
             image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 7)
-        elif noise < 25:
+        elif noise < 12.25:
             image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 7)
-        elif noise < 30:
+        elif noise < 14.40:
             image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 8)
-        elif noise < 35:
+        elif noise < 16.85:
             image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 9)
-        elif noise < 40:
+        elif noise < 20.35:
             image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 10)
-        elif noise < 45:
+        elif noise < 22.80:
             image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 10)
-        elif noise < 50:
+        elif noise < 25.80:
             image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 10)
-        elif noise < 55:
+        elif noise < 29.40:
             image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 10)
-        elif noise < 60:
+        elif noise < 34.65:
             image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 11)
-        elif noise < 65:
+        elif noise < 39.00:
             image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 12)
-        elif noise < 70:
+        elif noise < 45.00:
             image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 12)
-        elif noise < 75:
+        elif noise < 53.55:
             image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 12)
-        elif noise < 80:
+        elif noise < 62.40:
             image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 12)
-        elif noise < 85:
+        elif noise < 69.75:
             image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 12)
-        elif noise < 90:
+        elif noise < 79.50:
             image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 12)
-        elif noise < 95:
+        elif noise < 94.50:
             image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 12)
-        elif noise < 100:
-            image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 13)
         else:
             image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 14)
 
