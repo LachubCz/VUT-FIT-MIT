@@ -1,12 +1,14 @@
 import os
 
 import cv2
+import pickle
 import imutils
 import numpy as np
+from sklearn.cluster import KMeans
 
 from tools import load_fakes, ela, estimate_noise, create_folder_if_nexist
 from bbox_evaluation import evaluate_augmentation_fit
-
+from equal_groups import EqualGroupsKMeans
 
 def create_elas():
     for i, item in enumerate(os.listdir('./data/CASIA1_originals')):
@@ -58,7 +60,7 @@ def create_classes():
 def get_combinations():
     classes_ = []
     for i in range(20):
-        classes_.append('./data/CASIA1_classes/{}' .format(i+1))
+        classes_.append('./data/CASIA1_classes_2/{}' .format(i+1))
 
     medians_ = [0,3,5,7,9,11,13,15,17,19]
 
@@ -145,5 +147,91 @@ def get_noise_thresholds():
             print(i+1, item)
 
 
-if __name__ == '__main__':
+def create_ela_noise_files():
+    fakes_list = os.listdir('./data/CASIA1_fakes')
 
+    fakes = load_fakes(fakes_list, './data/CASIA1_fakes', './data/CASIA1_originals')
+
+    create_folder_if_nexist('./data/CASIA1_ela_noise')
+    for i, item in enumerate(fakes):
+        image = cv2.imread(os.path.join('./data/CASIA1_fakes_ela', item.path.split('\\')[-1]))
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
+        image = cv2.inRange(image, np.array([0,0,0]), np.array([180,255,60]))
+        image = cv2.bitwise_not(image)
+
+        cv2.imwrite("{}" .format(os.path.join('./data/CASIA1_ela_noise', item.path.split('\\')[-1])), image)
+
+
+def train_kmeans():
+    ela_noise = os.listdir('./data/CASIA1_ela_noise')
+    x = np.zeros((len(ela_noise), 294912))
+
+    for i, item in enumerate(ela_noise):
+        image = cv2.imread(os.path.join('./data/CASIA1_ela_noise', item))
+        if np.shape(image)[0] > np.shape(image)[1]:
+            image = cv2.resize(image, (384, 256))
+        else:
+            image = cv2.resize(image, (256, 384))
+        x[i] = image.flatten()
+
+    kmeans = KMeans(n_clusters=20, random_state=0).fit(x)
+    #print(kmeans.labels_)
+    with open("clustering_model.pkl", "wb") as output:
+        pickle.dump(kmeans, output, pickle.HIGHEST_PROTOCOL)
+
+
+def train_kmeans_2():
+    ela_noise = os.listdir('./data/CASIA1_ela_noise')
+    x = np.zeros((len(ela_noise), 294912))
+
+    for i, item in enumerate(ela_noise):
+        image = cv2.imread(os.path.join('./data/CASIA1_ela_noise', item))
+        if np.shape(image)[0] > np.shape(image)[1]:
+            image = cv2.resize(image, (384, 256))
+        else:
+            image = cv2.resize(image, (256, 384))
+        x[i] = image.flatten()
+
+    kmeans = EqualGroupsKMeans(n_clusters=20, random_state=0, verbose=1).fit(x)
+    #print(kmeans.labels_)
+    with open("clustering_model.pkl", "wb") as output:
+        pickle.dump(kmeans, output, pickle.HIGHEST_PROTOCOL)
+
+
+def create_classes_kmeans():
+    kmeans = None
+    
+    with open("./models/kmeans_model.pkl", "rb") as input:
+        kmeans = pickle.load(input)
+
+    create_folder_if_nexist('./data/CASIA1_classes_2')
+    for i in range(20):
+        create_folder_if_nexist('./data/CASIA1_classes_2/{}' .format(i))
+
+    fakes_list = os.listdir('./data/CASIA1_fakes')
+
+    fakes = load_fakes(fakes_list, './data/CASIA1_fakes', './data/CASIA1_originals')
+
+    noises = []
+    for i, item in enumerate(fakes):
+        image = cv2.imread(os.path.join('./data/CASIA1_fakes_ela', item.path.split('\\')[-1]))
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+        
+        image = cv2.inRange(image, np.array([0,0,0]), np.array([180,255,60]))
+        image = cv2.bitwise_not(image)
+
+        if np.shape(image)[0] > np.shape(image)[1]:
+            image = cv2.resize(image, (384, 256))
+        else:
+            image = cv2.resize(image, (256, 384))
+
+        image = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
+        image = np.array([image.flatten()])
+        class_ = kmeans.predict(image)[0]
+
+        cv2.imwrite("{}" .format(os.path.join('./data/CASIA1_classes_2/{}' .format(class_), item.path.split('\\')[-1])), item.image)
+
+
+if __name__ == '__main__':
+    train_kmeans_2()
