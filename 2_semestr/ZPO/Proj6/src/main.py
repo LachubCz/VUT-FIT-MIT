@@ -9,12 +9,11 @@ import imutils
 import numpy as np
 
 from image import Image as Dato
-from tools import load_fakes, load_originals, create_folder_if_nexist, ela, estimate_noise
-from tools import median_blur_noise, median_blur_kmeans, median_blur_kmeans_2
-from tools import morphology_ex_noise, morphology_ex_kmeans, morphology_ex_kmeans_2
 from bbox_evaluation import evaluate_augmentation_fit
-from extracting_inception import create_graph, extract_features
-from train_svm import get_model
+from classification import get_model, create_graph, extract_features
+from tools import load_fakes, load_originals, create_folder_if_nexist, ela, estimate_noise, dwt_dwt
+from tools import median_blur_noise, median_blur_kmeans, median_blur_kmeans_2, median_blur_dwt
+from tools import morphology_ex_noise, morphology_ex_kmeans, morphology_ex_kmeans_2, morphology_ex_dwt
 
 def parseargs():
     print( ' '.join(sys.argv))
@@ -141,10 +140,15 @@ if __name__ == '__main__':
 
         #wavelet soft-thresholding
         if args.mb_type == "dwt":
-            if np.shape(image)[0] > np.shape(image)[1]:
-                to_predict = cv2.resize(image, (384, 256))
+            to_predict = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+            
+            to_predict = cv2.inRange(to_predict, np.array([0,0,0]), np.array([180,255,60]))
+            to_predict = cv2.bitwise_not(to_predict)
+
+            if np.shape(to_predict)[0] > np.shape(to_predict)[1]:
+                to_predict = cv2.resize(to_predict, (384, 256))
             else:
-                to_predict = cv2.resize(image, (256, 384))
+                to_predict = cv2.resize(to_predict, (256, 384))
             to_predict = cv2.cvtColor(to_predict, cv2.COLOR_GRAY2BGR)
             to_predict = np.array([to_predict.flatten()])
             class_ = kmeans_model.predict(to_predict)[0]

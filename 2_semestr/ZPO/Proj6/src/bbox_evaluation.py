@@ -1,19 +1,9 @@
-#################################################################################
-# Description:  File contains methods for evaluation
-#               
-# Authors:      Petr Walek
-#               Lukas Maly
-# 
-# Note:     This source code is part of competition assigment and
-#           was used as part of project created on UnIT extended 2019.
-#################################################################################
-
 import cv2
 import numpy as np
 
 def evaluate_augmentation_fit(prediction, ground_truth):
     """
-    Evaluate ellipse fit by comparing its parameters to the ground truth ellipse's parameters from the CSV file.
+    method evaluates bbox by comparing its parameters to the ground truth bbox parameters
     """
     if ground_truth.augmentation:
         if prediction:
@@ -25,7 +15,6 @@ def evaluate_augmentation_fit(prediction, ground_truth):
             return 0.0
         else:
             return 1.0
-
 
 
 def get_augmentation_fit_score(prediction, ground_truth):

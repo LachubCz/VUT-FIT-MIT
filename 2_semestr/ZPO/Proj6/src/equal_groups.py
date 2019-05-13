@@ -1,10 +1,3 @@
-"""Equal Groups K-Means clustering utlizing the scikit-learn api and related
-utilities.
-BSD 3-clause "New" or "Revised" License
-version 0.17.1
-"""
-
-
 import warnings
 
 import numpy as np

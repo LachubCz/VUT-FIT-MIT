@@ -2,6 +2,7 @@ import os
 import math
 
 import cv2
+import pywt
 import imutils
 import numpy as np
 from scipy.signal import convolve2d
@@ -10,6 +11,9 @@ from fake import Fake
 from image import Image
 
 def ela(image, scale=10, quality=80, loaded=False):
+    """
+    method computes error level analysis of image
+    """
     if not loaded:
         original = cv2.imread(image)
     else:
@@ -17,20 +21,20 @@ def ela(image, scale=10, quality=80, loaded=False):
     cv2.imwrite('./temp.jpg', original, [int(cv2.IMWRITE_JPEG_QUALITY), quality])
     temporary = cv2.imread('./temp.jpg')
 
-    #os.remove("./temp.jpg")
-
     diff = cv2.absdiff(original, temporary)*scale
 
     return diff
 
 
 def get_ground_truth(im1, im2):
+    """
+    method finds bounding box of largest manipulation based on cv2.absdiff
+    """
     diff = cv2.absdiff(im1, im2)
     diff = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
-    ret,diff = cv2.threshold(diff,10,255,cv2.THRESH_BINARY)
+    ret, diff = cv2.threshold(diff,10,255,cv2.THRESH_BINARY)
 
-    cnts = cv2.findContours(diff.copy(), cv2.RETR_EXTERNAL,
-        cv2.CHAIN_APPROX_SIMPLE)
+    cnts = cv2.findContours(diff.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     cnts = imutils.grab_contours(cnts)
 
     max_idx = 0
@@ -41,7 +45,6 @@ def get_ground_truth(im1, im2):
         else:
             max_idx = i
             max_pnts = cv2.contourArea(item)
-    #print("MAX:", max_pnts)
 
     (x, y, w, h) = cv2.boundingRect(cnts[max_idx])
     
@@ -75,9 +78,9 @@ def load_fakes(fakes_list, fakes_path, originals_path):
         dato = Fake(fake, os.path.join(fakes_path, item), True, x, y, w, h)
         data.append(dato)
 
-    #remove weird fakes, which does not correspond to naming protocol
+    #weird fakes, which does not correspond to naming protocol
     for i, item in enumerate(to_remove):
-        os.remove(os.path.join(data_path, item))
+        print("Bad input: {}" .format(item))
 
     return data
 
@@ -99,24 +102,31 @@ def load_originals(originals_list, originals_path):
 
 
 def create_folder_if_nexist(name):
+    """
+    method creates folder if folder doesn't exist
+    """
     if not os.path.exists(name):
         os.makedirs(name)
 
 
 def estimate_noise(image):
-    height, width = image.shape
+    """
+    method estimates noise in image
+    """
+    filter_ = np.array([[1, -2, 1],
+                        [-2, 4, -2],
+                        [1, -2, 1]])
 
-    filter_ = [[1, -2, 1],
-               [-2, 4, -2],
-               [1, -2, 1]]
-
-    sigma = np.sum(np.sum(np.absolute(convolve2d(image, filter_))))
-    sigma = sigma * math.sqrt(0.5 * math.pi) / (6 * (width-2) * (height-2))
+    sigma = np.sum(np.sum(np.absolute(cv2.filter2D(image, cv2.CV_64F, filter_))))
+    sigma = sigma * np.sqrt(0.5 * np.pi) / (6 * (image.shape[1]-2) * (image.shape[0]-2))
 
     return sigma
 
 
 def median_blur_noise(image, noise):
+    """
+    method applies median blur with parametres based on noise in image
+    """
     if noise < 3.50:
         pass
     elif noise < 5.25:
@@ -162,6 +172,10 @@ def median_blur_noise(image, noise):
 
 
 def median_blur_kmeans(image, class_):
+    """
+    method applies median blur with parametres based unbalanced
+    kmeans classification applied on ela noise image
+    """
     if class_ == 0:
         image = cv2.medianBlur(image, 5)
     elif class_ == 1:
@@ -207,6 +221,10 @@ def median_blur_kmeans(image, class_):
 
 
 def median_blur_kmeans_2(image, class_):
+    """
+    method applies median blur with parametres based balanced
+    kmeans classification applied on ela noise image
+    """
     if class_ == 0:
         image = cv2.medianBlur(image, 5)
     elif class_ == 1:
@@ -252,10 +270,14 @@ def median_blur_kmeans_2(image, class_):
 
 
 def median_blur_dwt(image, class_):
+    """
+    method applies median blur with parametres based balanced
+    kmeans classification applied on ela image
+    """
     if class_ == 0:
         image = cv2.medianBlur(image, 3)
     elif class_ == 1:
-        image = cv2.medianBlur(image, 50)
+        image = cv2.medianBlur(image, 3)
     elif class_ == 2:
         image = cv2.medianBlur(image, 5)
     elif class_ == 3:
@@ -287,9 +309,9 @@ def median_blur_dwt(image, class_):
     elif class_ == 16:
         image = cv2.medianBlur(image, 3)
     elif class_ == 17:
-        image = cv2.medianBlur(image, 0)
+        pass
     elif class_ == 18:
-        image = cv2.medianBlur(image, 0)
+        pass
     elif class_ == 19:
         image = cv2.medianBlur(image, 3)
 
@@ -297,6 +319,9 @@ def median_blur_dwt(image, class_):
 
 
 def morphology_ex_noise(image, noise):
+    """
+    method applies opening with parametres based on noise in image
+    """
     kernel = np.ones((3, 3), np.uint8)
 
     if noise < 3.50:
@@ -344,6 +369,10 @@ def morphology_ex_noise(image, noise):
 
 
 def morphology_ex_kmeans(image, class_):
+    """
+    method applies opening with parametres based unbalanced
+    kmeans classification applied on ela noise image
+    """
     kernel = np.ones((3, 3), np.uint8)
     
     if class_ == 0:
@@ -391,6 +420,10 @@ def morphology_ex_kmeans(image, class_):
 
 
 def morphology_ex_kmeans_2(image, class_):
+    """
+    method applies opening with parametres based balanced
+    kmeans classification applied on ela noise image
+    """
     kernel = np.ones((3, 3), np.uint8)
     
     if class_ == 0:
@@ -438,12 +471,16 @@ def morphology_ex_kmeans_2(image, class_):
 
 
 def morphology_ex_dwt(image, class_):
+    """
+    method applies opening with parametres based balanced
+    kmeans classification applied on ela image
+    """
     kernel = np.ones((3, 3), np.uint8)
     
     if class_ == 0:
         image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 4)
     elif class_ == 1:
-        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 50)
+        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 10)
     elif class_ == 2:
         image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 18)
     elif class_ == 3:
@@ -485,11 +522,15 @@ def morphology_ex_dwt(image, class_):
 
 
 def dwt_dwt(image, class_):
+    """
+    method applies wavelet soft-thresholding with parametres
+    based balanced kmeans classification applied on ela image
+    """
     passed = False
     if class_ == 0:
         passed = True
     elif class_ == 1:
-        image_ = pywt.threshold(image, 50, 'soft')
+        image_ = pywt.threshold(image, 20, 'soft')
     elif class_ == 2:
         image_ = pywt.threshold(image, 29, 'soft')
     elif class_ == 3:
@@ -527,11 +568,9 @@ def dwt_dwt(image, class_):
     elif class_ == 19:
         image_ = pywt.threshold(image, 18, 'soft')
     
-    if passed:
+    if not passed:
         image = cv2.normalize(image_, image, 0, 1, cv2.NORM_MINMAX)
         image = 255 * image
         image = image.astype(np.uint8)
 
     return image
-
-
