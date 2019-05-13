@@ -3,11 +3,15 @@ import sys
 import argparse
 
 import cv2
+import pywt
+import pickle
 import imutils
 import numpy as np
 
 from image import Image as Dato
 from tools import load_fakes, load_originals, create_folder_if_nexist, ela, estimate_noise
+from tools import median_blur_noise, median_blur_kmeans, median_blur_kmeans_2
+from tools import morphology_ex_noise, morphology_ex_kmeans, morphology_ex_kmeans_2
 from bbox_evaluation import evaluate_augmentation_fit
 from extracting_inception import create_graph, extract_features
 from train_svm import get_model
@@ -27,6 +31,10 @@ def parseargs():
     parser.add_argument('--path-to-nn', type=str, default="./models/tensorflow_inception_graph.pb", 
                         help="")
     parser.add_argument('--path-to-svm', type=str, default="./models/classifier_model.pkl", 
+                        help="")
+    parser.add_argument('--path-to-kmeans', type=str, default="./models/kmeans_model.pkl", 
+                        help="")
+    parser.add_argument('--mb-type', type=str, default="noise", choices=["noise", "kmeans", "kmeans2", "dwt"],
                         help="")
     parser.add_argument('--use-classifier', action="store_true", default=False,
                         help="")
@@ -121,106 +129,81 @@ if __name__ == '__main__':
         print("Debugging bounding box")
         print("----------------------")
 
+    if args.mb_type == "kmeans" or args.mb_type == "kmeans2" or args.mb_type == "dwt":
+        kmeans_model = None
+        with open(args.path_to_kmeans, "rb") as input:
+            kmeans_model = pickle.load(input)
+
     for i, item in enumerate(fakes):
         image = cv2.imread(os.path.join(args.path_to_fakes_ela, item.path.split('\\')[-1]))
+        if args.show:
+            cv2.imshow("ELA", image)
+
+        #wavelet soft-thresholding
+        if args.mb_type == "dwt":
+            if np.shape(image)[0] > np.shape(image)[1]:
+                to_predict = cv2.resize(image, (384, 256))
+            else:
+                to_predict = cv2.resize(image, (256, 384))
+            to_predict = cv2.cvtColor(to_predict, cv2.COLOR_GRAY2BGR)
+            to_predict = np.array([to_predict.flatten()])
+            class_ = kmeans_model.predict(to_predict)[0]
+
+            image = dwt_dwt(image, class_)
+
+            if args.show:
+                cv2.imshow("threshold", image)
+
+        #inRange
         image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-        
         image = cv2.inRange(image, np.array([0,0,0]), np.array([180,255,60]))
         image = cv2.bitwise_not(image)
-        noise = estimate_noise(image)
+        
         if args.show:
             cv2.imshow("inRange", image)
 
-        if noise < 3.50:
-            pass
-        elif noise < 5.25:
-            pass
-        elif noise < 7.50:
-            image = cv2.medianBlur(image, 3)
-        elif noise < 10.05:
-            pass
-        elif noise < 12.25:
-            image = cv2.medianBlur(image, 3)
-        elif noise < 14.40:
-            image = cv2.medianBlur(image, 7)
-        elif noise < 16.85:
-            pass
-        elif noise < 20.35:
-            image = cv2.medianBlur(image, 5)
-        elif noise < 22.80:
-            image = cv2.medianBlur(image, 3)
-        elif noise < 25.80:
-            pass
-        elif noise < 29.40:
-            image = cv2.medianBlur(image, 5)
-        elif noise < 34.65:
-            image = cv2.medianBlur(image, 1)
-        elif noise < 39.00:
-            image = cv2.medianBlur(image, 7)
-        elif noise < 45.00:
-            image = cv2.medianBlur(image, 5)
-        elif noise < 53.55:
-            image = cv2.medianBlur(image, 5)
-        elif noise < 62.40:
-            image = cv2.medianBlur(image, 5)
-        elif noise < 69.75:
-            image = cv2.medianBlur(image, 5)
-        elif noise < 79.50:
-            image = cv2.medianBlur(image, 5)
-        elif noise < 94.50:
-            image = cv2.medianBlur(image, 3)
-        else:
-            image = cv2.medianBlur(image, 5)
+        #medianBlur
+        if args.mb_type == "noise":
+            noise = estimate_noise(image)
+            image = median_blur_noise(image, noise)
+        elif args.mb_type == "kmeans":
+            if np.shape(image)[0] > np.shape(image)[1]:
+                to_predict = cv2.resize(image, (384, 256))
+            else:
+                to_predict = cv2.resize(image, (256, 384))
+            to_predict = cv2.cvtColor(to_predict, cv2.COLOR_GRAY2BGR)
+            to_predict = np.array([to_predict.flatten()])
+            class_ = kmeans_model.predict(to_predict)[0]
+            image = median_blur_kmeans(image, class_)
+        elif args.mb_type == "kmeans2":
+            if np.shape(image)[0] > np.shape(image)[1]:
+                to_predict = cv2.resize(image, (384, 256))
+            else:
+                to_predict = cv2.resize(image, (256, 384))
+            to_predict = cv2.cvtColor(to_predict, cv2.COLOR_GRAY2BGR)
+            to_predict = np.array([to_predict.flatten()])
+            class_ = kmeans_model.predict(to_predict)[0]
+            image = median_blur_kmeans_2(image, class_)
+        elif args.mb_type == "dwt":
+            image = median_blur_dwt(image, class_)
 
         if args.show:
             cv2.imshow("medianBlur", image)
 
-        kernel = np.ones((3, 3), np.uint8)
-
-        if noise < 3.50:
-            image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 2)
-        elif noise < 5.25:
-            image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 3)
-        elif noise < 7.50:
-            image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 11)
-        elif noise < 10.05:
-            image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 2)
-        elif noise < 12.25:
-            image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 9)
-        elif noise < 14.40:
-            image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 7)
-        elif noise < 16.85:
-            image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 1)
-        elif noise < 20.35:
-            image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 10)
-        elif noise < 22.80:
-            image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 7)
-        elif noise < 25.80:
-            image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 2)
-        elif noise < 29.40:
-            image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 12)
-        elif noise < 34.65:
-            image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 1)
-        elif noise < 39.00:
-            image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 13)
-        elif noise < 45.00:
-            image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 12)
-        elif noise < 53.55:
-            image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 16)
-        elif noise < 62.40:
-            image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 18)
-        elif noise < 69.75:
-            image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 9)
-        elif noise < 79.50:
-            image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 11)
-        elif noise < 94.50:
-            image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 4)
-        else:
-            image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 14)
+        #morphologyEx
+        if args.mb_type == "noise":
+            image = morphology_ex_noise(image, noise)
+        elif args.mb_type == "kmeans":
+            image = morphology_ex_kmeans(image, class_)
+        elif args.mb_type == "kmeans2":
+            image = morphology_ex_kmeans_2(image, class_)
+        elif args.mb_type == "dwt":
+            image = morphology_ex_dwt(image, class_)
 
         if args.show:
             cv2.imshow("morphologyEx", image)
 
+        #findContours
         cnts = cv2.findContours(image.copy(), cv2.RETR_EXTERNAL,
             cv2.CHAIN_APPROX_SIMPLE)
         cnts = imutils.grab_contours(cnts)
