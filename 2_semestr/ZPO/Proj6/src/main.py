@@ -74,9 +74,6 @@ if __name__ == '__main__':
             for i, item in enumerate(originals):
                 originals_path.append(item.path)
 
-            for i, item in enumerate(os.listdir(args.path_to_originals_ela)):
-                originals_path.append(os.path.join(args.path_to_originals_ela, item))
-
             #feature extraction
             features = extract_features(originals_path, verbose=True)
 
@@ -89,9 +86,6 @@ if __name__ == '__main__':
         fakes_path = []
         for i, item in enumerate(fakes):
             fakes_path.append(item.path)
-
-        for i, item in enumerate(os.listdir(args.path_to_fakes_ela)):
-            fakes_path.append(os.path.join(args.path_to_fakes_ela, item))
         
         #feature extraction
         features = extract_features(fakes_path, verbose=True)
