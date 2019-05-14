@@ -275,43 +275,43 @@ def median_blur_dwt(image, class_):
     kmeans classification applied on ela image
     """
     if class_ == 0:
-        image = cv2.medianBlur(image, 3)
+        image = cv2.medianBlur(image, 5)
     elif class_ == 1:
         image = cv2.medianBlur(image, 3)
     elif class_ == 2:
-        image = cv2.medianBlur(image, 5)
+        image = cv2.medianBlur(image, 3)
     elif class_ == 3:
         image = cv2.medianBlur(image, 7)
     elif class_ == 4:
         image = cv2.medianBlur(image, 3)
     elif class_ == 5:
-        image = cv2.medianBlur(image, 3)
+        image = cv2.medianBlur(image, 7)
     elif class_ == 6:
-        image = cv2.medianBlur(image, 7)
+        image = cv2.medianBlur(image, 11)
     elif class_ == 7:
-        pass
+        image = cv2.medianBlur(image, 3)
     elif class_ == 8:
-        pass
+        image = cv2.medianBlur(image, 3)
     elif class_ == 9:
-        image = cv2.medianBlur(image, 7)
+        image = cv2.medianBlur(image, 5)
     elif class_ == 10:
         pass
     elif class_ == 11:
         image = cv2.medianBlur(image, 3)
     elif class_ == 12:
-        image = cv2.medianBlur(image, 3)
-    elif class_ == 13:
-        image = cv2.medianBlur(image, 5)
-    elif class_ == 14:
         pass
+    elif class_ == 13:
+        image = cv2.medianBlur(image, 11)
+    elif class_ == 14:
+        image = cv2.medianBlur(image, 5)
     elif class_ == 15:
         image = cv2.medianBlur(image, 3)
     elif class_ == 16:
-        image = cv2.medianBlur(image, 3)
+        image = cv2.medianBlur(image, 7)
     elif class_ == 17:
         pass
     elif class_ == 18:
-        pass
+        image = cv2.medianBlur(image, 5)
     elif class_ == 19:
         image = cv2.medianBlur(image, 3)
 
@@ -478,45 +478,45 @@ def morphology_ex_dwt(image, class_):
     kernel = np.ones((3, 3), np.uint8)
     
     if class_ == 0:
-        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 4)
+        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 14)
     elif class_ == 1:
-        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 10)
+        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 6)
     elif class_ == 2:
-        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 18)
+        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 11)
     elif class_ == 3:
-        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 12)
+        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 10)
     elif class_ == 4:
         image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 10)
     elif class_ == 5:
-        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 5)
+        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 17)
     elif class_ == 6:
-        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 5)
+        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 9)
     elif class_ == 7:
-        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 2)
+        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 8)
     elif class_ == 8:
-        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 11)
+        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 5)
     elif class_ == 9:
-        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 12)
+        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 14)
     elif class_ == 10:
         image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 2)
     elif class_ == 11:
-        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 8)
+        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 14)
     elif class_ == 12:
-        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 7)
-    elif class_ == 13:
-        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 8)
-    elif class_ == 14:
         image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 3)
+    elif class_ == 13:
+        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 6)
+    elif class_ == 14:
+        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 9)
     elif class_ == 15:
-        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 4)
+        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 9)
     elif class_ == 16:
-        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 5)
+        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 12)
     elif class_ == 17:
         image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 2)
     elif class_ == 18:
-        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 1)
+        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 7)
     elif class_ == 19:
-        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 6)
+        image = cv2.morphologyEx(image, cv2.MORPH_GRADIENT, kernel, iterations = 4)
 
     return image
 
@@ -530,43 +530,43 @@ def dwt_dwt(image, class_):
     if class_ == 0:
         passed = True
     elif class_ == 1:
-        image_ = pywt.threshold(image, 20, 'soft')
+        image_ = pywt.threshold(image, 10, 'soft')
     elif class_ == 2:
-        image_ = pywt.threshold(image, 29, 'soft')
+        image_ = pywt.threshold(image, 26, 'soft')
     elif class_ == 3:
-        image_ = pywt.threshold(image, 4, 'soft')
+        image_ = pywt.threshold(image, 1, 'soft')
     elif class_ == 4:
         image_ = pywt.threshold(image, 33, 'soft')
     elif class_ == 5:
-        image_ = pywt.threshold(image, 20, 'soft')
+        image_ = pywt.threshold(image, 8, 'soft')
     elif class_ == 6:
-        passed = True
+        image_ = pywt.threshold(image, 9, 'soft')
     elif class_ == 7:
-        image_ = pywt.threshold(image, 29, 'soft')
+        passed = True
     elif class_ == 8:
-        image_ = pywt.threshold(image, 32, 'soft')
+        image_ = pywt.threshold(image, 15, 'soft')
     elif class_ == 9:
-        image_ = pywt.threshold(image, 4, 'soft')
+        image_ = pywt.threshold(image, 8, 'soft')
     elif class_ == 10:
-        image_ = pywt.threshold(image, 38, 'soft')
+        image_ = pywt.threshold(image, 37, 'soft')
     elif class_ == 11:
-        image_ = pywt.threshold(image, 26, 'soft')
+        image_ = pywt.threshold(image, 38, 'soft')
     elif class_ == 12:
-        image_ = pywt.threshold(image, 11, 'soft')
+        image_ = pywt.threshold(image, 23, 'soft')
     elif class_ == 13:
         passed = True
     elif class_ == 14:
-        image_ = pywt.threshold(image, 39, 'soft')
+        image_ = pywt.threshold(image, 10, 'soft')
     elif class_ == 15:
-        image_ = pywt.threshold(image, 9, 'soft')
+        image_ = pywt.threshold(image, 20, 'soft')
     elif class_ == 16:
-        passed = True
+        image_ = pywt.threshold(image, 4, 'soft')
     elif class_ == 17:
-        image_ = pywt.threshold(image, 37, 'soft')
+        image_ = pywt.threshold(image, 28, 'soft')
     elif class_ == 18:
-        image_ = pywt.threshold(image, 24, 'soft')
+        image_ = pywt.threshold(image, 9, 'soft')
     elif class_ == 19:
-        image_ = pywt.threshold(image, 18, 'soft')
+        image_ = pywt.threshold(image, 4, 'soft')
     
     if not passed:
         image = cv2.normalize(image_, image, 0, 1, cv2.NORM_MINMAX)

@@ -140,16 +140,10 @@ if __name__ == '__main__':
 
         #wavelet soft-thresholding
         if args.mb_type == "dwt":
-            to_predict = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-            
-            to_predict = cv2.inRange(to_predict, np.array([0,0,0]), np.array([180,255,60]))
-            to_predict = cv2.bitwise_not(to_predict)
-
-            if np.shape(to_predict)[0] > np.shape(to_predict)[1]:
-                to_predict = cv2.resize(to_predict, (384, 256))
+            if np.shape(image)[0] > np.shape(image)[1]:
+                to_predict = cv2.resize(image, (384, 256))
             else:
-                to_predict = cv2.resize(to_predict, (256, 384))
-            to_predict = cv2.cvtColor(to_predict, cv2.COLOR_GRAY2BGR)
+                to_predict = cv2.resize(image, (256, 384))
             to_predict = np.array([to_predict.flatten()])
             class_ = kmeans_model.predict(to_predict)[0]
 
