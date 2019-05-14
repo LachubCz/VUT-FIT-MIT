@@ -17,8 +17,6 @@ from sklearn.utils import as_float_array
 from sklearn.utils.validation import check_is_fitted
 from sklearn.utils.validation import FLOAT_DTYPES
 
-
-
 class EqualGroupsKMeans(BaseEstimator, ClusterMixin, TransformerMixin):
     """Equal Groups K-Means clustering
     90 percent of this is the Kmeans implmentations with the equal groups logic

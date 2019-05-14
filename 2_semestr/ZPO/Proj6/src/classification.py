@@ -16,7 +16,6 @@ from sklearn.metrics import confusion_matrix, classification_report
 from sklearn.svm import SVC
 from sklearn.externals import joblib
 
-
 def train_svm_classifer(features, labels, model_output_path, cross_validation_gen=20):
     """
     method trains a SVM classifier
@@ -79,7 +78,7 @@ def extract_features(image_paths, verbose=False):
     """
     method computes the inception bottleneck feature for a list of images
     """
-    features = np.empty((len(image_paths), feature_dimension))
+    features = np.empty((len(image_paths), 2048))
 
     with tf.Session() as sess:
         flattened_tensor = sess.graph.get_tensor_by_name('pool_3:0')
@@ -96,9 +95,6 @@ def extract_features(image_paths, verbose=False):
 
 
 if __name__ == '__main__':
-    args = get_args()
-    batch = args.data_size
-
     originals_ela = ["./data/CASIA1_originals_ela/"+f for f in listdir("./data/CASIA1_originals_ela/") if isfile(join("./data/CASIA1_originals_ela/", f))]
     fakes_ela = ["./data/CASIA1_fakes_ela/"+f for f in listdir("./data/CASIA1_fakes_ela/") if isfile(join("./data/CASIA1_fakes_ela/", f))]
 
