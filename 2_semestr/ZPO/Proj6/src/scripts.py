@@ -324,7 +324,7 @@ def get_noise_thresholds(size_of_class=45, fakes='./data/CASIA1_fakes', original
             print(i+1, item)
 
 
-def train_balanced_kmeans(ela_noise='./data/CASIA1_ela_noise', model='clustering_model.pkl'):
+def train_unbalanced_kmeans(ela_noise='./data/CASIA1_ela_noise', model='clustering_model.pkl'):
     """
     method trains unbalanced kmeans
     """
