@@ -29,6 +29,6 @@
   * [2. Projekt](./2_semestr/ZPO/Proj2) - 2/2
   * [3. Projekt](./2_semestr/ZPO/Proj3) - 2/2
   * [5. Projekt](./2_semestr/ZPO/Proj5) - 2/2
-  * [6. Projekt](./2_semestr/ZPO/Proj6) - 29/29
+  * [6. Projekt](./2_semestr/ZPO/Proj6) - 22	/29
 * ZRE - Zpracování řečových signálů
-  * [1. Projekt](./2_semestr/ZRE/Proj1) - ?/29
+  * [1. Projekt](./2_semestr/ZRE/Proj1) - 29/29
