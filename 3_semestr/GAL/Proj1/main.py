@@ -78,6 +78,7 @@ def DFS(graph):
 
     L1 = dict()
     L2 = dict()
+    L2_help = dict()
     for i in reversed(range(1, len(order)+1)):
         if order[i] != u:
             parent = a[order[i]]
@@ -88,18 +89,28 @@ def DFS(graph):
 
         Adjs = Adjs.difference({parent})
 
-        print(order[i], Adjs)
         back = list(itemgetter(*frozenset(Adjs))(D))
         back.append(i)
 
         if order[i] in L1:
             back.append(L1[order[i]])
 
-        L1[order[i]] = min(back)
+        L1[order[i]] = min(set(back))
+        if order[i] in L2_help:
+            back = back + L2_help[order[i]]
+        if order[i] != u:
+            L2_help[a[order[i]]] = back
+
+        back = set(back).difference({L1[order[i]]})
+        L2[order[i]] = min(back)
+
         if order[i] != u:
             L1[a[order[i]]] = L1[order[i]]
+        else:
+            L2[order[i]] = D[order[2]]
 
     print(L1)
+    print(L2)
 
 def DFS2(graph):
     def cycle(v):
