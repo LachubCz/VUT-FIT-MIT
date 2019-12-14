@@ -1,8 +1,9 @@
 from collections import deque
 import random
+random.seed(0)
 
 from graph import Graph
-from graphs import g_1, g_2, g_3, g_4
+#from graphs import g_1, g_2, g_3, g_4
 from utils import draw_graph
 
 def isPlanar(graph):
@@ -48,6 +49,8 @@ def get_disconnected_components(graph):
 
     return graphs
 
+from operator import itemgetter
+
 def DFS(graph):
     def cycle(u):
         global DF_count
@@ -68,23 +71,93 @@ def DFS(graph):
     u = random.choice(list(graph.get_vertices()))
 
     cycle(u)
-    print(D)
-    print(a)
 
+    print(D, a)
+
+    order = dict((v,k) for k,v in D.items()) #swap keys with values
+
+    L1 = dict()
+    L2 = dict()
+    for i in reversed(range(1, len(order)+1)):
+        if order[i] != u:
+            parent = a[order[i]]
+        else:
+            parent = None
+
+        Adjs = graph.get_Adj(order[i])
+
+        Adjs = Adjs.difference({parent})
+
+        print(order[i], Adjs)
+        back = list(itemgetter(*frozenset(Adjs))(D))
+        back.append(i)
+
+        if order[i] in L1:
+            back.append(L1[order[i]])
+
+        L1[order[i]] = min(back)
+        if order[i] != u:
+            L1[a[order[i]]] = L1[order[i]]
+
+    print(L1)
+
+def DFS2(graph):
+    def cycle(v):
+        global pocet
+        global S
+        pocet += 1
+        d[v] = pocet
+        S = S.union({v})
+        low[v] = d[v]
+        komp.append(v)
+
+        for _, w in enumerate(graph.get_Adj(v)):
+            if w not in S:
+                p[w] = v
+                cycle(w)
+                low[v] = min([low[v], low[v]])
+            else:
+                low[v] = min([low[v], d[v]])
+        if d[v] >= 2 and low[v] == d[p[v]]:
+            while True:
+                u = komp.pop()
+                if u == v:
+                    break
+
+    global pocet
+    global S
+    pocet = 0
+    d = dict()
+    S = set()
+    low = dict()
+    p = dict()
+    komp = deque()
+    
+    u = random.choice(list(graph.get_vertices()))
+
+    cycle(u)
+    print(d)
+    print(p)
+    print(low)
 
 if __name__ == "__main__":
+    g = {"a" : {"f", "h", "b"},
+         "b" : {"c", "a", "g"},
+         "c" : {"h", "b", "d"},
+         "h" : {"a", "c", "e"},
+         "e" : {"d", "h", "f"},
+         "f" : {"e", "g", "a"},
+         "g" : {"b", "d", "f"},
+         "d" : {"g", "e", "c"}
+        }
+    graph = Graph(g)
 
+    graph.remove_self_loops()
+    graph.remove_vertexes_of_degree_1()
+    graphs = get_disconnected_components(graph)
 
-    planar = Graph(g_1)
-    non_planar = Graph(g_2)
-    more_components = Graph(g_3)
-    self_loop = Graph(g_4)
+    #for i, item in enumerate(graphs):
+    #    print(item)
 
-    planar.remove_self_loops()
-    planar.remove_vertexes_of_degree_1()
-    graphs = get_disconnected_components(planar) # get disconnected components
-
-    for i, item in enumerate(graphs):
-        print(item)
-
-    DFS(planar)
+    #DFS2(graph)
+    DFS(graph)
