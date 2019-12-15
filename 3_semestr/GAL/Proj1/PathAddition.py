@@ -420,7 +420,6 @@ if __name__ == "__main__":
     print(isPlanar(Graph(g_5)))
     print(isPlanar(Graph(g_6)))
     print(isPlanar(Graph(K_5)))
-    print(isPlanar(Graph(K_3_3)))
 
     #alphabet = list('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
     #for k in range(1, 61):
