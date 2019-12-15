@@ -8,16 +8,29 @@ from utils import draw_graph
 from graphs import g_1, g_2, g_3, g_4, g_5, g_6
 
 def isPlanar(graph):
-    V_count = len(graph.get_vertices())
-    E_count = len(graph.get_edges())
+    def recursion(graph):
+        V_count = len(graph.get_vertices())
+        E_count = len(graph.get_edges())
+        if E_count > 3 * V_count - 6:
+            return False
 
-    if E_count > 3 * V_count - 6:
-        return False
+        if V_count < 5:
+            return True
 
-    if V_count < 5:
-        return True
+    graph.symetrize()
+    graph.remove_self_loops()
+    graph.remove_vertexes_of_degree_1()
+    graph_components = get_disconnected_components(graph)
+
+    for _, component in enumerate(graph_components):
+        _, _, _, ap, _, _ = DFS(component, lowpoints=False)
+        bicomponents = get_biconnected_components(component, ap)
+        for _, bicomponent in enumerate(bicomponents):
+            if not recursion(bicomponent):
+                return False
 
     return True
+
 
 def get_disconnected_components(graph):
     vertices = set(graph.get_vertices())
@@ -54,7 +67,7 @@ def get_disconnected_components(graph):
     return graphs
 
 
-def DFS(graph):
+def DFS(graph, lowpoints=True, summary=False):
     def recursion(u):
         global DF_count
         DF_count += 1
@@ -93,55 +106,60 @@ def DFS(graph):
     u = random.choice(list(graph.get_vertices()))
     recursion(u)
 
-    print("Order: {}" .format(D))
-    print("Parents: {}" .format(a))
-    print("Articulation points: {}" .format(ap))
-    print("Lowpoints: {}" .format(low))
+    if summary:
+        print("Order: {}" .format(D))
+        print("Parents: {}" .format(a))
+        print("Articulation points: {}" .format(ap))
+        print("Lowpoints L1: {}" .format(low))
 
-    order = dict((v,k) for k,v in D.items()) #swap keys with values
+    if lowpoints:
+        order = dict((v,k) for k,v in D.items()) #swap keys with values
 
-    L1 = dict()
-    L2 = dict()
-    L2_help = dict()
-    for i in reversed(range(1, len(order)+1)):
-        if order[i] != u:
-            parent = a[order[i]]
-        else:
-            parent = None
+        L1 = dict()
+        L2 = dict()
+        L2_help = dict()
+        for i in reversed(range(1, len(order)+1)):
+            if order[i] != u:
+                parent = a[order[i]]
+            else:
+                parent = None
 
-        Adjs = graph.get_Adj(order[i])
+            Adjs = graph.get_Adj(order[i])
 
-        Adjs = Adjs.difference({parent})
+            Adjs = Adjs.difference({parent})
 
-        if len(Adjs) != 1:
-            back = list(itemgetter(*frozenset(Adjs))(D))
-        else:
-            back = [D[list(Adjs)[0]]]
-        back.append(i)
+            if len(Adjs) != 1:
+                back = list(itemgetter(*frozenset(Adjs))(D))
+            else:
+                back = [D[list(Adjs)[0]]]
+            back.append(i)
 
-        if order[i] in L1:
-            back.append(L1[order[i]])
+            if order[i] in L1:
+                back.append(L1[order[i]])
 
-        L1[order[i]] = min(set(back))
-        if order[i] in L2_help:
-            back = back + L2_help[order[i]]
-        if order[i] != u:
-            L2_help[a[order[i]]] = back
+            L1[order[i]] = min(set(back))
+            if order[i] in L2_help:
+                back = back + L2_help[order[i]]
+            if order[i] != u:
+                L2_help[a[order[i]]] = back
 
-        back = set(back).difference({L1[order[i]]})
-        L2[order[i]] = min(back)
+            back = set(back).difference({L1[order[i]]})
+            L2[order[i]] = min(back)
 
-        if order[i] != u:
-            L1[a[order[i]]] = L1[order[i]]
-        else:
-            L2[order[i]] = D[order[2]]
+            if order[i] != u:
+                L1[a[order[i]]] = L1[order[i]]
+            else:
+                L2[order[i]] = D[order[2]]
 
-    print("Lowpoints: {}" .format(L1))
-    print("Lowpoints: {}" .format(L2))
+        if summary:
+            print("Lowpoints L1: {}" .format(L1))
+            print("Lowpoints L2: {}" .format(L2))
+    else:
+        L1 = None
+        L2 = None
 
-    graphs = get_biconnected_components(graph, ap)
-    for i, item in enumerate(graphs):
-        print(item)
+    return D, a, low, ap, L1, L2
+
 
 def get_biconnected_components(graph, ap):
     graph_dict = graph.get_graph_dict()
@@ -188,17 +206,4 @@ def get_biconnected_components(graph, ap):
 
 if __name__ == "__main__":
     graph = Graph(g_6)
-
-    #print(graph)
-    #graph.symetrize()
-    #print(graph)
-
-    #graph.remove_self_loops()
-    #graph.remove_vertexes_of_degree_1()
-    #graphs = get_disconnected_components(graph)
-
-    #for i, item in enumerate(graphs):
-    #    print(item)
-
-    #DFS2(graph)
-    DFS(graph)
+    print(isPlanar(graph))
