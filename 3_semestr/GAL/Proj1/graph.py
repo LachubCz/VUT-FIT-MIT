@@ -106,12 +106,11 @@ class OrderedGraph(object):
             self.graph_dict[vertex] = []
 
     def add_edge(self, edge):
-        edge = set(edge)
         (vertex1, vertex2) = tuple(edge)
-        if vertex1 in self.__graph_dict:
-            self.__graph_dict[vertex1].append(vertex2)
+        if vertex1 in self.graph_dict:
+            self.graph_dict[vertex1].append(vertex2)
         else:
-            self.__graph_dict[vertex1] = [vertex2]
+            self.graph_dict[vertex1] = [vertex2]
 
     def __generate_edges(self):
         edges = []
