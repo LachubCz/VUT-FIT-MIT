@@ -116,8 +116,8 @@ class OrderedGraph(object):
         edges = []
         for vertex in self.graph_dict:
             for neighbour in self.graph_dict[vertex]:
-                if {neighbour, vertex} not in edges:
-                    edges.append({vertex, neighbour})
+                if (vertex, neighbour) not in edges:
+                    edges.append((vertex, neighbour))
         return edges
 
     def __str__(self):
@@ -128,21 +128,3 @@ class OrderedGraph(object):
         for edge in self.__generate_edges():
             res += str(edge) + " "
         return res
-
-
-if __name__ == "__main__":
-    g = { "a" : {},
-          "b" : {"c"},
-          "c" : {"b", "c", "d", "e"},
-          "d" : {"a", "c"},
-          "e" : {"c"},
-          "f" : {}
-        }
-
-    graph = Graph(g)
-
-    print(graph.graph_dict())
-
-    graph.symetrize()
-
-    print(graph.graph_dict())

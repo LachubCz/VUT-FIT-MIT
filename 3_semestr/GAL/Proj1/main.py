@@ -9,15 +9,102 @@ from graph import Graph, OrderedGraph
 from graphs import g_1, g_2, g_3, g_4, g_5, g_6
 
 def isPlanar(graph):
-    def recursion(graph):
-        V_count = len(graph.get_vertices())
-        E_count = len(graph.get_edges())
+    def isSegmentPlanar(vertexS, vertexT):
+            V_count = len(graph.get_vertices())
+            E_count = len(graph.get_edges())
 
+            if V_count < 5:
+                return True
+
+            return True
+        aLefts = [] #LinkedList<LinkedList<Integer>>
+        aRights = [] #LinkedList<LinkedList<Integer>>
+
+        result = [] #LinkedList<Integer>
+        A = [] #LinkedList<Integer>
         if V_count < 5:
             return True
 
+        actAdjacent = [] #LinkedList<Integer>
+        aMaxL = [] #LinkedList<Integer>
+        aMaxR = [] #LinkedList<Integer>
+        spine = [] #LinkedList<Integer>
+
+        source = vertexT;
+
+        target = vertexT.getAdjacent()[0];
+        if vertexT > vertexS:
+            spine.addLast(vertexT)
+            while target > source:
+                spine.addLast(target)
+                source = target
+                target = this.vertexProperties.get(target).getAdjacent().getFirst()
+            result.add(target)
+        else:
+            result.add(vertexT)
+
+        while not spine.isEmpty():
+            source = spine.removeLast()
+
+            actAdjacent = this.vertexProperties.get(source).getAdjacent()
+            for i in range(1, actAdjacent.size()):
+                target = actAdjacent.get(i)
+
+                A = isSegmentStronglyPlanar(source, target)
+                if A == None:
+                    return False
+                
+                if target < source:
+                    aMin = target
+                else:
+                    aMin = this.vertexProperties.get(target).getLow()
+
+                if not bipartity_test(aMin, A, aLefts, aRights):
+                    return None
+
+            previous = vertexProperties.get(source).getParent()
+            stop = False
+            while not stop:
+                if not aLefts.isEmpty() and previous >= 0:
+                    aMaxL = aLefts.removeLast()
+                    while not aMaxL.isEmpty() and aMaxL.peekLast() == previous:
+                        aMaxL.pollLast()
+
+                    aMaxR = aRights.removeLast()
+                    while not aMaxR.isEmpty() and aMaxR.peekLast() == previous:
+                        aMaxR.pollLast();
+
+                    if not aMaxL.isEmpty() or not aMaxR.isEmpty():
+                        aLefts.addLast(aMaxL)
+                        aRights.addLast(aMaxR)
+                        stop = True
+                else:
+                    stop = True
+
+        arb = [] # LinkedList<Integer>
+        alb = [] # LinkedList<Integer>
+
+        w1 = vertexT
+        previous = vertexS
+        while vertexProperties.get(vertexT).getLow() < previous:
+            w1 = previous
+            previous = vertexProperties.get(previous).getParent()
+
+        while not aLefts.isEmpty():
+            arb = aRights.removeFirst()
+            alb = aLefts.removeFirst()
+            if not alb.isEmpty() and not arb.isEmpty() and alb.peekLast() >= w1 and arb.peekLast() >= w1:
+                return False
+
+            if not alb.isEmpty() and alb.peekLast() >= w1:
+                result.addAll(arb)
+                result.addAll(alb)
+            else:
+                result.addAll(alb)
+                result.addAll(arb)
+
         return True
-    
+
     graph.symetrize()
     graph.remove_self_loops()
     graph.remove_vertices_of_degree_1()
@@ -35,7 +122,7 @@ def isPlanar(graph):
             D, a, low, ap, L1, L2 = DFS(bicomponent)
             new_graph = OrderedGraph()
             for _, u in enumerate(bicomponent.get_vertices()):
-                new_graph.add_vertex(u)
+                new_graph.add_vertex(D[u])
                 Adjs = list(bicomponent.get_Adj(u))
                 wt = []
                 for _, v in enumerate(Adjs):
@@ -53,100 +140,13 @@ def isPlanar(graph):
                 order = np.argsort(wt)
                 for i, item in enumerate(order):
                     if wt[item] != -1:
-                        new_graph.add_edge((u, Adjs[item]))
-            if not recursion(new_graph):
+                        new_graph.add_edge((D[u], D[Adjs[item]]))
+            print(new_graph.get_graph_dict())
+            if not isSegmentPlanar(0, 1):
                 return False
 
     return True
 
-def isSegmentPlanar(vertexS, vertexT):
-    aLefts = [] #LinkedList<LinkedList<Integer>>
-    aRights = [] #LinkedList<LinkedList<Integer>>
-
-    result = [] #LinkedList<Integer>
-    A = [] #LinkedList<Integer>
-    if V_count < 5:
-        return True
-
-    actAdjacent = [] #LinkedList<Integer>
-    aMaxL = [] #LinkedList<Integer>
-    aMaxR = [] #LinkedList<Integer>
-    spine = [] #LinkedList<Integer>
-
-    source = vertexT;
-
-    target = vertexT.getAdjacent()[0];
-    if vertexT > vertexS:
-        spine.addLast(vertexT)
-        while target > source:
-            spine.addLast(target)
-            source = target
-            target = this.vertexProperties.get(target).getAdjacent().getFirst()
-        result.add(target)
-    else:
-        result.add(vertexT)
-
-    while not spine.isEmpty():
-        source = spine.removeLast()
-
-        actAdjacent = this.vertexProperties.get(source).getAdjacent()
-        for i in range(1, actAdjacent.size()):
-            target = actAdjacent.get(i)
-
-            A = isSegmentStronglyPlanar(source, target)
-            if A == None:
-                return False
-            
-            if target < source:
-                aMin = target
-            else:
-                aMin = this.vertexProperties.get(target).getLow()
-
-            if not bipartity_test(aMin, A, aLefts, aRights):
-                return None
-
-        previous = vertexProperties.get(source).getParent()
-        stop = False
-        while not stop:
-            if not aLefts.isEmpty() and previous >= 0:
-                aMaxL = aLefts.removeLast()
-                while not aMaxL.isEmpty() and aMaxL.peekLast() == previous:
-                    aMaxL.pollLast()
-
-                aMaxR = aRights.removeLast()
-                while not aMaxR.isEmpty() and aMaxR.peekLast() == previous:
-                    aMaxR.pollLast();
-
-                if not aMaxL.isEmpty() or not aMaxR.isEmpty():
-                    aLefts.addLast(aMaxL)
-                    aRights.addLast(aMaxR)
-                    stop = True
-            else:
-                stop = True
-
-    arb = [] # LinkedList<Integer>
-    alb = [] # LinkedList<Integer>
-
-    w1 = vertexT
-    previous = vertexS
-    while vertexProperties.get(vertexT).getLow() < previous:
-        w1 = previous
-        previous = vertexProperties.get(previous).getParent()
-
-    while not aLefts.isEmpty():
-        arb = aRights.removeFirst()
-        alb = aLefts.removeFirst()
-        if not alb.isEmpty() and not arb.isEmpty() and alb.peekLast() >= w1 and arb.peekLast() >= w1:
-            return False
-
-        if not alb.isEmpty() and alb.peekLast() >= w1:
-            result.addAll(arb)
-            result.addAll(alb)
-        else:
-            result.addAll(alb)
-            result.addAll(arb)
-
-    return True
 
 def bipartity_test(minimum, A, aLefts, aRights):
     i = aLefts.size()
