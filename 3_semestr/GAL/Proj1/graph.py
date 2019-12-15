@@ -29,6 +29,10 @@ class Graph(object):
         for i, item in enumerate(self.__generate_edges()):
             if len(item) != 1:
                 (vertex1, vertex2) = tuple(item)
+                if vertex1 not in self.graph_dict:
+                    self.graph_dict[vertex1] = {}
+                if vertex2 not in self.graph_dict:
+                    self.graph_dict[vertex2] = {}
                 if type(self.graph_dict[vertex1]) is dict:
                     self.graph_dict[vertex1] = {vertex2}
                 else:

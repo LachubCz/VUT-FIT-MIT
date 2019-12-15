@@ -5,7 +5,7 @@ from operator import itemgetter
 
 from graph import Graph
 from utils import draw_graph
-#from graphs import g_1, g_2, g_3, g_4
+from graphs import g_1, g_2, g_3, g_4, g_5, g_6
 
 def isPlanar(graph):
     V_count = len(graph.get_vertices())
@@ -139,7 +139,9 @@ def DFS(graph):
     print("Lowpoints: {}" .format(L1))
     print("Lowpoints: {}" .format(L2))
 
-    print(get_biconnected_components(graph, ap))
+    graphs = get_biconnected_components(graph, ap)
+    for i, item in enumerate(graphs):
+        print(item)
 
 def get_biconnected_components(graph, ap):
     graph_dict = graph.get_graph_dict()
@@ -177,32 +179,15 @@ def get_biconnected_components(graph, ap):
         vertices = vertices - d
 
     graphs = []
-    for comp in components:
+    for i, comp in enumerate(components):
         graphs.append(Graph(dict((k, graph.get_graph_dict()[k]) for k in list(comp) if k in graph.get_graph_dict())))
+        graphs[i].symetrize()
 
     return graphs
 
 
 if __name__ == "__main__":
-    #g = {"a" : {"f", "h", "b"},
-    #     "b" : {"c", "a", "g"},
-    #     "c" : {"h", "b", "d"},
-    #     "h" : {"a", "c", "e"},
-    #     "e" : {"d", "h", "f"},
-    #     "f" : {"e", "g", "a"},
-    #     "g" : {"b", "d", "f"},
-    #     "d" : {"g", "e", "c"}
-    #    }
-    
-    g = {"a" : {"b", "d"}, 
-         "b" : {"a", "c"}, 
-         "c" : {"b", "d", "e", "f"}, 
-         "d" : {"a", "c"}, 
-         "e" : {"c", "f"}, 
-         "f" : {"c", "e"}
-        }
-
-    graph = Graph(g)
+    graph = Graph(g_6)
 
     #print(graph)
     #graph.symetrize()
@@ -217,4 +202,3 @@ if __name__ == "__main__":
 
     #DFS2(graph)
     DFS(graph)
-    #GetArticulationPoints(graph)

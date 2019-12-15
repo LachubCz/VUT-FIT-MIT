@@ -47,11 +47,29 @@ g_3 = {"a" : {"e", "b"},
        "m" : {"l", "k", "n"},
        "n" : {"m", "o"},
        "o" : {"h", "k", "n"}
-      } #more components
+      } #planar, multiple components
 
 g_4 = {"a" : {"b"},
        "b" : {"a", "c", "d"},
        "c" : {"b"},
        "d" : {"b", "d"},
        "e" : {}
-      } #self loop
+      } #planar, self loop
+
+g_5 = {"a" : {"f", "h", "b"},
+       "b" : {"c", "a", "g"},
+       "c" : {"h", "b", "d"},
+       "h" : {"a", "c", "e"},
+       "e" : {"d", "h", "f"},
+       "f" : {"e", "g", "a"},
+       "g" : {"b", "d", "f"},
+       "d" : {"g", "e", "c"}
+      } #planar, lowpoints test
+    
+g_6 = {"a" : {"b", "d"}, 
+       "b" : {"a", "c"}, 
+       "c" : {"b", "d", "e", "f"}, 
+       "d" : {"a", "c"}, 
+       "e" : {"c", "f"}, 
+       "f" : {"c", "e"}
+      } #planar, multiple bicomponents
