@@ -24,6 +24,7 @@ class Graph(object):
         edge = set(edge)
         (vertex1, vertex2) = tuple(edge)
         self.graph_dict[vertex1].add(vertex2)
+        self.graph_dict[vertex2].add(vertex1)
 
     def symetrize(self):
         for i, item in enumerate(self.__generate_edges()):
@@ -48,7 +49,7 @@ class Graph(object):
             if type(self.graph_dict[item]) is not dict:
                 self.graph_dict[item] = self.graph_dict[item].difference({item})
 
-    def remove_vertexes_of_degree_1(self):
+    def remove_vertices_of_degree_1(self):
         deleted = set()
         change = True
         while change:
@@ -63,6 +64,54 @@ class Graph(object):
                     deleted = deleted.union(item)
                     del self.graph_dict[item]
                     change = True
+
+    def __generate_edges(self):
+        edges = []
+        for vertex in self.graph_dict:
+            for neighbour in self.graph_dict[vertex]:
+                if {neighbour, vertex} not in edges:
+                    edges.append({vertex, neighbour})
+        return edges
+
+    def __str__(self):
+        res = "vertices: "
+        for k in self.graph_dict:
+            res += str(k) + " "
+        res += "\nedges: "
+        for edge in self.__generate_edges():
+            res += str(edge) + " "
+        return res
+
+
+class OrderedGraph(object):
+    def __init__(self, graph_dict=None):
+        if graph_dict == None:
+            graph_dict = {}
+        self.graph_dict = graph_dict
+
+    def get_vertices(self):
+        return list(self.graph_dict.keys())
+
+    def get_edges(self):
+        return self.__generate_edges()
+
+    def get_graph_dict(self):
+        return self.graph_dict
+
+    def get_Adj(self, vertex):
+        return self.graph_dict[vertex]
+
+    def add_vertex(self, vertex):
+        if vertex not in self.graph_dict:
+            self.graph_dict[vertex] = []
+
+    def add_edge(self, edge):
+        edge = set(edge)
+        (vertex1, vertex2) = tuple(edge)
+        if vertex1 in self.__graph_dict:
+            self.__graph_dict[vertex1].append(vertex2)
+        else:
+            self.__graph_dict[vertex1] = [vertex2]
 
     def __generate_edges(self):
         edges = []

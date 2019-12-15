@@ -3,7 +3,7 @@ random.seed(0)
 from collections import deque
 from operator import itemgetter
 
-from graph import Graph
+from graph import Graph, OrderedGraph
 from utils import draw_graph
 from graphs import g_1, g_2, g_3, g_4, g_5, g_6
 
@@ -11,15 +11,31 @@ def isPlanar(graph):
     def recursion(graph):
         V_count = len(graph.get_vertices())
         E_count = len(graph.get_edges())
+
         if E_count > 3 * V_count - 6:
             return False
 
         if V_count < 5:
             return True
 
+        D, a, low, ap, L1, L2 = DFS(graph)
+
+        new_graph = OrderedGraph()
+        for _, u in enumerate(graph.get_vertices()):
+            new_graph.add_vertex(u)
+            Adjs = graph.get_Adj(u)
+            wt = []
+            for e, elem in enumerate(Adjs):
+                if 
+                elif a[v] == 
+                
+                print(elem)
+
+        return True
+
     graph.symetrize()
     graph.remove_self_loops()
-    graph.remove_vertexes_of_degree_1()
+    graph.remove_vertices_of_degree_1()
     graph_components = get_disconnected_components(graph)
 
     for _, component in enumerate(graph_components):
@@ -205,5 +221,5 @@ def get_biconnected_components(graph, ap):
 
 
 if __name__ == "__main__":
-    graph = Graph(g_6)
+    graph = Graph(g_5)
     print(isPlanar(graph))
