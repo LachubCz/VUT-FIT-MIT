@@ -1,11 +1,20 @@
-import numpy as np 
+# @file sphere_generator.py
+# @author Václav Martinka a Petr Buchal
+# @date 29. 12. 2019 (15:41)
 
-x = np.random.randint(1000, size=10)
-y = np.random.randint(1000, size=10)
-z = np.random.randint(1000, size=10)
 
-for i, item in enumerate(zip(x, y, z)):
-    if 1000 - max(item) > min(item):
-        print(item[0], item[1], item[2], np.random.randint(1, min(item), size=1)[0])
-    else:
-        print(item[0], item[1], item[2], np.random.randint(1, 1000 - max(item), size=1)[0])
+import argparse
+import random as ran
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--count", "-c", action="store", type=int, required=True)
+parser.add_argument("--start", "-s", action="store", type=float, default=0.0)
+parser.add_argument("--end", "-e", action="store", type=float, default=1000.0)
+parser.add_argument("--maximal_size", "-m", action="store", type=float, default=100.0)
+
+args = parser.parse_args()
+
+
+for i in range(args.count):
+	print(ran.uniform(args.start, args.end), ran.uniform(args.start, args.end), ran.uniform(args.start, args.end), ran.uniform(0, args.maximal_size))

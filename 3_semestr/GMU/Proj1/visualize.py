@@ -1,3 +1,8 @@
+# @file visualize.py
+# @author Václav Martinka a Petr Buchal
+# @date 29. 12. 2019 (15:41)
+
+
 import argparse
 
 from pylab import *
@@ -13,10 +18,11 @@ import matplotlib.colors as colors
 def get_args():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("-x", action="store", type=int, required=True)
-    parser.add_argument("-y", action="store", type=int, required=True)
-    parser.add_argument("-z", action="store", type=int, required=True)
-    parser.add_argument("-r", action="store", type=int, required=True)
+    parser.add_argument("-x", action="store", type=float, required=True)
+    parser.add_argument("-y", action="store", type=float, required=True)
+    parser.add_argument("-z", action="store", type=float, required=True)
+    parser.add_argument("--radius", "-r", action="store", type=float, required=True)
+    parser.add_argument('filename', nargs=1)
 
     args = parser.parse_args()
 
@@ -58,7 +64,7 @@ def circles(x, y, s, c='b', vmin=None, vmax=None, **kwargs):
 
 if __name__ == '__main__':
     args = get_args()
-    array = [ line for line in open('generated_spheres.txt')]
+    array = [ line for line in open(args.filename[0])]
 
     x = []
     y = []
@@ -74,7 +80,7 @@ if __name__ == '__main__':
     x.append(args.x)
     y.append(args.y)
     z.append(args.z)
-    r.append(args.r)
+    r.append(args.radius)
 
     colors_list = list(colors._colors_full_map.values())
     colors_=arange(len(x))
@@ -95,8 +101,8 @@ if __name__ == '__main__':
     figure(figsize=(8,8))
     ax=subplot(aspect='equal')
 
-    xlim(0,1000)
-    ylim(0,1000)
+    xlim(min(x)-max(r),max(x)+max(r))
+    ylim(min(y)-max(r),max(y)+max(r))
 
     out_xy = circles(x, y, r, colors_, alpha=0.5, edgecolor='none')
     plt.show()
@@ -104,8 +110,8 @@ if __name__ == '__main__':
     figure(figsize=(8,8))
     ax=subplot(aspect='equal')
 
-    xlim(0,1000)
-    ylim(0,1000)
+    xlim(min(x)-max(r),max(x)+max(r))
+    ylim(min(z)-max(r),max(z)+max(r))
 
     out_xz = circles(x, z, r, colors_, alpha=0.5, edgecolor='none')
     plt.show()
@@ -113,8 +119,8 @@ if __name__ == '__main__':
     figure(figsize=(8,8))
     ax=subplot(aspect='equal')
 
-    xlim(0,1000)
-    ylim(0,1000)
+    xlim(min(y)-max(r),max(y)+max(r))
+    ylim(min(z)-max(r),max(z)+max(r))
 
     out_yz = circles(y, z, r, colors_, alpha=0.5, edgecolor='none')
     plt.show()
