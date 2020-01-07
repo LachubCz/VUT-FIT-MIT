@@ -1,7 +1,7 @@
 /**
  * @file Spheres.hpp
  * @author Václav Martinka a Petr Buchal
- * @date 29. 12. 2019 (15:41)
+ * @date 07. 01. 2020 (21:54)
  * @brief 
  */
 
@@ -79,7 +79,7 @@ inline float distanceSpheresCenters( const Sphere a, const Sphere b ) {
 }
 
 inline void printSphere(const Sphere &s) {
-	printf("x\ty\tz\tradius\n", s.x, s.y, s.z, s.radius);
+	printf("x\ty\tz\tradius\n");
 	printf("%.3f\t%.3f\t%.3f\t%.3f\n", s.x, s.y, s.z, s.radius);
 }
 

@@ -1,7 +1,7 @@
 /**
 * @file main.cpp
 * @author Václav Martinka a Petr Buchal
-* @date 29. 12. 2019 (15:42)
+* @date 07. 01. 2020 (21:54)
 * @brief
 */
 
@@ -75,6 +75,19 @@ int main(int argc, char* argv[]) {
 	vector<cl_float> yCoord(DIMENSION_SIZE);
 	vector<cl_float> zCoord(DIMENSION_SIZE);
 
+	Coord from, to;
+	boundingSphere.getBoundingBlock(from, to);
+	cl_float fromX = from.x;
+	cl_float fromY = from.y;
+	cl_float fromZ = from.z;
+	cl_float toX = to.x;
+	cl_float toY = to.y;
+	cl_float toZ = to.z;
+
+	const cl_float distanceLimit = static_cast<float>(DISTANCE_LIMIT);
+	const cl_int subcubesInLine = SUBCUBES_IN_LINE;
+
+
 
 	// Ziskam GPU
 	std::vector<cl::Platform> platforms;
@@ -129,6 +142,7 @@ int main(int argc, char* argv[]) {
 	cl::Buffer zCoordBuffer(context, CL_MEM_READ_WRITE, DIMENSION_SIZE * sizeof(cl_float));
 
 	cl::Buffer resultBuffer(context, CL_MEM_READ_WRITE, DIMENSION_SIZE * sizeof(cl_float));
+	cl::Buffer runBuffer(context, CL_MEM_READ_WRITE, sizeof(cl_bool));
 
 	cl_int spheresCount = static_cast<cl_int>(COUNT);
 	cl_int dimensionsCount = DIMENSION_SIZE;
@@ -152,14 +166,30 @@ int main(int argc, char* argv[]) {
 	kernel.setArg(i++, yCoordBuffer);
 	kernel.setArg(i++, zCoordBuffer);
 
+	kernel.setArg(i++, fromX);
+	kernel.setArg(i++, fromY);
+	kernel.setArg(i++, fromZ);
+	kernel.setArg(i++, toX);
+	kernel.setArg(i++, toY);
+	kernel.setArg(i++, toZ);
 
 	kernel.setArg(i++, resultBuffer);
 	kernel.setArg(i++, spheresCount);
+	kernel.setArg(i++, distanceLimit);
+	kernel.setArg(i++, subcubesInLine);
 	kernel.setArg(i++, dimensionsCount);
+	kernel.setArg(i++, runBuffer);
 
 
-	double gpuStart = getTime();
+	//double gpuStart = getTime();
 
+	//===========================================================================================
+	// Vytvorim casovac
+	cl::UserEvent boundingSphereKernelEvent(context, &errMsg);
+	clPrintErrorExit(errMsg, "clCreateUserEvent saxpy_ndrange_kernel_event");
+
+
+	//===========================================================================================
 	// Nahraji datove buffery
 	queue.enqueueWriteBuffer(xDataBuffer, false, 0, COUNT * sizeof(cl_float), xData.data(), NULL, NULL);
 	queue.enqueueWriteBuffer(yDataBuffer, false, 0, COUNT * sizeof(cl_float), yData.data(), NULL, NULL);
@@ -167,86 +197,21 @@ int main(int argc, char* argv[]) {
 	queue.enqueueWriteBuffer(radiusDataBuffer, false, 0, COUNT * sizeof(float), radiusData.data(), NULL, NULL);
 
 
-	// Ziskam souradnice obalovaciho obdelniku a delku kroku
-	Coord from, to, center = {numeric_limits<float>::max(),numeric_limits<float>::max(),numeric_limits<float>::max()};
-	boundingSphere.getBoundingBlock(from, to);
-
-	Sphere gpuResultSphere;
-
-	float stepX, stepY, stepZ;
-
-	while (true) {
-		// Vypoctu krok
-		stepX = (to.x - from.x) / SUBCUBES_IN_LINE;
-		stepY = (to.y - from.y) / SUBCUBES_IN_LINE;
-		stepZ = (to.z - from.z) / SUBCUBES_IN_LINE;
-	
-		// Prichystam souradnice
-		size_t i = 0;
-		cl_float tmpX = from.x + stepX / 2;
-		for (size_t x = 0; x < SUBCUBES_IN_LINE; x++) {
-			cl_float tmpY = from.y + stepY / 2;
-			
-			for (size_t y = 0; y < SUBCUBES_IN_LINE; y++) {
-				cl_float tmpZ = from.z + stepZ / 2;
-				
-				for (size_t z = 0; z < SUBCUBES_IN_LINE; z++) {
-					xCoord[i] = tmpX;
-					yCoord[i] = tmpY;
-					zCoord[i] = tmpZ;
-
-					
-					tmpZ += stepZ;
-					++i;
-				}
-
-				tmpY += stepY;
-			}
-
-			tmpX += stepX;
-		}
-
-		// Nahraji souradnice na GPU
-		queue.enqueueWriteBuffer(xCoordBuffer, false, 0, DIMENSION_SIZE * sizeof(cl_float), xCoord.data(), NULL, NULL);
-		queue.enqueueWriteBuffer(yCoordBuffer, false, 0, DIMENSION_SIZE * sizeof(cl_float), yCoord.data(), NULL, NULL);
-		queue.enqueueWriteBuffer(zCoordBuffer, false, 0, DIMENSION_SIZE * sizeof(cl_float), zCoord.data(), NULL, NULL);
+	// Spustim kernel
+	queue.enqueueNDRangeKernel(kernel, 0, global, local, NULL, &boundingSphereKernelEvent);
+	//queue.enqueueNDRangeKernel(kernel, 0, global, local, NULL, NULL);
 
 
-		// Spustim kernel
-		//queue.enqueueNDRangeKernel(kernel, 0, global, local, NULL, &boundingSphereKernelEvent);
-		queue.enqueueNDRangeKernel(kernel, 0, global, local, NULL, NULL);
+	// Ziskam vysledky
+	queue.enqueueReadBuffer(resultBuffer, false, 0, DIMENSION_SIZE * sizeof(cl_float), resultsGPU.data(), NULL, NULL);
 
 
-		// Ziskam vysledky
-		queue.enqueueReadBuffer(resultBuffer, false, 0, DIMENSION_SIZE * sizeof(cl_float), resultsGPU.data(), NULL, NULL);
+	// Synchronizace
+	clPrintErrorExit(queue.finish(), "clFinish");
 
+	Sphere gpuResultSphere = {resultsGPU[0], resultsGPU[1], resultsGPU[2], resultsGPU[3]};
 
-		// Synchronizace
-		clPrintErrorExit(queue.finish(), "clFinish");
-
-
-		// Najdu nejmensi kouli
-		size_t minValIndex = findMin(resultsGPU);
-
-		// Zkontroluji presnost vypoctu
-		if (distanceCoords(center, xCoord, yCoord, zCoord, minValIndex) < DISTANCE_LIMIT) {
-			gpuResultSphere = {xCoord[minValIndex], yCoord[minValIndex], zCoord[minValIndex], resultsGPU[minValIndex]};
-			break;
-		}
-		else {
-			center = {xCoord[minValIndex], yCoord[minValIndex], zCoord[minValIndex]};
-
-			from = {center.x - stepX / 2, center.y - stepY / 2, center.z - stepZ / 2};
-			to = from;
-			to.x += stepX;
-			to.y += stepY;
-			to.z += stepZ;
-		}
-
-	}
-
-
-	double gpuEnd = getTime();
+	//double gpuEnd = getTime();
 	////////////////////////////////////////////////
 
 
@@ -283,7 +248,7 @@ int main(int argc, char* argv[]) {
 
 	// Vytisknu vysledky mereni
 	printf("\nVysledny cas:\n");
-	printf(" GPU cas: %fs\n", gpuEnd - gpuStart);
+	printf(" GPU cas: %fs\n", getEventTime(boundingSphereKernelEvent));
 	printf(" CPU cas: %fs\n", cpuEnd - cpuStart);
 
 	getchar();

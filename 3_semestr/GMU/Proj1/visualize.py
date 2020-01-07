@@ -1,6 +1,6 @@
 # @file visualize.py
 # @author Václav Martinka a Petr Buchal
-# @date 29. 12. 2019 (15:41)
+# @date 07. 01. 2020 (21:55)
 
 
 import argparse
