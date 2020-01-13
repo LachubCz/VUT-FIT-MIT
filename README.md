@@ -36,13 +36,13 @@
 ## 3. semester
 
 * GMU - Grafické a multimediální procesory
-  * [1. Projekt](./2_semestr/GMU/Proj1) - 18/28
+  * [1. Projekt](./3_semestr/GMU/Proj1) - 18/28
 * POVa - Počítačové vidění (v angličtině)
-  * [1. Projekt](./2_semestr/POVa/Proj1) - 2/2
-  * [2. Projekt](./2_semestr/POVa/Proj2) - 2/2
-  * [3. Projekt](./2_semestr/POVa/Proj3) - 3/3
-  * [5. Projekt](./2_semestr/POVa/Proj5) - 30/30
+  * [1. Projekt](./3_semestr/POVa/Proj1) - 2/2
+  * [2. Projekt](./3_semestr/POVa/Proj2) - 2/2
+  * [3. Projekt](./3_semestr/POVa/Proj3) - 3/3
+  * [5. Projekt](./3_semestr/POVa/Proj5) - 30/30
 * GAL - Grafové algoritmy
-  * [1. Projekt](./2_semestr/GAL/Proj1) - 15/25
+  * [1. Projekt](./3_semestr/GAL/Proj1) - 15/25
 * THE - Teorie her
-  * [1. Projekt](./2_semestr/THE/Proj1) - ?/40
+  * [1. Projekt](./3_semestr/THE/Proj1) - ?/40
