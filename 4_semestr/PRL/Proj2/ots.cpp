@@ -11,8 +11,9 @@
 
 int recieve_and_compare(int my_id, int my_value, MPI_Status status) {
     int recieved_value;
-    
-    MPI_Recv(&recieved_value, 1, MPI_INT, my_id - 1, 0, MPI_COMM_WORLD, &status); //recieve value
+
+    //recieve value
+    MPI_Recv(&recieved_value, 1, MPI_INT, my_id - 1, 0, MPI_COMM_WORLD, &status); 
         
     //compare values
     if (recieved_value > my_value) {
@@ -44,15 +45,15 @@ int main(int argc, char *argv[]){
         return 0;
     }
 
-    //master will load data
+    //master will load data and send them
     if (my_id == 0){
         int to_send;
         std::fstream fs;
         fs.open("numbers", std::fstream::in);
 
         for (int i = 0; i < values_count; ++i) {
-            to_send = fs.get();
-            MPI_Send(&to_send, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
+            to_send = fs.get(); //load
+            MPI_Send(&to_send, 1, MPI_INT, i, 0, MPI_COMM_WORLD); //send
             std::cout << to_send << " ";
         }
         std::cout << std::endl;
@@ -61,7 +62,7 @@ int main(int argc, char *argv[]){
     
     int my_value;
     MPI_Status status;
-    MPI_Recv(&my_value, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
+    MPI_Recv(&my_value, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &status); //recieve
 
     int recieved_value;
     for (int i = 0; i < (values_count / 2); ++i) {
@@ -74,36 +75,20 @@ int main(int argc, char *argv[]){
         else {
             //reciever
             if (my_id <= ((2 * (values_count / 2)) - 1)) {
-                MPI_Recv(&recieved_value, 1, MPI_INT, my_id - 1, 0, MPI_COMM_WORLD, &status); //recieve value
-                
-                //compare values
-                if (recieved_value > my_value) {
-                    MPI_Send(&my_value, 1, MPI_INT, my_id - 1, 0, MPI_COMM_WORLD);
-                    my_value = recieved_value;
-                }
-                else {
-                    MPI_Send(&recieved_value, 1, MPI_INT, my_id - 1, 0, MPI_COMM_WORLD);
-                }
+                my_value = recieve_and_compare(my_id, my_value, status);
             }
         }
 
         //even sort, but odd processes
+        //sender
         if ((my_id % 2 == 1) && (my_id < (2 * ((values_count - 1) / 2)))) {
             MPI_Send(&my_value, 1, MPI_INT, my_id + 1, 0, MPI_COMM_WORLD); //send value
             MPI_Recv(&my_value, 1, MPI_INT, my_id + 1, 0, MPI_COMM_WORLD, &status); //recieve lesser value
         }
         else {
+            //reciever
             if ((my_id <= (2 * ((values_count - 1) / 2))) && (my_id != 0)) {
-                MPI_Recv(&recieved_value, 1, MPI_INT, my_id - 1, 0, MPI_COMM_WORLD, &status); //recieve value
-            
-                //compare values
-                if (recieved_value > my_value) {
-                    MPI_Send(&my_value, 1, MPI_INT, my_id - 1, 0, MPI_COMM_WORLD);
-                    my_value = recieved_value;
-                }
-                else {
-                    MPI_Send(&recieved_value, 1, MPI_INT, my_id - 1, 0, MPI_COMM_WORLD);
-                }
+                my_value = recieve_and_compare(my_id, my_value, status);
             }
         }
     }

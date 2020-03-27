@@ -1,0 +1,10 @@
+#!/bin/bash
+
+numbers=$1;
+
+dd if=/dev/random bs=1 count=$numbers of=numbers
+
+mpic++ --prefix /usr/local/share/OpenMPI -o ots ots.cpp
+mpirun --prefix /usr/local/share/OpenMPI -verbose -np $numbers ots $numbers
+
+rm -f ots numbers
