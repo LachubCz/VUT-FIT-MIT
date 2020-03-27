@@ -63,8 +63,6 @@ int main(int argc, char *argv[]){
     int my_value;
     MPI_Status status;
     MPI_Recv(&my_value, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &status); //recieve
-
-    int recieved_value;
     for (int i = 0; i < (values_count / 2); ++i) {
         //odd sort, but even processes
         //sender
@@ -101,6 +99,7 @@ int main(int argc, char *argv[]){
     }
 
     //master will recieve values and print them
+    int recieved_value;
     std::vector<int> values;
     if (my_id == 0) {
         //recieve
