@@ -1,0 +1,396 @@
+#ClickItButton {
+    position: fixed;
+    left: 15vw;
+    top: 50px;
+    z-index: 10;
+}
+
+@font-face {
+  font-family: VafleLight;
+  src: url(./fonts/Vafle_VUT_Light.ttf);
+}
+@font-face {
+  font-family: VafleRegular;
+  src: url(./fonts/Vafle_VUT_Regular.ttf);
+}
+@font-face {
+  font-family: VafleBold;
+  src: url(./fonts/Vafle_VUT_Bold.ttf);
+}
+html, body, #root {
+    width: 100%;
+    height: 100%;
+}
+
+.App {
+    background: url('img/forest_bg.jpg') no-repeat fixed center;
+    background-size: cover;
+    /*background: url('img/background.jpg') no-repeat fixed center;
+    background-color: rgba(0,0,0,0.15);*/
+    width: 100%;
+    height: 100%;
+    font-family: VafleLight;
+    color: white;
+}
+
+/* ----- Sign in page CSS  ----- */
+
+#MainPageElems {
+    width: 30vw;
+    padding-top: 25vh;
+    margin-left: 35vw;
+    display: flex;
+    flex-direction: column;
+}
+
+#MainPageElems button:hover {
+    opacity: 0.65;
+    cursor: pointer;
+}
+
+#FormTypeButtons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-bottom: 10vh;
+}
+
+#FormTypeButtons > button {
+    font-size: 15pt;
+    font-family: VafleRegular;
+    border: 3px solid;
+    border-color: #ff4848 #571818 #571818 #ff4848;
+    background-color: #af3131;
+    color: white;
+    padding: 10px 20px;
+}
+
+#SignInGameForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: VafleLight;
+}
+
+#SignInGameForm > label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 40px;
+    font-size: 14pt;
+}
+
+#SignInGameForm > label > input {
+    line-height: 2;
+    border: 5px solid;
+    border-color: #00baff #003f57 #003f57 #00baff;
+}
+
+#FormSubmit {
+    border: 5px solid;
+    border-color: #80ff80 #2c572c #2c572c #80ff80;
+    background-color: #58af58;
+    color: white;
+    font-family: VafleBold;
+    font-size: 20pt;
+    padding: 20px 40px;
+    margin-top: 5vh;
+}
+
+/* ----- Loading page CSS ----- */
+
+#LoadingPageContent {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 18pt;
+}
+
+/* ----- Loader CSS ----- */
+.loader {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.loader div {
+  display: inline-block;
+  position: absolute;
+  left: 8px;
+  width: 13px;
+  background: #fff;
+  animation: loader 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+}
+.loader div:nth-child(1) {
+  left: 8px;
+  animation-delay: -0.24s;
+}
+.loader div:nth-child(2) {
+  left: 32px;
+  animation-delay: -0.12s;
+}
+.loader div:nth-child(3) {
+  left: 56px;
+  animation-delay: 0;
+}
+@keyframes loader {
+  0% {
+    top: 8px;
+    height: 64px;
+  }
+  50%, 100% {
+    top: 24px;
+    height: 32px;
+  }
+}
+
+
+/* ----- Game CSS ----- */
+
+#NewCard {
+    display: none;
+    position: fixed;
+    left: 41vw; /*52vw; in case of the right deck*/
+    z-index: 2;
+}
+
+#PlayedCard {
+    display: none;
+    position: fixed;
+    left: 46.5vw;
+    top: 50vh;
+    z-index: 2;
+}
+
+#Decks {
+    position: fixed;
+    left: 41vw;
+    width: 18vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.PlayerHalf {
+    height: 70vh;
+    width: 49.5vw;
+    float: left;
+}
+
+.PlayerStatus {
+    width: 30%;
+    height: inherit;
+    float: left;
+}
+
+.PlayerStatus > div {
+    margin: auto;
+}
+
+.PlayerName {
+    width: 8vw;
+    line-height: 2;
+    text-align: center;
+    margin-top: 3vh !important;
+    margin-bottom: 3vh !important;
+
+    background-color: white;/*#dddddd;*/
+    border: 5px solid #111111;
+    color: black;
+    font-family: VafleBold;
+    font-size: 15pt;
+}
+
+.ResourceTile {
+    height: 12vh;
+    width: 8vw;
+    border: 5px solid;
+    font-size: 11pt;
+    font-weight: bold;
+    color: white;
+}
+
+.ResourceTile > .ResourceTileLine:first-of-type {
+    color: yellow;
+}
+
+.BuildingStats {
+    background-color: #af3131;
+    border-color: #ff4848 #571818 #571818 #ff4848;
+}
+.ArmyStats {
+    background-color: #58af58;
+    border-color: #80ff80 #2c572c #2c572c #80ff80;
+}
+.MagicStats {
+    background-color: #007faf;
+    border-color: #00baff #003f57 #003f57 #00baff;
+}
+.CastleStats {
+    margin-top: 3vh !important;
+    background-color: #5a5a5a;
+    border-color: #8c8c8c #000000 #000000 #8c8c8c;
+}
+.CastleStats > .ResourceTileLine {
+    color: white !important;
+}
+
+.ResourceTileLine {
+    height: 6vh;
+}
+
+.ResourceTileLineFirst {
+    border-bottom: 2.5px dotted gray;
+}
+
+.TileLineDesc {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    width: 50%;
+    height: 100%;
+    float:left;
+}
+
+.PlayerStatImg {
+    height: 3vh;
+}
+
+.TileLineValue {
+    width: 50%;
+    float:left;
+    text-align: center;
+    line-height: 6vh;
+    font-size: 19pt;
+    font-weight: bold;
+}
+
+
+.CastleVisual {
+    height: inherit;
+    width: 69%;
+    float: left;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.CastleDiv {
+    position: absolute;
+    bottom: -100px;
+    z-index: 1;
+}
+
+.CastleFlag {
+    position: absolute;
+    top: 0;
+    left: 56px;
+}
+
+.CastleTrumpet {
+    position: absolute;
+    top: 0;
+    left: 35px;
+    display: none;
+}
+
+#CastleTrumpetRed {
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    left: 32px;
+}
+
+#CastleLeft {
+    left: 116px; /*16px because of grass + 100 random*/
+    /*clip-path: inset(0 0 80% 0);*/
+}
+
+#CastleRight {
+    right: 116px;
+    /*clip-path: inset(0 0 80% 0);*/
+}
+
+.GrassTop {
+    position: absolute;
+    bottom: 96px;
+    z-index: 0;
+}
+
+.GrassBottom {
+    position: absolute;
+    bottom: 80px;
+    z-index: 2;
+}
+
+.GrassLeft {
+    left: 100px;
+}
+
+.GrassRight {
+    right: 100px;
+}
+
+.Celebration {
+    position: absolute;
+    bottom: 80px;
+    z-index: 2;
+    width: 150px;
+    display: none;
+}
+
+#CelebrationLeft {
+    left: 104px;
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+}
+
+#CelebrationRight {
+    right: 100px;
+}
+
+.Wall {
+    position: absolute;
+    bottom: 96px;
+}
+
+#WallLeft {
+    left: 300px;
+}
+
+#WallRight {
+    right: 300px;
+}
+
+#Hand {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 90vw;
+    height: 30vh;
+    margin: 0 5vw 0 5vw;
+}
+
+.Card {
+    width: 7vw;
+    cursor: pointer;
+}
+
+.PlayableCard {
+    
+}
+
+.NonPlayableCard {
+    filter: grayscale(100%);
+}
+
+
+
+
+
