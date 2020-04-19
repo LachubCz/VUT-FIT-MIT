@@ -1,0 +1,11 @@
+#!/bin/bash
+
+char=","
+heights=$1;
+processes=`awk -F"${char}" '{print NF-1}' <<< "${heights}"`
+processes=$(( $processes + 1 ))
+
+mpic++ --prefix /usr/local/share/OpenMPI -o vid vid.cpp
+mpirun --prefix /usr/local/share/OpenMPI -verbose -np $processes vid $heights
+
+rm -f vid
