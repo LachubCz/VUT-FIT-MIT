@@ -1,4 +1,5 @@
 import cv2
+import tripy
 import numpy as np
 
 import matplotlib.pyplot as plt
@@ -6,7 +7,6 @@ from matplotlib.patches import Polygon
 
 from PIL import Image
 
-import tripy
 
 def fig2data(fig):
     """
@@ -55,7 +55,6 @@ def print_triangle(ax, triangle):
 
 def get_ec_steps(coords):
     triangles = np.array(tripy.earclip(np.array(coords)))
-
     steps = []
     for i in range(len(triangles)+1):
         fig, ax = plt.subplots(facecolor=(49/255, 52/255, 49/255))
