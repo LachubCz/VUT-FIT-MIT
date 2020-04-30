@@ -1,4 +1,4 @@
-from easygui import multenterbox
+import sys
 
 import matplotlib.pyplot as plt
 from Colorizer import *
@@ -7,23 +7,7 @@ from monotonepart import *
 from triangulatemono import *
 DEBUG = False
 
-msg = "Enter the value of 'n'"
-title = "Polygon with 'n' sides"
-fieldNames = ["  n"]
-fieldValues = multenterbox(msg,title,fieldNames)
-while 1:
-    if fieldValues == None: break
-    errmsg = ""
-    try:
-        int(fieldValues[0])
-    except:
-        errmsg = errmsg + ('%s is a required to be a number.\n\n' % fieldNames[0])
-    if fieldValues[0].strip() == "":
-        errmsg = errmsg + ('%s is a required field.\n\n' % fieldNames[0])
-    if errmsg == "": break
-    fieldValues = multenterbox(errmsg, title, fieldNames, fieldValues)
-    
-n = int(fieldValues[0])
+n = int(sys.argv[1])
 from numpy.random import randint
 from numpy import lexsort,asarray,append
 coords = randint(0,90000, size=(2,n))
@@ -47,7 +31,6 @@ coords = append(coords, asarray( zip(*pairs)[-1] ), axis=0 )
 coords = append(coords, asarray([pivot]), axis=0 )
 
 p=[(c[1],c[0]) for c in coords][::-1][1:]
-p = [(45653, 6438), (81705, 70772), (57719, 64550), (56202, 82194), (48080, 79032), (42424, 55734), (36137, 34711), (26877, 82330), (6826, 66112), (30315, 2644)]
 print 'Polygon', p
 d = buildSimplePolygon(p)
 map_points ={x.coords:x for x in d.getVertices()}

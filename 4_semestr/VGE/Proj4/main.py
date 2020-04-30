@@ -1,6 +1,7 @@
-import numpy as np
 import cv2
+import json
 import cvui
+import numpy as np
 
 from ear_clipping import get_ec_steps
 from sweep_line import parse_data, get_sl_steps
@@ -12,11 +13,12 @@ if __name__ == '__main__':
 	cvui.init(WINDOW_NAME)
 
 	# ear clipping
-	coords = np.array([[350, 75], [379, 161], [469, 161], [397, 215], [423, 301], [350, 250], [277, 301], [303, 215], [231, 161], [321, 161]])
+	with open("polygon_ec.txt") as file:
+		coords = np.array(json.load(file))
 	steps_0 = get_ec_steps(coords)
 
 	# sweep line
-	with open("./sweep-line/polygon_new.txt") as file:
+	with open("polygon_sl.txt") as file:
 		data = file.readlines()
 
 	polygon, trap_edges, partition, triangles = parse_data(data)
