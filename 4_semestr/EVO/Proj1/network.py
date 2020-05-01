@@ -16,7 +16,7 @@ class Network():
 
     Currently only works for an MLP.
     """
-    def __init__(self, nb_neurons, nb_layers, activation, optimizer):
+    def __init__(self, layers, optimizer):
         """Initialize our network.
 
         Args:
@@ -28,9 +28,8 @@ class Network():
         """
         self.accuracy = 0.
 
-        self.nb_neurons = nb_neurons
-        self.nb_layers = nb_layers
-        self.activation = activation
+        self.nb_layers = len(layers)
+        self.layers = layers
         self.optimizer = optimizer
 
     def create_set(self, network):
@@ -51,7 +50,7 @@ class Network():
 
         """
         if self.accuracy == 0.:
-            self.accuracy = train_and_score(self.network)
+            self.accuracy = self.train_and_score()
 
 
     def print_network(self):
@@ -63,10 +62,10 @@ class Network():
     def compile_model(self, nb_classes, input_shape):
         model = Sequential()
 
-        model.add(Dense(self.nb_neurons, activation=self.activation, input_shape=input_shape))
+        model.add(Dense(self.layers[0][0], activation=self.layers[0][1], input_shape=input_shape))
         for i in range(self.nb_layers-1):
-            model.add(Dense(self.nb_neurons, activation=self.activation))
-            model.add(Dropout(0.2))
+            model.add(Dense(self.layers[i][0], activation=self.layers[i][1]))
+            #model.add(Dropout(0.2))
 
         model.add(Dense(nb_classes, activation="linear"))
         model.compile(loss="MSE", optimizer=self.optimizer, metrics=['accuracy'])
@@ -87,10 +86,11 @@ class Network():
         batch_size = 1024
         input_shape = (50,)
 
-        model = compile_model(network, nb_classes, input_shape)
-        X, Y = dataset.get_val_batch(typeisch)
+        model = self.compile_model(nb_classes, input_shape)
+        #X, Y = dataset.get_val_batch(typeisch)
 
         lowest = 1000000
+        """
         logging.info("#####################################")
         logging.info(network)
         for eps in range(epochs):
@@ -112,4 +112,5 @@ class Network():
                     break
 
         logging.info("############ LogLoss Final: {}".format(lowest))
+        """
         return lowest

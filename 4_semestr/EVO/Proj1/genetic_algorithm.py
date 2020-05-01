@@ -1,10 +1,21 @@
 import json
+import argparse
 import tensorflow as tf
 
 from keras.backend.tensorflow_backend import set_session
 from keras import backend as K
 
 from generator import Generator
+
+def get_args():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("-p", "--nn-parameters", action="store", dest="nn_parameters", default="./nn_parameters.json",
+                        help="parameters of neural network")
+
+    args = parser.parse_args()
+
+    return args
 
 
 def evolve(args, generations, population):

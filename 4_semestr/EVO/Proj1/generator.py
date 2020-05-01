@@ -1,6 +1,7 @@
 """
 Class that holds a genetic algorithm for evolving a network.
 """
+import numpy as np
 from functools import reduce
 from operator import add
 import random
@@ -26,15 +27,22 @@ class Generator():
         self.retain = retain
         self.nn_param = nn_param
 
+
     def create_random_population(self, count):
         networks = []
+
         for _ in range(0, count):
-            nb_neurons = random.choice(self.nn_param["nb_neurons"])
+            layers = []
             nb_layers = random.choice(self.nn_param["nb_layers"])
-            activation = random.choice(self.nn_param["activation"])
+
+            for l in range(nb_layers):
+                nb_neurons = random.choice(self.nn_param["nb_neurons"])
+                activation = random.choice(self.nn_param["activation"])
+                layers.append([nb_neurons, activation])
+
             optimizer = random.choice(self.nn_param["optimizer"])
 
-            network = Network(nb_neurons, nb_layers, activation, optimizer)
+            network = Network(layers, optimizer)
             networks.append(network)
 
         return networks
@@ -69,33 +77,43 @@ class Generator():
 
         Returns:
             (list): Two network objects
-
         """
         children = []
         for _ in range(2):
-
             child = {}
 
-            # Loop through the parameters and pick params for the kid.
-            for param in self.nn_param_choices:
-                child[param] = random.choice(
-                    [mother.network[param], father.network[param]]
-                )
+            networks = []
+
+            min_layers = min([mother.nb_layers, father.nb_layers])
+            max_layers = max([mother.nb_layers, father.nb_layers])
+
+            nb_layers = np.random.randint(min_layers, max_layers+1, size=(1))[0]
+
+            layers = []
+            for i in range(nb_layers):
+                if i < mother.nb_layers and i < father.nb_layers:
+                    layers.append(random.choice([mother.layers[i], father.layers[i]]))
+                elif i < mother.nb_layers:
+                    layers.append(random.choice([mother.layers[i], mother.layers[i]]))
+                elif i < father.nb_layers:
+                    layers.append(random.choice([father.layers[i], father.layers[i]]))
+
+            optimizer = random.choice([mother.optimizer, father.optimizer])
 
             # Now create a network object.
-            network = Network(self.nn_param_choices)
+            network = Network(layers, optimizer)
             network.create_set(child)
 
             # Randomly mutate some of the children.
-            if self.mutate_chance > random.random():
-                network = self.mutate(network)
+            #if self.mutate_chance > random.random():
+            network = self.mutate(network)
 
             children.append(network)
 
         return children
 
 
-    def mutate(self, network):
+    def mutate(self, network, change_nb_layers=0.3, change_layers=0.7, change=0.5):
         """Randomly mutate one part of the network.
 
         Args:
@@ -105,11 +123,27 @@ class Generator():
             (Network): A randomly mutated network object
 
         """
-        # Choose a random key.
-        mutation = random.choice(list(self.nn_param_choices.keys()))
+        if change_nb_layers > random.random():
+            new_nb_layers = random.choice(self.nn_param["nb_layers"])
+            if new_nb_layers > network.nb_layers and (network.nb_layers+1) <= max(self.nn_param["nb_layers"]):
+                position = np.random.randint(0, max(self.nn_param["nb_layers"])+1, size=(1))[0]
+                network.layers.insert(position, [random.choice(self.nn_param["nb_neurons"]), random.choice(self.nn_param["activation"])])
+                network.nb_layers = len(network.layers)
+            elif new_nb_layers < network.nb_layers and (network.nb_layers-1) >= min(self.nn_param["nb_layers"]):
+                position = np.random.randint(0, network.nb_layers, size=(1))[0]
+                del network.layers[position]
+                network.nb_layers = len(network.layers)
 
-        # Mutate one of the params.
-        network.network[mutation] = random.choice(self.nn_param_choices[mutation])
+        layers_for_change = []
+        if change_layers > random.random():
+            nb_layers = np.random.randint(0, network.nb_layers, size=(network.nb_layers))
+            layers_for_change = set(nb_layers)
+
+        for nb_layer in layers_for_change:
+            if change > random.random():
+                network.layers[nb_layer][0] = random.choice(self.nn_param["nb_neurons"])
+            if change > random.random():
+                network.layers[nb_layer][1] = random.choice(self.nn_param["activation"])
 
         return network
 

@@ -1,4 +1,5 @@
 import gym
+import random
 import argparse
 import numpy as np
 from collections import deque
@@ -30,8 +31,6 @@ def get_args():
 
     return args
 
-def train(args):
-    pass
 
 def showcase(args):
     env = gym.make(args.environment)
@@ -52,40 +51,19 @@ def fill_memory(env, memory):
     """
     for eps in range(10000):
         state = env.reset()
-        last_position = env.position
-
-        already = np.empty((0, 16))
-        already = np.append(already, np.array([state]), axis=0)
-
         done = False
+
         for _ in range(100):
-            action = np.random.randint(0, 4, size=1)[0]
-            next_state, reward, done = env.step(action)
-
-            for i, item in enumerate(already):
-                flag = True
-                for e, elem in enumerate(next_state):
-                    if item[e] != elem:
-                        flag = False
-                        break
-                if flag:
-                    reward -= 0.1
-                break
-
-            already = np.append(already, np.array([next_state]), axis=0)
-
-            if last_position == env.position:
-                reward -= 0.1
-
+            action = np.random.randint(0, 2, size=1)[0]
+            next_state, reward, done, info = env.step(action)
             memory.append((state, action, reward, next_state, done))
-
             state = next_state
-            last_position = env.position
 
             if done:
                 if len(memory) == 1000:
                     return memory
                 break
+
     return memory
 
 
@@ -112,7 +90,7 @@ def dqn(model, memory, minibatch_size, gamma):
         else:
             q_value[i][action[i]] = reward[i] + gamma * np.max(ns_model_pred[i])
 
-    model.fit(state, q_value)
+    model.fit(state, q_value, verbose=0)
 
 
 def test(env, eps, epsilon, model, r_mode):
@@ -146,59 +124,50 @@ def train(args):
     main for training mode
     """
     env = gym.make(args.environment)
-    model = neural_network(16, 16, 4, 0.01)
+
+    ############
+    from keras.models import Model
+    from keras.layers import Input, Dense
+    from keras import optimizers
+
+    network_input = Input(shape=(4,))
+
+    net = Dense(units=32, activation="relu", kernel_initializer="he_uniform")(network_input)
+    net = Dense(units=32, activation="relu", kernel_initializer="he_uniform")(net)
+    net = Dense(units=2, activation="linear", kernel_initializer="he_uniform")(net)
+
+    model = Model(inputs=network_input, outputs=net)
+
+    model.compile(loss='MSE', optimizer=optimizers.Adam(lr=0.01), metrics=['accuracy'])
+    ############
+
     memory = deque(maxlen=1000)
     memory = fill_memory(env, memory)
     epsilon = 1
 
     for eps in range(10000):
         state = env.reset()
-        last_position = env.position
-
-        already = np.empty((0, 16))
-        already = np.append(already, np.array([state]), axis=0)
-
         done = False
 
         for _ in range(100):
             if np.random.rand() > epsilon:
                 action = np.argmax(model.predict(np.array([state])))
             else:
-                action = np.random.randint(0, 4, size=1)[0]
+                action = np.random.randint(0, 2, size=1)[0]
 
-            next_state, reward, done = env.step(action)
-
-            for i, item in enumerate(already):
-                flag = True
-                for e, elem in enumerate(next_state):
-                    if item[e] != elem:
-                        flag = False
-                        break
-                if flag:
-                    reward -= 0.1
-                break
-
-            already = np.append(already, np.array([next_state]), axis=0)
+            next_state, reward, done, info = env.step(action)
 
             if epsilon > 0.1:
                 epsilon -= 0.001
-
-            if last_position == env.position:
-                reward -= 0.1
 
             memory.append((state, action, reward, next_state, done))
             dqn(model, memory, 64, 0.9)
 
             state = next_state
-            last_position = env.position
 
             if done:
-                if test(env, eps, epsilon, model, r_mode):
-                    model.save_model("model")
-                    print("[SUCCESSFUL RUN]")
-                    return
+                print("[SUCCESSFUL RUN]")
                 break
-
 
 
 if __name__ == "__main__":
