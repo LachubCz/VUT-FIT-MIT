@@ -4,17 +4,14 @@ import numpy as np
 
 from collections import deque
 
-def fill_memory():
-    """
-    method fills memory before learning
-    """
-    env = gym.make('CartPole-v0')
+def fill_memory(environment):
+    env = gym.make(environment)
     memory = deque(maxlen=1000)
     while True:
         state = env.reset()
 
         for _ in range(100):
-            action = np.random.randint(0, 2, size=1)[0]
+            action = np.random.randint(0, env.action_space.n, size=1)[0]
             next_state, reward, done, _ = env.step(action)
             memory.append((state, action, reward, next_state, done))
             state = next_state
@@ -26,9 +23,6 @@ def fill_memory():
 
 
 def dqn(model, memory, minibatch_size, gamma):
-    """
-    method performs q-learning
-    """
     if minibatch_size > len(memory):
         return
     minibatch = random.sample(list(memory), minibatch_size)
@@ -51,11 +45,9 @@ def dqn(model, memory, minibatch_size, gamma):
     model.fit(state, q_value, verbose=0)
 
 
-def test(env, model):
-    """
-    method tests succes of neural network
-    """
-    state = env.reset()
+def test(environment, model):
+    env = gym.make(environment)
+
     score = 0
     for game in range(100):
         state = env.reset()
@@ -66,19 +58,25 @@ def test(env, model):
             state = next_state
             if done:
                 break
-        if game == 9 and score/10 < 195:
+
+        if game == 9 and score/10 < 195 and environment == 'CartPole-v0':
+            return False
+        if game == 9 and score/10 < -110 and environment == 'MountainCar-v0':
             return False
 
-    if (score/100) >= 195:
-        return True
-    else:
-        return False
+    if environment == 'CartPole-v0':
+        if (score/100) >= 195:
+            return True
+        else:
+            return False
+    elif environment == 'MountainCar-v0':
+        if (score/100) >= -110:
+            return True
+        else:
+            return False
 
 
 def train(environment, model, memory, episodes):
-    """
-    main for training mode
-    """
     env = gym.make(environment)
     epsilon = 1
 
@@ -89,7 +87,7 @@ def train(environment, model, memory, episodes):
             if np.random.rand() > epsilon:
                 action = np.argmax(model.predict(np.array([state])))
             else:
-                action = np.random.randint(0, 2, size=1)[0]
+                action = np.random.randint(0, env.action_space.n, size=1)[0]
 
             next_state, reward, done, _ = env.step(action)
 
@@ -102,7 +100,7 @@ def train(environment, model, memory, episodes):
             state = next_state
 
             if done:
-                if test(env, model):
+                if test(environment, model):
                     return eps
                 break
 

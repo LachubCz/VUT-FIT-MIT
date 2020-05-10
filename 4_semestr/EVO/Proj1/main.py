@@ -1,7 +1,7 @@
 import os
 import json
 import logging
-logging.basicConfig(filename=os.path.join(os.getcwd(), 'ga.log'), level=logging.DEBUG)
+logging.basicConfig(filename=os.path.join(os.getcwd(), 'records.log'), level=logging.DEBUG)
 import argparse
 
 from generator import Generator
@@ -10,8 +10,14 @@ from dqn import fill_memory
 def get_args():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("-p", "--nn-parameters", action="store", dest="nn_parameters", default="./nn_parameters.json",
+    parser.add_argument("--nn-parameters", action="store", dest="nn_parameters", default="./nn_parameters.json",
                         help="parameters of neural network")
+    parser.add_argument("--generations", action="store", dest="generations", default=10,
+                        help="number of generations")
+    parser.add_argument("--population", action="store", dest="population", default=20,
+                        help="population size")
+    parser.add_argument("--environment", action="store", dest="environment", default='CartPole-v0',
+                        help="name of environment")
 
     args = parser.parse_args()
 
@@ -23,59 +29,43 @@ def print_networks(networks):
         network.print_network()
 
 
-def evolve(args, generations, population):
-    """Generate a network with the genetic algorithm.
-
-    Args:
-        generations (int): Number of times to evole the population
-        population (int): Number of networks in each generation
-        nn_param_choices (dict): Parameter choices for networks
-        dataset (str): Dataset to use for training/evaluating
-
-    """
-    with open(args.nn_parameters) as json_file:
-        nn_param = json.load(json_file)
-
-    generator = Generator(nn_param)
+def evolve(nn_parameters, generations, population, environment):
+    generator = Generator(nn_parameters)
     networks = generator.create_random_population(population)
 
-    memory = fill_memory()
+    memory = fill_memory(environment)
 
-    # Evolve the generation.
     for i in range(generations):
         logging.info("***Doing generation {} of {}" .format(i + 1, generations))
 
-        # Train and get accuracy for networks. Get the average accuracy for this generation.
         total_accuracy = 0
         for network in networks:
-            network.train(memory)
+            network.train(environment, memory)
             total_accuracy += network.accuracy
 
-        # Print out the average accuracy each generation.
         logging.info("Generation average: {}" .format((total_accuracy / len(networks)) * 100))
 
-        # Evolve, except on the last iteration.
         if i != generations - 1:
-            # Do the evolution.
             networks = generator.evolve(networks)
 
-    # Sort our final population.
-    networks = sorted(networks, key=lambda x: x.accuracy, reverse=True)
+    networks = sorted(networks, key=lambda x: x.accuracy)
 
-    # Print out the top 5 networks.
     print_networks(networks[:5])
 
 
 def main():
-    """Evolve a network."""
-    generations = 10  # Number of times to evole the population.
-    population = 20  # Number of networks in each generation.
+    args = get_args()
+    nn_parameters = args.nn_parameters
+    generations = args.generations
+    population = args.population
+    environment = args.environment
+
+    with open(nn_parameters) as json_file:
+        nn_params = json.load(json_file)
 
     logging.info("***Evolving {} generations with population {}" .format(generations, population))
 
-    args = get_args()
-
-    evolve(args, generations, population)
+    evolve(nn_params, generations, population, environment)
 
 
 if __name__ == '__main__':
