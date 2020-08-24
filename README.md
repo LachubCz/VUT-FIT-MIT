@@ -47,7 +47,7 @@
 * THE - Teorie her
   * [1. Projekt](./3_semestr/THE/Proj1) - 40/40
   
-  ## 4. semester
+## 4. semester
 
 * VGE - Výpočetní geometrie
   * [1. Projekt](./4_semestr/VGE/Proj1) - 6/6
