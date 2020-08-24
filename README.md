@@ -45,4 +45,26 @@
 * GAL - Grafové algoritmy
   * [1. Projekt](./3_semestr/GAL/Proj1) - 15/25
 * THE - Teorie her
-  * [1. Projekt](./3_semestr/THE/Proj1) - ?/40
+  * [1. Projekt](./3_semestr/THE/Proj1) - 40/40
+  
+  ## 4. semester
+
+* VGE - Výpočetní geometrie
+  * [1. Projekt](./4_semestr/VGE/Proj1) - 6/6
+  * [2. Projekt](./4_semestr/VGE/Proj2) - 4/6
+  * [3. Projekt](./4_semestr/VGE/Proj3) - 5/6
+  * [4. Projekt](./4_semestr/VGE/Proj4) - 25/31
+* PRL - Paralelní a distribuované algoritmy
+  * [2. Projekt](./4_semestr/PRL/Proj2) - 6/10
+  * [3. Projekt](./4_semestr/PRL/Proj3) - 4/10
+* WAP - Internetové aplikace
+  * [1. Projekt](./4_semestr/WAP/Proj1) - 25/30
+* EVO - Aplikované evoluční algoritmy
+  * [1. Projekt](./4_semestr/EVO/Proj1) - 21/22
+  * [4. Projekt](./4_semestr/EVO/Proj4) - 3/3
+  * [5. Projekt](./4_semestr/EVO/Proj5) - 3/3
+  * [6. Projekt](./4_semestr/EVO/Proj6) - 3/3
+* PMA - Projektový manažer
+  * [1. Projekt](./4_semestr/PMA/Proj1) - 14/15
+  * [2. Projekt](./4_semestr/PMA/Proj2) - 6/7
+  * [3. Projekt](./4_semestr/PMA/Proj3) - 9/18
