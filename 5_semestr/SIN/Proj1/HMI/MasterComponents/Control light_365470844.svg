@@ -1,0 +1,330 @@
+<svg contentScriptType="text/ecmascript" zoomAndPan="magnify" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" id="prefix_id_Layer_1" enable-background="new 0 0 600 600" version="1.1" width="146" xml:space="preserve" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" preserveAspectRatio="xMidYMid meet" xmlns:myscada="http://www.myscada.org" viewBox="0 0 146 175.25" height="175.25" inkscape:voditka="{&quot;voditkoHorValues&quot;:[],&quot;voditkoVerValues&quot;:[]}" xmlns="http://www.w3.org/2000/svg" inkscape:componentData="{&quot;attr&quot;:&quot;Comp&quot;,&quot;name&quot;:&quot;Component Name&quot;,&quot;desc&quot;:&quot;Component Description&quot;,&quot;author&quot;:&quot;mySCADA Team&quot;,&quot;uniqueID&quot;:&quot;1394c69755&quot;,&quot;MasterID&quot;:&quot;365470844&quot;,&quot;list&quot;:[{&quot;variableName&quot;:&quot;tag&quot;,&quot;name&quot;:&quot;Tag&quot;,&quot;desc&quot;:&quot;Enter Tag&quot;,&quot;value&quot;:&quot;&quot;,&quot;valueSub&quot;:&quot;&quot;,&quot;type&quot;:0,&quot;hide&quot;:false,&quot;translate&quot;:false,&quot;translations&quot;:{}},{&quot;variableName&quot;:&quot;txt&quot;,&quot;name&quot;:&quot;Text&quot;,&quot;desc&quot;:&quot;Edit text&quot;,&quot;value&quot;:&quot;text&quot;,&quot;valueSub&quot;:&quot;&quot;,&quot;type&quot;:1,&quot;hide&quot;:false,&quot;translate&quot;:false,&quot;translations&quot;:{}},{&quot;variableName&quot;:&quot;showtxt&quot;,&quot;name&quot;:&quot;Show text&quot;,&quot;desc&quot;:&quot;show text&quot;,&quot;value&quot;:&quot;0&quot;,&quot;valueSub&quot;:&quot;&quot;,&quot;type&quot;:5,&quot;hide&quot;:false,&quot;translate&quot;:false,&quot;translations&quot;:{}},{&quot;variableName&quot;:&quot;combo&quot;,&quot;name&quot;:&quot;Light color&quot;,&quot;desc&quot;:&quot;Choose color&quot;,&quot;value&quot;:&quot;0;0=Green,1=Blue,2=Yellow,3=Red&quot;,&quot;valueSub&quot;:&quot;&quot;,&quot;type&quot;:7,&quot;hide&quot;:false,&quot;translate&quot;:false,&quot;translations&quot;:{}},{&quot;variableName&quot;:&quot;show&quot;,&quot;name&quot;:&quot;Background base&quot;,&quot;desc&quot;:&quot;show/hide&quot;,&quot;value&quot;:&quot;1&quot;,&quot;valueSub&quot;:&quot;&quot;,&quot;type&quot;:5,&quot;hide&quot;:false,&quot;translate&quot;:false,&quot;translations&quot;:{}}]}" x="0px" y="0px">
+<defs/>
+<rect x="0" width="146" y="0" height="175.25" id="prefix_id_pozadiNoSeL" style="fill:#ffffff;stoke:#ffffff;"/>
+<g inkscape:groupmode="layer" id="layer0" style="display:inline;" inkscape:layerlabel="podklad">
+<g style="visibility:visible;" id="prefix_id_podklad" inkscape:opac="show;1;1">
+<g>
+<path id="prefix_id_XMLID_3_" d="M363.137,326h-127c-4.971,0-9.137,3.779-9.137,8.75l5,99c0,0.316,0.086,0.629,0.117,0.937    c1.027,36.382,30.855,65.563,67.485,65.563s66.372-29.182,67.399-65.563c0.032-0.308-0.002-0.62-0.002-0.937l5-99    C372,329.779,368.107,326,363.137,326z" style="fill:#58595B;" transform="matrix(1 0 0 1 -227 -326)"/>
+</g>
+<text inkscape:textik="txt" id="prefix_id_text0001" style="visibility:hidden;text-anchor:middle;font-size:12pt;font-family:&apos;Ubuntu-Bold&apos;;fill:#FFFFFF;" inkscape:opac="showtxt;1;1" transform="matrix(1 0 0 1 72.5 22.6669921875)">
+text</text>
+</g>
+</g>
+<g inkscape:groupmode="layer" id="layer1" style="display:inline;" inkscape:layerlabel="default">
+<g inkscape:label="{&quot;attr&quot;:&quot;opac&quot;,&quot;tag&quot;:&quot;&quot;,&quot;alias&quot;:&quot;&quot;,&quot;plcName&quot;:&quot;&quot;,&quot;min&quot;:&quot;0&quot;,&quot;max&quot;:&quot;0&quot;},{&quot;attr&quot;:&quot;Component&quot;,&quot;parentID&quot;:&quot;Layer_1&quot;}" id="prefix_id_XMLID_2_" inkscape:lblTemplate="{&quot;attr&quot;:&quot;opac&quot;,&quot;tag&quot;:&quot;tag&quot;,&quot;alias&quot;:&quot;&quot;,&quot;plcName&quot;:&quot;&quot;,&quot;min&quot;:&quot;0&quot;,&quot;max&quot;:&quot;0&quot;}">
+<linearGradient x1="299.5" xmlns:xlink="http://www.w3.org/1999/xlink" gradientUnits="userSpaceOnUse" y1="495.25" x2="299.5" y2="368.25" xlink:type="simple" xlink:actuate="onLoad" id="prefix_id_XMLID_54_" xlink:show="other">
+<stop offset="0" style="stop-color:#000000;stop-opacity:0.2"/>
+<stop offset="0.1413" style="stop-color:#000000;stop-opacity:0.1788"/>
+<stop offset="1" style="stop-color:#000000;stop-opacity:0.05"/>
+</linearGradient>
+<path id="prefix_id_XMLID_35_" d="M299.5,371.25c33.414,0,60.5,27.086,60.5,60.5   c-0.001,33.412-27.088,60.499-60.5,60.5c-33.413-0.001-60.5-27.088-60.5-60.5C239.001,398.336,266.086,371.25,299.5,371.25    M299.5,368.25c-35.013,0-63.499,28.486-63.5,63.5c0,35.013,28.486,63.499,63.5,63.5c35.013-0.001,63.499-28.487,63.5-63.5   C363,396.736,334.514,368.25,299.5,368.25L299.5,368.25z" style="fill:url(#prefix_id_XMLID_54_);" transform="matrix(1 0 0 1 -227 -326)"/>
+<radialGradient gradientTransform="matrix(1.0,0.0,0.0,1.0,-300.771484375,-523.896484375)" xmlns:xlink="http://www.w3.org/1999/xlink" gradientUnits="userSpaceOnUse" xlink:type="simple" cx="373.2715" r="60.5" xlink:actuate="onLoad" id="prefix_id_XMLID_55_" cy="629.6465" xlink:show="other">
+<stop offset="0" style="stop-color:#B4B5B8"/>
+<stop offset="0.07" style="stop-color:#EFF0F2"/>
+<stop offset="0.13" style="stop-color:#E2E2E2"/>
+<stop offset="0.18" style="stop-color:#F6F7F9"/>
+<stop offset="0.26" style="stop-color:#DFDFDF"/>
+<stop offset="0.35" style="stop-color:#E5E6E7"/>
+<stop offset="0.46" style="stop-color:#5B5B5B"/>
+<stop offset="0.56" style="stop-color:#E5E6E7"/>
+<stop offset="0.75" style="stop-color:#505562"/>
+<stop offset="0.93" style="stop-color:#E6E7E8"/>
+<stop offset="1" style="stop-color:#B4B5B8"/>
+</radialGradient>
+<ellipse rx="60.5" ry="60.5" id="prefix_id_XMLID_40_" style="fill:url(#prefix_id_XMLID_55_);" cx="72.5" cy="105.75"/>
+<g>
+<g id="prefix_id_XMLID_6_">
+<ellipse rx="51.616" ry="51.616" id="prefix_id_XMLID_8_" style="fill:#FFFFFF;fill-opacity:0.5;" cx="72.83200000000001" cy="107.75000000000001"/>
+<ellipse rx="51.616" ry="51.616" id="prefix_id_XMLID_9_" style="fill:#6D6E71;" cx="72.83200000000001" cy="105.75000000000001"/>
+</g>
+<radialGradient gradientTransform="matrix(1.0,0.0,0.0,1.0,-227.0,-326.0)" xmlns:xlink="http://www.w3.org/1999/xlink" gradientUnits="userSpaceOnUse" xlink:type="simple" cx="299.8311" r="51.6157" xlink:actuate="onLoad" id="prefix_id_XMLID_56_" cy="431.75" xlink:show="other">
+<stop offset="0" style="stop-color:#3EDA88;stop-opacity:1"/>
+<stop offset="0" style="stop-color:#40DA89;stop-opacity:0.5927"/>
+<stop offset="0" style="stop-color:#47DC8E;stop-opacity:0.4088"/>
+<stop offset="0" style="stop-color:#54DE95;stop-opacity:0.2698"/>
+<stop offset="0" style="stop-color:#66E2A0;stop-opacity:0.1542"/>
+<stop offset="0" style="stop-color:#7DE6AF;stop-opacity:0.0528"/>
+<stop offset="0" style="stop-color:#7EE6AF;stop-opacity:0.05"/>
+<stop offset="0.1071" style="stop-color:#7CE2AC;stop-opacity:0.0857"/>
+<stop offset="0.207" style="stop-color:#76D7A4;stop-opacity:0.119"/>
+<stop offset="0.3042" style="stop-color:#6BC495;stop-opacity:0.1514"/>
+<stop offset="0.3996" style="stop-color:#5DA981;stop-opacity:0.1832"/>
+<stop offset="0.4938" style="stop-color:#4A8767;stop-opacity:0.2146"/>
+<stop offset="0.5871" style="stop-color:#335D47;stop-opacity:0.2457"/>
+<stop offset="0.6778" style="stop-color:#182C22;stop-opacity:0.2759"/>
+<stop offset="0.75" style="stop-color:#000000;stop-opacity:0.3"/>
+<stop offset="1" style="stop-color:#000000;stop-opacity:0.45"/>
+</radialGradient>
+<ellipse rx="51.616" ry="51.616" id="prefix_id_XMLID_10_" style="fill:url(#prefix_id_XMLID_56_);opacity:0.5;" cx="72.83200000000001" cy="105.75000000000001"/>
+<ellipse style="fill:none;stroke:#231F20;" rx="51.616" cx="72.83200000000001" ry="51.616" id="prefix_id_XMLID_11_" cy="105.75000000000001" stroke-miterlimit="10"/>
+</g>
+<linearGradient x1="299.8311" xmlns:xlink="http://www.w3.org/1999/xlink" gradientUnits="userSpaceOnUse" y1="443.3135" x2="299.8311" y2="382.3438" xlink:type="simple" xlink:actuate="onLoad" id="prefix_id_XMLID_57_" xlink:show="other">
+<stop offset="0" style="stop-color:#FFFFFF;stop-opacity:0"/>
+<stop offset="1" style="stop-color:#FFFFFF;stop-opacity:0.65"/>
+</linearGradient>
+<path id="prefix_id_XMLID_4_" d="M348.784,431.297c0,27.036-21.917,0-48.953,0c-27.035,0-48.953,27.036-48.953,0   s21.918-48.953,48.953-48.953C326.867,382.344,348.784,404.261,348.784,431.297z" style="fill:url(#prefix_id_XMLID_57_);fill-opacity:0.7;" transform="matrix(1 0 0 1 -227 -326)"/>
+</g>
+</g>
+<g inkscape:groupmode="layer" id="layer2" style="opacity:1.0;display:inline;" inkscape:layerlabel="lights">
+<g inkscape:label="{&quot;attr&quot;:&quot;opac&quot;,&quot;tag&quot;:&quot;&quot;,&quot;alias&quot;:&quot;&quot;,&quot;plcName&quot;:&quot;&quot;,&quot;min&quot;:&quot;1.0&quot;,&quot;max&quot;:&quot;1.0&quot;},{&quot;attr&quot;:&quot;Component&quot;,&quot;parentID&quot;:&quot;Layer_1&quot;}" id="prefix_id_g0001" inkscape:lblTemplate="{&quot;attr&quot;:&quot;opac&quot;,&quot;tag&quot;:&quot;tag&quot;,&quot;alias&quot;:&quot;&quot;,&quot;plcName&quot;:&quot;&quot;,&quot;min&quot;:&quot;1.0&quot;,&quot;max&quot;:&quot;1.0&quot;}">
+<g style="visibility:visible;" id="prefix_id_XMLID_5_" inkscape:opac="combo;0;0">
+<linearGradient x1="299.5" xmlns:xlink="http://www.w3.org/1999/xlink" gradientUnits="userSpaceOnUse" y1="495.25" x2="299.5" y2="368.25" xlink:type="simple" xlink:actuate="onLoad" id="prefix_id_XMLID_58_" xlink:show="other">
+<stop offset="0" style="stop-color:#000000;stop-opacity:0.2"/>
+<stop offset="0.1413" style="stop-color:#000000;stop-opacity:0.1788"/>
+<stop offset="1" style="stop-color:#000000;stop-opacity:0.05"/>
+</linearGradient>
+<path id="prefix_id_XMLID_38_" d="M299.5,371.25c33.414,0,60.5,27.087,60.5,60.5s-27.086,60.5-60.5,60.5   c-33.412,0-60.5-27.087-60.5-60.5S266.088,371.25,299.5,371.25 M299.5,368.25c-35.014,0-63.5,28.486-63.5,63.5   s28.486,63.5,63.5,63.5s63.5-28.486,63.5-63.5S334.514,368.25,299.5,368.25L299.5,368.25z" style="fill:url(#prefix_id_XMLID_58_);" transform="matrix(1 0 0 1 -227 -326)"/>
+<radialGradient gradientTransform="matrix(1.0,0.0,0.0,1.0,-227.0,-326.0)" xmlns:xlink="http://www.w3.org/1999/xlink" gradientUnits="userSpaceOnUse" xlink:type="simple" cx="299.5" r="60.5" xlink:actuate="onLoad" id="prefix_id_XMLID_59_" cy="431.75" xlink:show="other">
+<stop offset="0" style="stop-color:#B4B5B8"/>
+<stop offset="0.07" style="stop-color:#EFF0F2"/>
+<stop offset="0.13" style="stop-color:#E2E2E2"/>
+<stop offset="0.18" style="stop-color:#F6F7F9"/>
+<stop offset="0.26" style="stop-color:#DFDFDF"/>
+<stop offset="0.35" style="stop-color:#E5E6E7"/>
+<stop offset="0.46" style="stop-color:#5B5B5B"/>
+<stop offset="0.56" style="stop-color:#E5E6E7"/>
+<stop offset="0.75" style="stop-color:#505562"/>
+<stop offset="0.85" style="stop-color:#7EE6AF"/>
+<stop offset="0.92" style="stop-color:#9FE6C1"/>
+<stop offset="0.95" style="stop-color:#E6E7E8"/>
+<stop offset="1" style="stop-color:#B4B5B8"/>
+</radialGradient>
+<ellipse rx="60.5" ry="60.5" id="prefix_id_XMLID_51_" style="fill:url(#prefix_id_XMLID_59_);" cx="72.5" cy="105.75"/>
+<g id="prefix_id_XMLID_30_">
+<ellipse rx="51.616" ry="51.616" id="prefix_id_XMLID_33_" style="fill:#FFFFFF;fill-opacity:0.5;" cx="72.50000000000001" cy="107.75000000000001"/>
+<linearGradient gradientTransform="matrix(1.0,0.0,0.0,1.0,-227.0,-326.0)" x1="299.501" xmlns:xlink="http://www.w3.org/1999/xlink" gradientUnits="userSpaceOnUse" y1="483.3652" x2="299.501" y2="380.1348" xlink:type="simple" xlink:actuate="onLoad" id="prefix_id_XMLID_60_" xlink:show="other">
+<stop offset="0" style="stop-color:#2BB673"/>
+<stop offset="1" style="stop-color:#37D984"/>
+</linearGradient>
+<ellipse rx="51.616" ry="51.616" id="prefix_id_XMLID_31_" style="fill:url(#prefix_id_XMLID_60_);" cx="72.50000000000001" cy="105.75000000000001"/>
+<radialGradient gradientTransform="matrix(1.0,0.0,0.0,1.0,-227.0,-326.0)" xmlns:xlink="http://www.w3.org/1999/xlink" gradientUnits="userSpaceOnUse" xlink:type="simple" cx="299.501" r="51.6152" xlink:actuate="onLoad" id="prefix_id_XMLID_61_" cy="431.75" xlink:show="other">
+<stop offset="0" style="stop-color:#3EDA88;stop-opacity:1"/>
+<stop offset="0" style="stop-color:#40DA89;stop-opacity:0.8071"/>
+<stop offset="0" style="stop-color:#47DC8E;stop-opacity:0.7199"/>
+<stop offset="0" style="stop-color:#54DE95;stop-opacity:0.6541"/>
+<stop offset="0" style="stop-color:#66E2A0;stop-opacity:0.5993"/>
+<stop offset="0" style="stop-color:#7DE6AF;stop-opacity:0.5513"/>
+<stop offset="0" style="stop-color:#7EE6AF;stop-opacity:0.55"/>
+<stop offset="0.1108" style="stop-color:#82E7B1;stop-opacity:0.4743"/>
+<stop offset="0.2159" style="stop-color:#8DE9B8;stop-opacity:0.4024"/>
+<stop offset="0.3188" style="stop-color:#A0EDC4;stop-opacity:0.3321"/>
+<stop offset="0.4203" style="stop-color:#BBF2D5;stop-opacity:0.2628"/>
+<stop offset="0.5198" style="stop-color:#DEF9EA;stop-opacity:0.1948"/>
+<stop offset="0.6" style="stop-color:#FFFFFF;stop-opacity:0.14"/>
+<stop offset="0.6206" style="stop-color:#F9F9F9;stop-opacity:0.1438"/>
+<stop offset="0.6478" style="stop-color:#E9E9E9;stop-opacity:0.1488"/>
+<stop offset="0.6785" style="stop-color:#CDCDCD;stop-opacity:0.1544"/>
+<stop offset="0.7119" style="stop-color:#A7A7A7;stop-opacity:0.1606"/>
+<stop offset="0.7475" style="stop-color:#777777;stop-opacity:0.1671"/>
+<stop offset="0.7842" style="stop-color:#3C3C3C;stop-opacity:0.1738"/>
+<stop offset="0.8177" style="stop-color:#000000;stop-opacity:0.18"/>
+<stop offset="1" style="stop-color:#000000;stop-opacity:0.7"/>
+</radialGradient>
+<ellipse rx="51.616" ry="51.616" id="prefix_id_XMLID_29_" style="fill:url(#prefix_id_XMLID_61_);opacity:0.5;" cx="72.50000000000001" cy="105.75000000000001"/>
+</g>
+<ellipse style="fill:none;stroke:#006838;" rx="51.616" cx="72.50000000000001" ry="51.616" id="prefix_id_XMLID_28_" cy="105.75000000000001" stroke-miterlimit="10"/>
+<linearGradient x1="299.5" xmlns:xlink="http://www.w3.org/1999/xlink" gradientUnits="userSpaceOnUse" y1="443.3135" x2="299.5" y2="382.3438" xlink:type="simple" xlink:actuate="onLoad" id="prefix_id_XMLID_62_" xlink:show="other">
+<stop offset="0" style="stop-color:#FFFFFF;stop-opacity:0.05"/>
+<stop offset="1" style="stop-color:#FFFFFF"/>
+</linearGradient>
+<path id="prefix_id_XMLID_17_" d="M348.453,431.297c0,27.036-21.917,0-48.953,0s-48.953,27.036-48.953,0   s21.917-48.953,48.953-48.953S348.453,404.261,348.453,431.297z" style="fill:url(#prefix_id_XMLID_62_);fill-opacity:0.7;" transform="matrix(1 0 0 1 -227 -326)"/>
+</g>
+<g style="visibility:hidden;" id="prefix_id_XMLID_12_" inkscape:opac="combo;1;1">
+<linearGradient x1="299.5" xmlns:xlink="http://www.w3.org/1999/xlink" gradientUnits="userSpaceOnUse" y1="495.25" x2="299.5" y2="368.25" xlink:type="simple" xlink:actuate="onLoad" id="prefix_id_XMLID_63_" xlink:show="other">
+<stop offset="0" style="stop-color:#000000;stop-opacity:0.2"/>
+<stop offset="0.1413" style="stop-color:#000000;stop-opacity:0.1788"/>
+<stop offset="1" style="stop-color:#000000;stop-opacity:0.05"/>
+</linearGradient>
+<path id="prefix_id_XMLID_27_" d="M299.5,371.25c33.414,0,60.5,27.087,60.5,60.5s-27.086,60.5-60.5,60.5   c-33.412,0-60.5-27.087-60.5-60.5S266.088,371.25,299.5,371.25 M299.5,368.25c-35.014,0-63.5,28.486-63.5,63.5   s28.486,63.5,63.5,63.5s63.5-28.486,63.5-63.5S334.514,368.25,299.5,368.25L299.5,368.25z" style="fill:url(#prefix_id_XMLID_63_);" transform="matrix(1 0 0 1 -227 -326)"/>
+<radialGradient gradientTransform="matrix(1.0,0.0,0.0,1.0,-227.0,-326.0)" xmlns:xlink="http://www.w3.org/1999/xlink" gradientUnits="userSpaceOnUse" xlink:type="simple" cx="299.5" r="60.5" xlink:actuate="onLoad" id="prefix_id_XMLID_64_" cy="431.75" xlink:show="other">
+<stop offset="0" style="stop-color:#B4B5B8"/>
+<stop offset="0.07" style="stop-color:#EFF0F2"/>
+<stop offset="0.13" style="stop-color:#E2E2E2"/>
+<stop offset="0.18" style="stop-color:#F6F7F9"/>
+<stop offset="0.26" style="stop-color:#DFDFDF"/>
+<stop offset="0.35" style="stop-color:#E5E6E7"/>
+<stop offset="0.46" style="stop-color:#5B5B5B"/>
+<stop offset="0.56" style="stop-color:#E5E6E7"/>
+<stop offset="0.75" style="stop-color:#505562"/>
+<stop offset="0.85" style="stop-color:#AAAFFF"/>
+<stop offset="0.92" style="stop-color:#BFDAFF"/>
+<stop offset="0.95" style="stop-color:#E6E7E8"/>
+<stop offset="1" style="stop-color:#B4B5B8"/>
+</radialGradient>
+<ellipse rx="60.5" ry="60.5" id="prefix_id_XMLID_26_" style="fill:url(#prefix_id_XMLID_64_);" cx="72.5" cy="105.75"/>
+<g id="prefix_id_XMLID_15_">
+<ellipse rx="51.616" ry="51.616" id="prefix_id_XMLID_22_" style="fill:#FFFFFF;fill-opacity:0.5;" cx="72.50000000000001" cy="107.75000000000001"/>
+<linearGradient gradientTransform="matrix(1.0,0.0,0.0,1.0,-227.0,-326.0)" x1="299.501" xmlns:xlink="http://www.w3.org/1999/xlink" gradientUnits="userSpaceOnUse" y1="483.3652" x2="299.501" y2="380.1348" xlink:type="simple" xlink:actuate="onLoad" id="prefix_id_XMLID_65_" xlink:show="other">
+<stop offset="0" style="stop-color:#0065FF"/>
+<stop offset="1" style="stop-color:#6A88FF"/>
+</linearGradient>
+<ellipse rx="51.616" ry="51.616" id="prefix_id_XMLID_18_" style="fill:url(#prefix_id_XMLID_65_);" cx="72.50000000000001" cy="105.75000000000001"/>
+<radialGradient gradientTransform="matrix(1.0,0.0,0.0,1.0,-227.0,-326.0)" xmlns:xlink="http://www.w3.org/1999/xlink" gradientUnits="userSpaceOnUse" xlink:type="simple" cx="299.501" r="51.6152" xlink:actuate="onLoad" id="prefix_id_XMLID_66_" cy="431.75" xlink:show="other">
+<stop offset="0" style="stop-color:#3EDA88;stop-opacity:1"/>
+<stop offset="0" style="stop-color:#40D98A;stop-opacity:0.8346"/>
+<stop offset="0" style="stop-color:#47D791;stop-opacity:0.7599"/>
+<stop offset="0" style="stop-color:#52D39E;stop-opacity:0.7034"/>
+<stop offset="0" style="stop-color:#63CDB0;stop-opacity:0.6561"/>
+<stop offset="0" style="stop-color:#78C6C8;stop-opacity:0.6145"/>
+<stop offset="0" style="stop-color:#92BDE4;stop-opacity:0.5776"/>
+<stop offset="0" style="stop-color:#AAB4FF;stop-opacity:0.55"/>
+<stop offset="0.1353" style="stop-color:#AEB7FF;stop-opacity:0.4576"/>
+<stop offset="0.2636" style="stop-color:#B9C1FF;stop-opacity:0.3699"/>
+<stop offset="0.3891" style="stop-color:#CCD2FF;stop-opacity:0.2841"/>
+<stop offset="0.5122" style="stop-color:#E7EAFF;stop-opacity:0.2"/>
+<stop offset="0.6" style="stop-color:#FFFFFF;stop-opacity:0.14"/>
+<stop offset="0.6206" style="stop-color:#F9F9F9;stop-opacity:0.1438"/>
+<stop offset="0.6478" style="stop-color:#E9E9E9;stop-opacity:0.1488"/>
+<stop offset="0.6785" style="stop-color:#CDCDCD;stop-opacity:0.1544"/>
+<stop offset="0.7119" style="stop-color:#A7A7A7;stop-opacity:0.1606"/>
+<stop offset="0.7475" style="stop-color:#777777;stop-opacity:0.1671"/>
+<stop offset="0.7842" style="stop-color:#3C3C3C;stop-opacity:0.1738"/>
+<stop offset="0.8177" style="stop-color:#000000;stop-opacity:0.18"/>
+<stop offset="1" style="stop-color:#000000;stop-opacity:0.7"/>
+</radialGradient>
+<ellipse rx="51.616" ry="51.616" id="prefix_id_XMLID_16_" style="fill:url(#prefix_id_XMLID_66_);opacity:0.5;" cx="72.50000000000001" cy="105.75000000000001"/>
+</g>
+<ellipse style="fill:none;stroke:#18307C;" rx="51.616" cx="72.50000000000001" ry="51.616" id="prefix_id_XMLID_14_" cy="105.75000000000001" stroke-miterlimit="10"/>
+<linearGradient x1="299.5" xmlns:xlink="http://www.w3.org/1999/xlink" gradientUnits="userSpaceOnUse" y1="443.3135" x2="299.5" y2="382.3438" xlink:type="simple" xlink:actuate="onLoad" id="prefix_id_XMLID_74_" xlink:show="other">
+<stop offset="0" style="stop-color:#FFFFFF;stop-opacity:0.05"/>
+<stop offset="1" style="stop-color:#FFFFFF"/>
+</linearGradient>
+<path id="prefix_id_XMLID_13_" d="M348.453,431.297c0,27.036-21.917,0-48.953,0s-48.953,27.036-48.953,0   s21.917-48.953,48.953-48.953S348.453,404.261,348.453,431.297z" style="fill:url(#prefix_id_XMLID_74_);fill-opacity:0.7;" transform="matrix(1 0 0 1 -227 -326)"/>
+</g>
+<g style="visibility:hidden;" id="prefix_id_XMLID_37_" inkscape:opac="combo;2;2">
+<linearGradient x1="299.5" xmlns:xlink="http://www.w3.org/1999/xlink" gradientUnits="userSpaceOnUse" y1="495.25" x2="299.5" y2="368.25" xlink:type="simple" xlink:actuate="onLoad" id="prefix_id_XMLID_76_" xlink:show="other">
+<stop offset="0" style="stop-color:#000000;stop-opacity:0.2"/>
+<stop offset="0.1413" style="stop-color:#000000;stop-opacity:0.1788"/>
+<stop offset="1" style="stop-color:#000000;stop-opacity:0.05"/>
+</linearGradient>
+<path id="prefix_id_XMLID_53_" d="M299.5,371.25c33.414,0,60.5,27.087,60.5,60.5s-27.086,60.5-60.5,60.5   c-33.412,0-60.5-27.087-60.5-60.5S266.088,371.25,299.5,371.25 M299.5,368.25c-35.014,0-63.5,28.486-63.5,63.5   s28.486,63.5,63.5,63.5s63.5-28.486,63.5-63.5S334.514,368.25,299.5,368.25L299.5,368.25z" style="fill:url(#prefix_id_XMLID_76_);" transform="matrix(1 0 0 1 -227 -326)"/>
+<radialGradient gradientTransform="matrix(1.0,0.0,0.0,1.0,-227.0,-326.0)" xmlns:xlink="http://www.w3.org/1999/xlink" gradientUnits="userSpaceOnUse" xlink:type="simple" cx="299.5" r="60.5" xlink:actuate="onLoad" id="prefix_id_XMLID_81_" cy="431.75" xlink:show="other">
+<stop offset="0" style="stop-color:#B4B5B8"/>
+<stop offset="0.07" style="stop-color:#EFF0F2"/>
+<stop offset="0.13" style="stop-color:#E2E2E2"/>
+<stop offset="0.18" style="stop-color:#F6F7F9"/>
+<stop offset="0.26" style="stop-color:#DFDFDF"/>
+<stop offset="0.35" style="stop-color:#E5E6E7"/>
+<stop offset="0.46" style="stop-color:#5B5B5B"/>
+<stop offset="0.56" style="stop-color:#E5E6E7"/>
+<stop offset="0.75" style="stop-color:#505562"/>
+<stop offset="0.85" style="stop-color:#FFDBAA"/>
+<stop offset="0.92" style="stop-color:#FFEBD4"/>
+<stop offset="0.95" style="stop-color:#E6E7E8"/>
+<stop offset="1" style="stop-color:#B4B5B8"/>
+</radialGradient>
+<ellipse rx="60.5" ry="60.5" id="prefix_id_XMLID_52_" style="fill:url(#prefix_id_XMLID_81_);" cx="72.5" cy="105.75"/>
+<g id="prefix_id_XMLID_43_">
+<ellipse rx="51.616" ry="51.616" id="prefix_id_XMLID_46_" style="fill:#FFFFFF;fill-opacity:0.5;" cx="72.50000000000001" cy="107.75000000000001"/>
+<linearGradient gradientTransform="matrix(1.0,0.0,0.0,1.0,-227.0,-326.0)" x1="299.501" xmlns:xlink="http://www.w3.org/1999/xlink" gradientUnits="userSpaceOnUse" y1="483.3652" x2="299.501" y2="380.1348" xlink:type="simple" xlink:actuate="onLoad" id="prefix_id_XMLID_82_" xlink:show="other">
+<stop offset="0" style="stop-color:#FFB100"/>
+<stop offset="1" style="stop-color:#FFD17F"/>
+</linearGradient>
+<ellipse rx="51.616" ry="51.616" id="prefix_id_XMLID_45_" style="fill:url(#prefix_id_XMLID_82_);" cx="72.50000000000001" cy="105.75000000000001"/>
+<radialGradient gradientTransform="matrix(1.0,0.0,0.0,1.0,-227.0,-326.0)" xmlns:xlink="http://www.w3.org/1999/xlink" gradientUnits="userSpaceOnUse" xlink:type="simple" cx="299.501" r="51.6152" xlink:actuate="onLoad" id="prefix_id_XMLID_83_" cy="431.75" xlink:show="other">
+<stop offset="0" style="stop-color:#3EDA88;stop-opacity:1"/>
+<stop offset="0" style="stop-color:#40DA88;stop-opacity:0.8533"/>
+<stop offset="0" style="stop-color:#47DB8A;stop-opacity:0.787"/>
+<stop offset="0" style="stop-color:#54DC8C;stop-opacity:0.7369"/>
+<stop offset="0" style="stop-color:#66DD8F;stop-opacity:0.6949"/>
+<stop offset="0" style="stop-color:#7EDF93;stop-opacity:0.658"/>
+<stop offset="0" style="stop-color:#9BE298;stop-opacity:0.6248"/>
+<stop offset="0" style="stop-color:#BDE59E;stop-opacity:0.5941"/>
+<stop offset="0" style="stop-color:#E4E8A5;stop-opacity:0.5664"/>
+<stop offset="0" style="stop-color:#FFEAAA;stop-opacity:0.55"/>
+<stop offset="0.1353" style="stop-color:#FFEBAE;stop-opacity:0.4576"/>
+<stop offset="0.2636" style="stop-color:#FFEEB9;stop-opacity:0.3699"/>
+<stop offset="0.3891" style="stop-color:#FFF2CC;stop-opacity:0.2841"/>
+<stop offset="0.5122" style="stop-color:#FFF9E7;stop-opacity:0.2"/>
+<stop offset="0.6" style="stop-color:#FFFFFF;stop-opacity:0.14"/>
+<stop offset="0.6206" style="stop-color:#F9F9F9;stop-opacity:0.1438"/>
+<stop offset="0.6478" style="stop-color:#E9E9E9;stop-opacity:0.1488"/>
+<stop offset="0.6785" style="stop-color:#CDCDCD;stop-opacity:0.1544"/>
+<stop offset="0.7119" style="stop-color:#A7A7A7;stop-opacity:0.1606"/>
+<stop offset="0.7475" style="stop-color:#777777;stop-opacity:0.1671"/>
+<stop offset="0.7842" style="stop-color:#3C3C3C;stop-opacity:0.1738"/>
+<stop offset="0.8177" style="stop-color:#000000;stop-opacity:0.18"/>
+<stop offset="1" style="stop-color:#000000;stop-opacity:0.7"/>
+</radialGradient>
+<ellipse rx="51.616" ry="51.616" id="prefix_id_XMLID_44_" style="fill:url(#prefix_id_XMLID_83_);opacity:0.5;" cx="72.50000000000001" cy="105.75000000000001"/>
+</g>
+<ellipse style="fill:none;stroke:#825700;" rx="51.616" cx="72.50000000000001" ry="51.616" id="prefix_id_XMLID_42_" cy="105.75000000000001" stroke-miterlimit="10"/>
+<linearGradient x1="299.5" xmlns:xlink="http://www.w3.org/1999/xlink" gradientUnits="userSpaceOnUse" y1="443.3135" x2="299.5" y2="382.3438" xlink:type="simple" xlink:actuate="onLoad" id="prefix_id_XMLID_84_" xlink:show="other">
+<stop offset="0" style="stop-color:#FFFFFF;stop-opacity:0.05"/>
+<stop offset="1" style="stop-color:#FFFFFF"/>
+</linearGradient>
+<path id="prefix_id_XMLID_41_" d="M348.453,431.297c0,27.036-21.917,0-48.953,0s-48.953,27.036-48.953,0   s21.917-48.953,48.953-48.953S348.453,404.261,348.453,431.297z" style="fill:url(#prefix_id_XMLID_84_);fill-opacity:0.7;" transform="matrix(1 0 0 1 -227 -326)"/>
+</g>
+<g style="visibility:hidden;" id="prefix_id_XMLID_7_" inkscape:opac="combo;3;3">
+<linearGradient x1="299.5" xmlns:xlink="http://www.w3.org/1999/xlink" gradientUnits="userSpaceOnUse" y1="495.25" x2="299.5" y2="368.25" xlink:type="simple" xlink:actuate="onLoad" id="prefix_id_XMLID_86_" xlink:show="other">
+<stop offset="0" style="stop-color:#000000;stop-opacity:0.2"/>
+<stop offset="0.1413" style="stop-color:#000000;stop-opacity:0.1788"/>
+<stop offset="1" style="stop-color:#000000;stop-opacity:0.05"/>
+</linearGradient>
+<path id="prefix_id_XMLID_78_" d="M299.5,371.25c33.414,0,60.5,27.087,60.5,60.5s-27.086,60.5-60.5,60.5   c-33.412,0-60.5-27.087-60.5-60.5S266.088,371.25,299.5,371.25 M299.5,368.25c-35.014,0-63.5,28.486-63.5,63.5   s28.486,63.5,63.5,63.5s63.5-28.486,63.5-63.5S334.514,368.25,299.5,368.25L299.5,368.25z" style="fill:url(#prefix_id_XMLID_86_);" transform="matrix(1 0 0 1 -227 -326)"/>
+<radialGradient gradientTransform="matrix(1.0,0.0,0.0,1.0,-227.0,-326.0)" xmlns:xlink="http://www.w3.org/1999/xlink" gradientUnits="userSpaceOnUse" xlink:type="simple" cx="299.5" r="60.5" xlink:actuate="onLoad" id="prefix_id_XMLID_88_" cy="431.75" xlink:show="other">
+<stop offset="0" style="stop-color:#B4B5B8"/>
+<stop offset="0.07" style="stop-color:#EFF0F2"/>
+<stop offset="0.13" style="stop-color:#E2E2E2"/>
+<stop offset="0.18" style="stop-color:#F6F7F9"/>
+<stop offset="0.26" style="stop-color:#DFDFDF"/>
+<stop offset="0.35" style="stop-color:#E5E6E7"/>
+<stop offset="0.46" style="stop-color:#5B5B5B"/>
+<stop offset="0.56" style="stop-color:#E5E6E7"/>
+<stop offset="0.75" style="stop-color:#505562"/>
+<stop offset="0.85" style="stop-color:#FFAAAA"/>
+<stop offset="0.92" style="stop-color:#FFD4D4"/>
+<stop offset="0.95" style="stop-color:#E6E7E8"/>
+<stop offset="1" style="stop-color:#B4B5B8"/>
+</radialGradient>
+<ellipse rx="60.5" ry="60.5" id="prefix_id_XMLID_77_" style="fill:url(#prefix_id_XMLID_88_);" cx="72.5" cy="105.75"/>
+<g id="prefix_id_XMLID_47_">
+<ellipse rx="51.616" ry="51.616" id="prefix_id_XMLID_71_" style="fill:#FFFFFF;fill-opacity:0.5;" cx="72.50000000000001" cy="107.75000000000001"/>
+<linearGradient gradientTransform="matrix(1.0,0.0,0.0,1.0,-227.0,-326.0)" x1="299.501" xmlns:xlink="http://www.w3.org/1999/xlink" gradientUnits="userSpaceOnUse" y1="483.3652" x2="299.501" y2="380.1348" xlink:type="simple" xlink:actuate="onLoad" id="prefix_id_XMLID_89_" xlink:show="other">
+<stop offset="0" style="stop-color:#FF0007"/>
+<stop offset="1" style="stop-color:#E90000"/>
+</linearGradient>
+<ellipse rx="51.616" ry="51.616" id="prefix_id_XMLID_69_" style="fill:url(#prefix_id_XMLID_89_);" cx="72.50000000000001" cy="105.75000000000001"/>
+<radialGradient gradientTransform="matrix(1.0,0.0,0.0,1.0,-227.0,-326.0)" xmlns:xlink="http://www.w3.org/1999/xlink" gradientUnits="userSpaceOnUse" xlink:type="simple" cx="299.501" r="51.6152" xlink:actuate="onLoad" id="prefix_id_XMLID_90_" cy="431.75" xlink:show="other">
+<stop offset="0" style="stop-color:#3EDA88;stop-opacity:1"/>
+<stop offset="0" style="stop-color:#40D988;stop-opacity:0.8533"/>
+<stop offset="0" style="stop-color:#47D789;stop-opacity:0.787"/>
+<stop offset="0" style="stop-color:#54D389;stop-opacity:0.7369"/>
+<stop offset="0" style="stop-color:#66CD8B;stop-opacity:0.6949"/>
+<stop offset="0" style="stop-color:#7EC68C;stop-opacity:0.658"/>
+<stop offset="0" style="stop-color:#9BBD8E;stop-opacity:0.6248"/>
+<stop offset="0" style="stop-color:#BDB290;stop-opacity:0.5941"/>
+<stop offset="0" style="stop-color:#E4A592;stop-opacity:0.5664"/>
+<stop offset="0" style="stop-color:#FF9D94;stop-opacity:0.55"/>
+<stop offset="0.1212" style="stop-color:#FFA098;stop-opacity:0.4672"/>
+<stop offset="0.2361" style="stop-color:#FFABA3;stop-opacity:0.3886"/>
+<stop offset="0.3486" style="stop-color:#FFBCB6;stop-opacity:0.3118"/>
+<stop offset="0.4596" style="stop-color:#FFD5D1;stop-opacity:0.2359"/>
+<stop offset="0.5685" style="stop-color:#FFF5F4;stop-opacity:0.1616"/>
+<stop offset="0.6" style="stop-color:#FFFFFF;stop-opacity:0.14"/>
+<stop offset="0.6206" style="stop-color:#F9F9F9;stop-opacity:0.1438"/>
+<stop offset="0.6478" style="stop-color:#E9E9E9;stop-opacity:0.1488"/>
+<stop offset="0.6785" style="stop-color:#CDCDCD;stop-opacity:0.1544"/>
+<stop offset="0.7119" style="stop-color:#A7A7A7;stop-opacity:0.1606"/>
+<stop offset="0.7475" style="stop-color:#777777;stop-opacity:0.1671"/>
+<stop offset="0.7842" style="stop-color:#3C3C3C;stop-opacity:0.1738"/>
+<stop offset="0.8177" style="stop-color:#000000;stop-opacity:0.18"/>
+<stop offset="1" style="stop-color:#000000;stop-opacity:0.7"/>
+</radialGradient>
+<ellipse rx="51.616" ry="51.616" id="prefix_id_XMLID_50_" style="fill:url(#prefix_id_XMLID_90_);opacity:0.5;" cx="72.50000000000001" cy="105.75000000000001"/>
+</g>
+<ellipse style="fill:none;stroke:#7F0000;" rx="51.616" cx="72.50000000000001" ry="51.616" id="prefix_id_XMLID_25_" cy="105.75000000000001" stroke-miterlimit="10"/>
+<linearGradient x1="299.5" xmlns:xlink="http://www.w3.org/1999/xlink" gradientUnits="userSpaceOnUse" y1="443.3135" x2="299.5" y2="382.3438" xlink:type="simple" xlink:actuate="onLoad" id="prefix_id_XMLID_91_" xlink:show="other">
+<stop offset="0" style="stop-color:#FFFFFF;stop-opacity:0.05"/>
+<stop offset="1" style="stop-color:#FFFFFF"/>
+</linearGradient>
+<path id="prefix_id_XMLID_24_" d="M348.453,431.297c0,27.036-21.917,0-48.953,0s-48.953,27.036-48.953,0   s21.917-48.953,48.953-48.953S348.453,404.261,348.453,431.297z" style="stroke-opacity:0.4;fill:url(#prefix_id_XMLID_91_);fill-opacity:0.7;" transform="matrix(1 0 0 1 -227 -326)"/>
+</g>
+</g>
+</g>
+<g inkscape:groupmode="layer" id="layer3" style="display:none;" inkscape:layerlabel="green"/>
+<g inkscape:groupmode="layer" id="layer4" style="display:none;" inkscape:layerlabel="blue"/>
+<g inkscape:groupmode="layer" id="layer5" style="display:none;" inkscape:layerlabel="yellow"/>
+<g inkscape:groupmode="layer" id="layer6" style="display:none;" inkscape:layerlabel="red"/>
+<g inkscape:groupmode="layer" myscada:layerActiveArea="YES" id="layer7" inkscape:layerlabel="ActiveArea"/>
+</svg>

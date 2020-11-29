@@ -1,0 +1,1 @@
+{"connections":[{"plcType":11,"alias":"script","tiaPLC":"","id":-1,"ip":"","disableWrites":false},{"plcType":6,"alias":"HMI","tiaPLC":"","id":-1,"ip":"127.0.0.1","port":502,"disableWrites":false,"optwindow":50,"hide":false,"deviceID":1}]}
