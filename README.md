@@ -68,3 +68,13 @@
   * [1. Projekt](./4_semestr/PMA/Proj1) - 14/15
   * [2. Projekt](./4_semestr/PMA/Proj2) - 6/7
   * [3. Projekt](./4_semestr/PMA/Proj3) - 9/18
+
+## 5. semester
+
+* SIN - Inteligentní systémy
+  * [1. Projekt](./5_semestr/SIN/Proj1) - 25/30
+
+## 6. semester
+
+* DIP - Diplomová práce
+  * [Diplomová práce](./6_semestr/IBT) - A
