@@ -77,4 +77,4 @@
 ## 6. semester
 
 * DIP - Diplomová práce
-  * [Diplomová práce](./6_semestr/IBT) - A
+  * [Diplomová práce](./6_semestr/DIP) - A
